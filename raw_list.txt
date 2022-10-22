@@ -1,0 +1,100 @@
+House 	Name 	main Twitter Handle 	Party 	
+1 	David Brock Smith 	@davidbrocksmith 	R 	
+2 	Gary Leif 	@realgaryleif 	R 	
+3 	Lily Morgan 		R 	
+4 	Duane Stark 	@duane_stark 	R 	
+5 	Pam Marsh 	@pammarshorhd5 	D 	
+6 	Kim Wallan 		R 	
+7 	Cedric Hayden 	@cedrichaydenor 	R 	
+8 	Paul Holvey 		D 	
+9 	Boomer Wright 		R 	
+10 	David Gomberg 		D 	
+11 	Marty Wilde 	@duckwilde 	D 	
+12 	John Lively 	@electjohnlively 	D 	
+13 	Nancy Nathanson 	@rep_nn 	D 	
+14 	Julie Fahey 	@juliefehey 	D 	
+15 	Shelly Boshart  Davis 	@boshartdavisag 	R 	
+16 	Dan Rayfield 	@danrayfield 	D 	
+17 	Jami Cate 		R 	
+18 	Rick Lewis 		R 	
+19 	Raquel Moore-Green 		R 	
+20 	Paul Evans 	@paulevansoregon 	D 	
+21 	Brian Clem 	@brianclem 	D 	
+22 	Teresa Alonso Leon 	@alonsoleon4hd22 	D 	@alonsonhli_leon
+23 	Mike Nearman 	@uncle_mikey 	R 	@repnrarman
+24 	Ron Noble 	@noblefororegon 	R 	
+25 	Bill Post 	@billpostoregon 	R 	@billpost
+26 	Courtney Neron 	@repneronhd26 	D 	
+27 	Sheri Schouten 	@sherileem 	D 	
+28 	Wlnsvey Campos 		D 	
+29 	Susan McLain 		D 	
+30 	Janeen Sollman 	@sollmanjaneen 	D 	
+31 	Brad Witt 	@bradwitt15 	D 	
+32 	Suzanne Weber 		R 	
+33 	Maxine Dexter 		D 	
+34 	Ken Helm 	@repkenhelm 	D 	
+35 	Dacia Grayber 		D 	
+36 	Lisa Reynolds 	D 	
+37 	Rachel Prusak 	@rachel_prusak 	D 	
+38 	Andrea Salinas 		D 	
+39 	Christine Drazen 	@christinedrazen 	R 	
+40 	Mark Meek 	@meek_mark 	D 	
+41 	Karin A Power 	@karin_power 	D 	
+42 	Rob Nosse 	@robnosse 	D 	
+43 	Tawna D Sanchez 	@reptawnasanchez 	D 	
+44 	Tina Kotek 	@tinakotek 	D 	
+45 	Barbara Smith Warner 	@repbsw 	D 	
+46 	Khanh Pham 		D 	
+47 	Diego Hernandez 	@diego4oregon 	D 	
+48 	Jeff Reardon 		D 	
+49 	Zach Hudson 		D 	
+50 	Ricki Ruiz 		D 	
+51 	Janelle Bynum 	@bynum4thewin 	D 	
+52 	Anna Williams 		D 	
+53 	Jack Zika 	@jackzikaor 	R 	
+54 	Jason Kropf 		D 	
+55 	Vikki Breese-Iverson 		R 	
+56 	E. Werner Reschke 	@ewreschke 	R 	
+57 	Greg Smith 		R 	
+58 	Bobby Levy 		R 	
+59 	Daniel Bonham 	@danielbonham4or 	R 	@bonham31
+60 	Mark Owens 		R 	
+	OR House Republicans 	@orhouserepublicans 	R 	
+	OR House Democrats 	@oregonhousedems 	D 	
+		@dpowomenscaucus 	D 	
+
+Senators—————————————————————————
+Senate 	Name 	Twitter Handle 	Party
+1 	Dallas Heard 	@heard4staterep 	R
+2 	Art Robinson 		R
+3 	Jeff Golden 	@senatorgolden 	D
+4 	Floyd Prozanski 	@senprozanski 	D
+5 	Dick Anderson 		R
+6 	Lee Beyer 		D
+7 	James L Manning Jr 	@manningstl 	D
+8 	Sara Gelser 	@sensaragelser 	D
+9 	Fred Girod 	@fredgirod 	R
+10 	Deb Patterson 		R
+11 	Peter Courtney 		D
+12 	Brian Boquist 	@brianboquistgop 	R
+13 	Kim Thatcher 	@kimthatchergop 	R
+14 	Kate Lieber 		D
+15 	Chuck Riley 	@chuckriley2014 	D
+16 	Betsy Johnson 	@senbetsyjohnson 	D
+17 	Elizabeth Steiner Hayward 	@eshfororegon 	D
+18 	Ginny Burdick 	@Senburdick 	D
+19 	Rob Wagner 	@robfororegon 	D
+20 	Bill Kennemer 		R
+21 	Kathleen Taylor 	@kathleen4oregon 	D
+22 	Lew Frederick 	@lewfrederick 	D
+23 	Michael Dembrow 	@MichaelDembrow 	D
+24 	Kayse Jama 		D
+25 	Chris Gorsek 	D
+26 	Chuck Thomsen 	@chuckthomsen 	R
+27 	Tim Knopp 	@senatorknopp 	R
+28 	Dennis Linthicum 	@dennislinthicum 	R
+29 	Bill Hansell 	@hansell4senate 	R
+30 	Lynn Findley 		R
+	OR Senate Republicans 	@orsenategop 	R
+	OR Senate Democrats 	@orsendemocrats 	D
+

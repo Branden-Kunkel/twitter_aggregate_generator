@@ -1,0 +1,1323 @@
+{
+    "data": [
+        {
+            "created_at": "2021-06-01T16:34:27.000Z",
+            "description": "Come on in, Twitter Blue members. Follow for a heads up on new features and to get support.",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "help.twitter.com/using-twitter/\u2026",
+                            "end": 23,
+                            "expanded_url": "https://help.twitter.com/using-twitter/twitter-blue",
+                            "start": 0,
+                            "url": "https://t.co/YhGUfs5vnN"
+                        }
+                    ]
+                }
+            },
+            "id": "1399766153053061121",
+            "location": "Twitter HQ",
+            "name": "Twitter Blue",
+            "pinned_tweet_id": "1575590534529556480",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1484226604104486912/dW26JJSc_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 146343,
+                "following_count": 0,
+                "listed_count": 540,
+                "tweet_count": 1162
+            },
+            "url": "https://t.co/YhGUfs5vnN",
+            "username": "TwitterBlue",
+            "verified": true
+        },
+        {
+            "created_at": "2007-03-14T04:14:58.000Z",
+            "description": "VC @craft_ventures Bestie @theallinpod Founder @getcallin",
+            "entities": {
+                "description": {
+                    "mentions": [
+                        {
+                            "end": 18,
+                            "start": 3,
+                            "username": "craft_ventures"
+                        },
+                        {
+                            "end": 38,
+                            "start": 26,
+                            "username": "theallinpod"
+                        },
+                        {
+                            "end": 57,
+                            "start": 47,
+                            "username": "getcallin"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "sacks.substack.com",
+                            "end": 23,
+                            "expanded_url": "http://sacks.substack.com",
+                            "start": 0,
+                            "url": "https://t.co/VWe3GFbxF2"
+                        }
+                    ]
+                }
+            },
+            "id": "1137701",
+            "location": "San Francisco",
+            "name": "David Sacks",
+            "pinned_tweet_id": "1577421981535784961",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1398157893774413825/vQ-FwRtP_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 428297,
+                "following_count": 2927,
+                "listed_count": 5724,
+                "tweet_count": 8698
+            },
+            "url": "https://t.co/VWe3GFbxF2",
+            "username": "DavidSacks",
+            "verified": true
+        },
+        {
+            "created_at": "2018-05-21T07:56:07.000Z",
+            "description": "KoGuan Law School, the only living Chinese has a school named after him in China; XuanYuan2.0 powered by KQID; The 3rd Largest individual shareholder of Tesla.",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "SHI.com",
+                            "end": 23,
+                            "expanded_url": "http://SHI.com",
+                            "start": 0,
+                            "url": "https://t.co/TS8S0qjaiG"
+                        }
+                    ]
+                }
+            },
+            "id": "998472493605076993",
+            "location": "USA",
+            "name": "KoGuan Leo",
+            "pinned_tweet_id": "1566632287860670464",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1164790480623656960/45kIk3WO_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 29854,
+                "following_count": 220,
+                "listed_count": 213,
+                "tweet_count": 1348
+            },
+            "url": "https://t.co/TS8S0qjaiG",
+            "username": "KoguanLeo",
+            "verified": false
+        },
+        {
+            "created_at": "2014-05-28T21:52:53.000Z",
+            "description": "Known as Mad Max for my unorthodox ideas and passion for adventure, my scientific interests range from artificial intelligence to the ultimate nature of reality",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "space.mit.edu/home/tegmark/",
+                            "end": 23,
+                            "expanded_url": "http://space.mit.edu/home/tegmark/",
+                            "start": 0,
+                            "url": "https://t.co/sJZf2ouf4o"
+                        }
+                    ]
+                }
+            },
+            "id": "2530947115",
+            "location": "MIT",
+            "name": "Max Tegmark",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/471772020963700736/bYpXSErt_normal.jpeg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 90447,
+                "following_count": 14,
+                "listed_count": 1440,
+                "tweet_count": 743
+            },
+            "url": "https://t.co/sJZf2ouf4o",
+            "username": "tegmark",
+            "verified": false
+        },
+        {
+            "created_at": "2013-03-27T18:13:53.000Z",
+            "description": "Tesla, SpaceX, Elon Musk, and #FutureTech Go behind the scenes @TeslaratiTeam",
+            "entities": {
+                "description": {
+                    "hashtags": [
+                        {
+                            "end": 41,
+                            "start": 30,
+                            "tag": "FutureTech"
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "end": 77,
+                            "start": 63,
+                            "username": "TeslaratiTeam"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "teslarati.com",
+                            "end": 23,
+                            "expanded_url": "https://www.teslarati.com/",
+                            "start": 0,
+                            "url": "https://t.co/Pwxbo5WHot"
+                        }
+                    ]
+                }
+            },
+            "id": "1308211178",
+            "location": "California",
+            "name": "TESLARATI",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/967139929888243712/kpeiQiVn_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 684902,
+                "following_count": 63,
+                "listed_count": 2371,
+                "tweet_count": 19663
+            },
+            "url": "https://t.co/Pwxbo5WHot",
+            "username": "Teslarati",
+            "verified": false
+        }
+    ],
+    "includes": {
+        "tweets": [
+            {
+                "edit_history_tweet_ids": [
+                    "1575590109000323073",
+                    "1575590534529556480"
+                ],
+                "id": "1575590534529556480",
+                "text": "hello\n\nthis is a test to make sure the edit button works, we\u2019ll let you know how it goes https://t.co/XbZmX572Xc"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1577421981535784961"
+                ],
+                "id": "1577421981535784961",
+                "text": "My latest op-ed for Newsweek: \n\nNeocons and the Woke Left Are Joining Hands and Leading Us to Woke War III\n\nhttps://t.co/bMsnzqx9SR"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1566632287860670464"
+                ],
+                "id": "1566632287860670464",
+                "text": "Love is Giving first Taking later.\n\nKoGuan Dao is love. \n\nKoGuan Dao is Giving first Taking later.\n\nGiving first and Taking later principle in quantum superposition is our Ancestor Qbit(00,+,-).\n\nOur Ancestor Qbit computes, simulates and projects Existence within Itself. https://t.co/9Z4bXohAh2"
+            }
+        ]
+    },
+    "meta": {
+        "next_token": "R44MPBU7FOMHGZZZ",
+        "result_count": 5
+    }
+}{
+    "data": [
+        {
+            "created_at": "2021-06-01T16:34:27.000Z",
+            "description": "Come on in, Twitter Blue members. Follow for a heads up on new features and to get support.",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "help.twitter.com/using-twitter/\u2026",
+                            "end": 23,
+                            "expanded_url": "https://help.twitter.com/using-twitter/twitter-blue",
+                            "start": 0,
+                            "url": "https://t.co/YhGUfs5vnN"
+                        }
+                    ]
+                }
+            },
+            "id": "1399766153053061121",
+            "location": "Twitter HQ",
+            "name": "Twitter Blue",
+            "pinned_tweet_id": "1575590534529556480",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1484226604104486912/dW26JJSc_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 146343,
+                "following_count": 0,
+                "listed_count": 540,
+                "tweet_count": 1162
+            },
+            "url": "https://t.co/YhGUfs5vnN",
+            "username": "TwitterBlue",
+            "verified": true
+        },
+        {
+            "created_at": "2007-03-14T04:14:58.000Z",
+            "description": "VC @craft_ventures Bestie @theallinpod Founder @getcallin",
+            "entities": {
+                "description": {
+                    "mentions": [
+                        {
+                            "end": 18,
+                            "start": 3,
+                            "username": "craft_ventures"
+                        },
+                        {
+                            "end": 38,
+                            "start": 26,
+                            "username": "theallinpod"
+                        },
+                        {
+                            "end": 57,
+                            "start": 47,
+                            "username": "getcallin"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "sacks.substack.com",
+                            "end": 23,
+                            "expanded_url": "http://sacks.substack.com",
+                            "start": 0,
+                            "url": "https://t.co/VWe3GFbxF2"
+                        }
+                    ]
+                }
+            },
+            "id": "1137701",
+            "location": "San Francisco",
+            "name": "David Sacks",
+            "pinned_tweet_id": "1577421981535784961",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1398157893774413825/vQ-FwRtP_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 428297,
+                "following_count": 2927,
+                "listed_count": 5724,
+                "tweet_count": 8698
+            },
+            "url": "https://t.co/VWe3GFbxF2",
+            "username": "DavidSacks",
+            "verified": true
+        },
+        {
+            "created_at": "2018-05-21T07:56:07.000Z",
+            "description": "KoGuan Law School, the only living Chinese has a school named after him in China; XuanYuan2.0 powered by KQID; The 3rd Largest individual shareholder of Tesla.",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "SHI.com",
+                            "end": 23,
+                            "expanded_url": "http://SHI.com",
+                            "start": 0,
+                            "url": "https://t.co/TS8S0qjaiG"
+                        }
+                    ]
+                }
+            },
+            "id": "998472493605076993",
+            "location": "USA",
+            "name": "KoGuan Leo",
+            "pinned_tweet_id": "1566632287860670464",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1164790480623656960/45kIk3WO_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 29856,
+                "following_count": 220,
+                "listed_count": 213,
+                "tweet_count": 1348
+            },
+            "url": "https://t.co/TS8S0qjaiG",
+            "username": "KoguanLeo",
+            "verified": false
+        },
+        {
+            "created_at": "2014-05-28T21:52:53.000Z",
+            "description": "Known as Mad Max for my unorthodox ideas and passion for adventure, my scientific interests range from artificial intelligence to the ultimate nature of reality",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "space.mit.edu/home/tegmark/",
+                            "end": 23,
+                            "expanded_url": "http://space.mit.edu/home/tegmark/",
+                            "start": 0,
+                            "url": "https://t.co/sJZf2ouf4o"
+                        }
+                    ]
+                }
+            },
+            "id": "2530947115",
+            "location": "MIT",
+            "name": "Max Tegmark",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/471772020963700736/bYpXSErt_normal.jpeg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 90447,
+                "following_count": 14,
+                "listed_count": 1440,
+                "tweet_count": 743
+            },
+            "url": "https://t.co/sJZf2ouf4o",
+            "username": "tegmark",
+            "verified": false
+        },
+        {
+            "created_at": "2013-03-27T18:13:53.000Z",
+            "description": "Tesla, SpaceX, Elon Musk, and #FutureTech Go behind the scenes @TeslaratiTeam",
+            "entities": {
+                "description": {
+                    "hashtags": [
+                        {
+                            "end": 41,
+                            "start": 30,
+                            "tag": "FutureTech"
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "end": 77,
+                            "start": 63,
+                            "username": "TeslaratiTeam"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "teslarati.com",
+                            "end": 23,
+                            "expanded_url": "https://www.teslarati.com/",
+                            "start": 0,
+                            "url": "https://t.co/Pwxbo5WHot"
+                        }
+                    ]
+                }
+            },
+            "id": "1308211178",
+            "location": "California",
+            "name": "TESLARATI",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/967139929888243712/kpeiQiVn_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 684902,
+                "following_count": 63,
+                "listed_count": 2371,
+                "tweet_count": 19663
+            },
+            "url": "https://t.co/Pwxbo5WHot",
+            "username": "Teslarati",
+            "verified": false
+        }
+    ],
+    "includes": {
+        "tweets": [
+            {
+                "edit_history_tweet_ids": [
+                    "1575590109000323073",
+                    "1575590534529556480"
+                ],
+                "id": "1575590534529556480",
+                "text": "hello\n\nthis is a test to make sure the edit button works, we\u2019ll let you know how it goes https://t.co/XbZmX572Xc"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1577421981535784961"
+                ],
+                "id": "1577421981535784961",
+                "text": "My latest op-ed for Newsweek: \n\nNeocons and the Woke Left Are Joining Hands and Leading Us to Woke War III\n\nhttps://t.co/bMsnzqx9SR"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1566632287860670464"
+                ],
+                "id": "1566632287860670464",
+                "text": "Love is Giving first Taking later.\n\nKoGuan Dao is love. \n\nKoGuan Dao is Giving first Taking later.\n\nGiving first and Taking later principle in quantum superposition is our Ancestor Qbit(00,+,-).\n\nOur Ancestor Qbit computes, simulates and projects Existence within Itself. https://t.co/9Z4bXohAh2"
+            }
+        ]
+    },
+    "meta": {
+        "next_token": "R44MPBU7FOMHGZZZ",
+        "result_count": 5
+    }
+}{
+    "data": [
+        {
+            "created_at": "2021-06-01T16:34:27.000Z",
+            "description": "Come on in, Twitter Blue members. Follow for a heads up on new features and to get support.",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "help.twitter.com/using-twitter/\u2026",
+                            "end": 23,
+                            "expanded_url": "https://help.twitter.com/using-twitter/twitter-blue",
+                            "start": 0,
+                            "url": "https://t.co/YhGUfs5vnN"
+                        }
+                    ]
+                }
+            },
+            "id": "1399766153053061121",
+            "location": "Twitter HQ",
+            "name": "Twitter Blue",
+            "pinned_tweet_id": "1575590534529556480",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1484226604104486912/dW26JJSc_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 146343,
+                "following_count": 0,
+                "listed_count": 540,
+                "tweet_count": 1162
+            },
+            "url": "https://t.co/YhGUfs5vnN",
+            "username": "TwitterBlue",
+            "verified": true
+        },
+        {
+            "created_at": "2007-03-14T04:14:58.000Z",
+            "description": "VC @craft_ventures Bestie @theallinpod Founder @getcallin",
+            "entities": {
+                "description": {
+                    "mentions": [
+                        {
+                            "end": 18,
+                            "start": 3,
+                            "username": "craft_ventures"
+                        },
+                        {
+                            "end": 38,
+                            "start": 26,
+                            "username": "theallinpod"
+                        },
+                        {
+                            "end": 57,
+                            "start": 47,
+                            "username": "getcallin"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "sacks.substack.com",
+                            "end": 23,
+                            "expanded_url": "http://sacks.substack.com",
+                            "start": 0,
+                            "url": "https://t.co/VWe3GFbxF2"
+                        }
+                    ]
+                }
+            },
+            "id": "1137701",
+            "location": "San Francisco",
+            "name": "David Sacks",
+            "pinned_tweet_id": "1577421981535784961",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1398157893774413825/vQ-FwRtP_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 428297,
+                "following_count": 2927,
+                "listed_count": 5724,
+                "tweet_count": 8698
+            },
+            "url": "https://t.co/VWe3GFbxF2",
+            "username": "DavidSacks",
+            "verified": true
+        },
+        {
+            "created_at": "2018-05-21T07:56:07.000Z",
+            "description": "KoGuan Law School, the only living Chinese has a school named after him in China; XuanYuan2.0 powered by KQID; The 3rd Largest individual shareholder of Tesla.",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "SHI.com",
+                            "end": 23,
+                            "expanded_url": "http://SHI.com",
+                            "start": 0,
+                            "url": "https://t.co/TS8S0qjaiG"
+                        }
+                    ]
+                }
+            },
+            "id": "998472493605076993",
+            "location": "USA",
+            "name": "KoGuan Leo",
+            "pinned_tweet_id": "1566632287860670464",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1164790480623656960/45kIk3WO_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 29856,
+                "following_count": 220,
+                "listed_count": 213,
+                "tweet_count": 1348
+            },
+            "url": "https://t.co/TS8S0qjaiG",
+            "username": "KoguanLeo",
+            "verified": false
+        },
+        {
+            "created_at": "2014-05-28T21:52:53.000Z",
+            "description": "Known as Mad Max for my unorthodox ideas and passion for adventure, my scientific interests range from artificial intelligence to the ultimate nature of reality",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "space.mit.edu/home/tegmark/",
+                            "end": 23,
+                            "expanded_url": "http://space.mit.edu/home/tegmark/",
+                            "start": 0,
+                            "url": "https://t.co/sJZf2ouf4o"
+                        }
+                    ]
+                }
+            },
+            "id": "2530947115",
+            "location": "MIT",
+            "name": "Max Tegmark",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/471772020963700736/bYpXSErt_normal.jpeg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 90447,
+                "following_count": 14,
+                "listed_count": 1440,
+                "tweet_count": 743
+            },
+            "url": "https://t.co/sJZf2ouf4o",
+            "username": "tegmark",
+            "verified": false
+        },
+        {
+            "created_at": "2013-03-27T18:13:53.000Z",
+            "description": "Tesla, SpaceX, Elon Musk, and #FutureTech Go behind the scenes @TeslaratiTeam",
+            "entities": {
+                "description": {
+                    "hashtags": [
+                        {
+                            "end": 41,
+                            "start": 30,
+                            "tag": "FutureTech"
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "end": 77,
+                            "start": 63,
+                            "username": "TeslaratiTeam"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "teslarati.com",
+                            "end": 23,
+                            "expanded_url": "https://www.teslarati.com/",
+                            "start": 0,
+                            "url": "https://t.co/Pwxbo5WHot"
+                        }
+                    ]
+                }
+            },
+            "id": "1308211178",
+            "location": "California",
+            "name": "TESLARATI",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/967139929888243712/kpeiQiVn_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 684903,
+                "following_count": 63,
+                "listed_count": 2371,
+                "tweet_count": 19663
+            },
+            "url": "https://t.co/Pwxbo5WHot",
+            "username": "Teslarati",
+            "verified": false
+        }
+    ],
+    "includes": {
+        "tweets": [
+            {
+                "edit_history_tweet_ids": [
+                    "1575590109000323073",
+                    "1575590534529556480"
+                ],
+                "id": "1575590534529556480",
+                "text": "hello\n\nthis is a test to make sure the edit button works, we\u2019ll let you know how it goes https://t.co/XbZmX572Xc"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1577421981535784961"
+                ],
+                "id": "1577421981535784961",
+                "text": "My latest op-ed for Newsweek: \n\nNeocons and the Woke Left Are Joining Hands and Leading Us to Woke War III\n\nhttps://t.co/bMsnzqx9SR"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1566632287860670464"
+                ],
+                "id": "1566632287860670464",
+                "text": "Love is Giving first Taking later.\n\nKoGuan Dao is love. \n\nKoGuan Dao is Giving first Taking later.\n\nGiving first and Taking later principle in quantum superposition is our Ancestor Qbit(00,+,-).\n\nOur Ancestor Qbit computes, simulates and projects Existence within Itself. https://t.co/9Z4bXohAh2"
+            }
+        ]
+    },
+    "meta": {
+        "next_token": "R44MPBU7FOMHGZZZ",
+        "result_count": 5
+    }
+}{
+    "data": [
+        {
+            "created_at": "2007-02-20T14:35:54.000Z",
+            "description": "What's happening?!",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "about.twitter.com",
+                            "end": 23,
+                            "expanded_url": "https://about.twitter.com/",
+                            "start": 0,
+                            "url": "https://t.co/DAtOo6uuHk"
+                        }
+                    ]
+                }
+            },
+            "id": "783214",
+            "location": "everywhere",
+            "name": "Twitter",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1488548719062654976/u6qfBBkF_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 64020927,
+                "following_count": 6,
+                "listed_count": 87583,
+                "tweet_count": 15045
+            },
+            "url": "https://t.co/DAtOo6uuHk",
+            "username": "Twitter",
+            "verified": true
+        },
+        {
+            "created_at": "2008-08-04T19:44:20.000Z",
+            "description": "Senior Space Editor at Ars Technica. Likes rockets. Author of the acclaimed book LIFTOFF, on the origins of SpaceX: https://t.co/BwN7Xg5WOK",
+            "entities": {
+                "description": {
+                    "urls": [
+                        {
+                            "display_url": "bit.ly/LiftoffbyEricB\u2026",
+                            "end": 139,
+                            "expanded_url": "https://bit.ly/LiftoffbyEricBerger",
+                            "start": 116,
+                            "url": "https://t.co/BwN7Xg5WOK"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "arstechnica.com",
+                            "end": 23,
+                            "expanded_url": "http://www.arstechnica.com",
+                            "start": 0,
+                            "url": "https://t.co/UzwlclzpyW"
+                        }
+                    ]
+                }
+            },
+            "id": "15726728",
+            "location": "Houston, TX",
+            "name": "Eric Berger",
+            "pinned_tweet_id": "1310591955374665729",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1365795824127651845/d6DJqa7S_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 248587,
+                "following_count": 733,
+                "listed_count": 3228,
+                "tweet_count": 53866
+            },
+            "url": "https://t.co/UzwlclzpyW",
+            "username": "SciGuySpace",
+            "verified": true
+        },
+        {
+            "created_at": "2012-02-09T19:58:01.000Z",
+            "description": "Nature Portfolio\u2019s high-quality products and services across the life, physical, chemical and applied sciences is dedicated to serving the scientific community.",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "go.nature.com/natureportfolio",
+                            "end": 23,
+                            "expanded_url": "http://go.nature.com/natureportfolio",
+                            "start": 0,
+                            "url": "https://t.co/1POUQw5gov"
+                        }
+                    ]
+                }
+            },
+            "id": "487833518",
+            "location": "London",
+            "name": "Nature Portfolio",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1393205274887049219/CpCGQiVy_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 2309569,
+                "following_count": 2235,
+                "listed_count": 12430,
+                "tweet_count": 19751
+            },
+            "url": "https://t.co/1POUQw5gov",
+            "username": "NaturePortfolio",
+            "verified": true
+        },
+        {
+            "created_at": "2008-10-31T18:27:47.000Z",
+            "description": "The latest stories in science, brought to you by the @ScienceMagazine news team.",
+            "entities": {
+                "description": {
+                    "mentions": [
+                        {
+                            "end": 69,
+                            "start": 53,
+                            "username": "ScienceMagazine"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "science.org/news",
+                            "end": 23,
+                            "expanded_url": "https://www.science.org/news",
+                            "start": 0,
+                            "url": "https://t.co/RKFDHHARXL"
+                        }
+                    ]
+                }
+            },
+            "id": "17089636",
+            "location": "Washington, D.C.",
+            "name": "News from Science",
+            "pinned_tweet_id": "1571537063148765186",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1001918076164759552/KBl8u8ia_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 480412,
+                "following_count": 720,
+                "listed_count": 5503,
+                "tweet_count": 32020
+            },
+            "url": "https://t.co/RKFDHHARXL",
+            "username": "NewsfromScience",
+            "verified": true
+        },
+        {
+            "created_at": "2009-04-17T11:37:12.000Z",
+            "description": "The world's leading outlet for cutting-edge research in all areas of science. Follow @NewsfromScience for stories from our news team.",
+            "entities": {
+                "description": {
+                    "mentions": [
+                        {
+                            "end": 101,
+                            "start": 85,
+                            "username": "NewsfromScience"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "science.org",
+                            "end": 23,
+                            "expanded_url": "https://www.science.org/",
+                            "start": 0,
+                            "url": "https://t.co/2Xer0gk0P7"
+                        }
+                    ]
+                }
+            },
+            "id": "32372834",
+            "location": "Washington, DC & Cambridge, UK",
+            "name": "Science Magazine",
+            "pinned_tweet_id": "1580620646996144129",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1001918231752429568/wUNPvDdW_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 3080644,
+                "following_count": 494,
+                "listed_count": 19605,
+                "tweet_count": 33354
+            },
+            "url": "https://t.co/2Xer0gk0P7",
+            "username": "ScienceMagazine",
+            "verified": true
+        }
+    ],
+    "includes": {
+        "tweets": [
+            {
+                "edit_history_tweet_ids": [
+                    "1310591955374665729"
+                ],
+                "id": "1310591955374665729",
+                "text": "The remarkable story of how @elonmusk and his small team reached orbit in 2008 has gone largely untold\u2014until now. I\u2019m thrilled to say my book on the origins of SpaceX, Liftoff, will be published by William Morrow on March 2, 2021. Preorder now: https://t.co/tF26ug8p3y https://t.co/9Zdvrw8RSt"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1571537063148765186"
+                ],
+                "id": "1571537063148765186",
+                "text": "Starship will be the biggest rocket ever. Are space scientists ready to take advantage of it? \n\nLearn more: https://t.co/2JnMPtcL40 @ScienceVisuals https://t.co/3KbLqvL1Zf"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1580620646996144129"
+                ],
+                "id": "1580620646996144129",
+                "text": "Like many viruses, #SARSCoV2 deploys a molecular arsenal to neutralize the host's immune response. \n\nThis week in Science, explore how the virus wields versatile proteins to foil our immune system\u2019s counterattack: https://t.co/EagB1ssza5 https://t.co/YPUVkyujSj"
+            }
+        ]
+    },
+    "meta": {
+        "next_token": "LIHU3LVKLOH1GZZZ",
+        "previous_token": "7DJ05IO8779UEZZZ",
+        "result_count": 5
+    }
+}{
+    "data": [
+        {
+            "created_at": "2009-01-26T22:21:06.000Z",
+            "description": "Join me weekdays LIVE on RUMBLE | 5:00 PM (BST) | 12:00 PM (EDT)\nhttps://t.co/AhoMyFutkf",
+            "entities": {
+                "description": {
+                    "urls": [
+                        {
+                            "display_url": "linktr.ee/russellbrand",
+                            "end": 88,
+                            "expanded_url": "http://linktr.ee/russellbrand",
+                            "start": 65,
+                            "url": "https://t.co/AhoMyFutkf"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "russellbrand.com",
+                            "end": 23,
+                            "expanded_url": "https://russellbrand.com",
+                            "start": 0,
+                            "url": "https://t.co/ptDU6r0OWP"
+                        }
+                    ]
+                }
+            },
+            "id": "19562228",
+            "name": "Russell Brand",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1575093292567613440/XUXCdtzX_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 11160540,
+                "following_count": 653,
+                "listed_count": 46667,
+                "tweet_count": 16818
+            },
+            "url": "https://t.co/ptDU6r0OWP",
+            "username": "rustyrockets",
+            "verified": true
+        },
+        {
+            "created_at": "2009-04-07T15:40:56.000Z",
+            "description": "Launched: Dec. 25, 2021. First images revealed: July 12, 2022. Follow along as the world's most powerful space telescope continues to #UnfoldTheUniverse!",
+            "entities": {
+                "description": {
+                    "hashtags": [
+                        {
+                            "end": 152,
+                            "start": 134,
+                            "tag": "UnfoldTheUniverse"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "webb.nasa.gov",
+                            "end": 23,
+                            "expanded_url": "https://webb.nasa.gov",
+                            "start": 0,
+                            "url": "https://t.co/ZpTf8zeWa8"
+                        }
+                    ]
+                }
+            },
+            "id": "29472803",
+            "location": "Lagrange Point 2",
+            "name": "NASA Hallo-Webb Telescope \ud83d\udd78\ud83d\udd77\ud83c\udf83",
+            "pinned_tweet_id": "1582736008260440066",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/685182791496134658/Wmyak8D6_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 2515077,
+                "following_count": 77,
+                "listed_count": 10628,
+                "tweet_count": 10178
+            },
+            "url": "https://t.co/ZpTf8zeWa8",
+            "username": "NASAWebb",
+            "verified": true
+        },
+        {
+            "created_at": "2009-09-09T14:21:28.000Z",
+            "description": "UN Special Envoy, Tesla Board, Danone Mission committee, The B Team, Milken Institute, CFA Institute, HBS, Oxford, Kellogg, Cambridge,",
+            "id": "72862939",
+            "location": "Stranded in Tokyo",
+            "name": "HIRO MIZUNO",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1561173333869473792/5rybkfKE_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 75310,
+                "following_count": 700,
+                "listed_count": 642,
+                "tweet_count": 11844
+            },
+            "username": "hiromichimizuno",
+            "verified": false
+        },
+        {
+            "created_at": "2009-04-23T20:27:41.000Z",
+            "description": "Author of The Code Breaker, The Innovators, Leonardo, Franklin, Einstein, Steve Jobs. Professor @Tulane. Formerly Time, CNN, & Aspen Institute. Next: Elon Musk.",
+            "entities": {
+                "description": {
+                    "mentions": [
+                        {
+                            "end": 103,
+                            "start": 96,
+                            "username": "Tulane"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "isaacson.tulane.edu",
+                            "end": 23,
+                            "expanded_url": "http://isaacson.tulane.edu",
+                            "start": 0,
+                            "url": "https://t.co/FLRMtsDTve"
+                        }
+                    ]
+                }
+            },
+            "id": "34719119",
+            "location": "New Orleans, LA",
+            "name": "Walter Isaacson",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1208967434503409665/3c7F4X92_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 189508,
+                "following_count": 571,
+                "listed_count": 1664,
+                "tweet_count": 6651
+            },
+            "url": "https://t.co/FLRMtsDTve",
+            "username": "WalterIsaacson",
+            "verified": true
+        },
+        {
+            "created_at": "2006-07-16T22:01:55.000Z",
+            "description": "@OpenAI",
+            "entities": {
+                "description": {
+                    "mentions": [
+                        {
+                            "end": 7,
+                            "start": 0,
+                            "username": "OpenAI"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "blog.samaltman.com",
+                            "end": 23,
+                            "expanded_url": "http://blog.samaltman.com",
+                            "start": 0,
+                            "url": "https://t.co/teHmy8mwEz"
+                        }
+                    ]
+                }
+            },
+            "id": "1605",
+            "location": "SF",
+            "name": "Sam Altman",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/804990434455887872/BG0Xh7Oa_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 967417,
+                "following_count": 761,
+                "listed_count": 8258,
+                "tweet_count": 5664
+            },
+            "url": "https://t.co/teHmy8mwEz",
+            "username": "sama",
+            "verified": true
+        }
+    ],
+    "includes": {
+        "tweets": [
+            {
+                "edit_history_tweet_ids": [
+                    "1582736008260440066"
+                ],
+                "id": "1582736008260440066",
+                "text": "This is what you\u2019ve waited for.\n\nJourney with us through Webb\u2019s breathtaking view of the Pillars of Creation, where scores of newly formed stars glisten like dewdrops among floating, translucent columns of gas and dust: https://t.co/5ea1kCzU5x\n\nHere\u2019s your guided tour \u2b07\ufe0f https://t.co/jFiDDrMUPl"
+            }
+        ]
+    },
+    "meta": {
+        "next_token": "0VJCKES7S8B1GZZZ",
+        "previous_token": "5KOGF6GSGNFEEZZZ",
+        "result_count": 5
+    }
+}{
+    "data": [
+        {
+            "created_at": "2021-06-01T16:34:27.000Z",
+            "description": "Come on in, Twitter Blue members. Follow for a heads up on new features and to get support.",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "help.twitter.com/using-twitter/\u2026",
+                            "end": 23,
+                            "expanded_url": "https://help.twitter.com/using-twitter/twitter-blue",
+                            "start": 0,
+                            "url": "https://t.co/YhGUfs5vnN"
+                        }
+                    ]
+                }
+            },
+            "id": "1399766153053061121",
+            "location": "Twitter HQ",
+            "name": "Twitter Blue",
+            "pinned_tweet_id": "1575590534529556480",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1484226604104486912/dW26JJSc_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 146343,
+                "following_count": 0,
+                "listed_count": 540,
+                "tweet_count": 1162
+            },
+            "url": "https://t.co/YhGUfs5vnN",
+            "username": "TwitterBlue",
+            "verified": true
+        },
+        {
+            "created_at": "2007-03-14T04:14:58.000Z",
+            "description": "VC @craft_ventures Bestie @theallinpod Founder @getcallin",
+            "entities": {
+                "description": {
+                    "mentions": [
+                        {
+                            "end": 18,
+                            "start": 3,
+                            "username": "craft_ventures"
+                        },
+                        {
+                            "end": 38,
+                            "start": 26,
+                            "username": "theallinpod"
+                        },
+                        {
+                            "end": 57,
+                            "start": 47,
+                            "username": "getcallin"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "sacks.substack.com",
+                            "end": 23,
+                            "expanded_url": "http://sacks.substack.com",
+                            "start": 0,
+                            "url": "https://t.co/VWe3GFbxF2"
+                        }
+                    ]
+                }
+            },
+            "id": "1137701",
+            "location": "San Francisco",
+            "name": "David Sacks",
+            "pinned_tweet_id": "1577421981535784961",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1398157893774413825/vQ-FwRtP_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 428297,
+                "following_count": 2927,
+                "listed_count": 5724,
+                "tweet_count": 8698
+            },
+            "url": "https://t.co/VWe3GFbxF2",
+            "username": "DavidSacks",
+            "verified": true
+        },
+        {
+            "created_at": "2018-05-21T07:56:07.000Z",
+            "description": "KoGuan Law School, the only living Chinese has a school named after him in China; XuanYuan2.0 powered by KQID; The 3rd Largest individual shareholder of Tesla.",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "SHI.com",
+                            "end": 23,
+                            "expanded_url": "http://SHI.com",
+                            "start": 0,
+                            "url": "https://t.co/TS8S0qjaiG"
+                        }
+                    ]
+                }
+            },
+            "id": "998472493605076993",
+            "location": "USA",
+            "name": "KoGuan Leo",
+            "pinned_tweet_id": "1566632287860670464",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/1164790480623656960/45kIk3WO_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 29856,
+                "following_count": 220,
+                "listed_count": 213,
+                "tweet_count": 1348
+            },
+            "url": "https://t.co/TS8S0qjaiG",
+            "username": "KoguanLeo",
+            "verified": false
+        },
+        {
+            "created_at": "2014-05-28T21:52:53.000Z",
+            "description": "Known as Mad Max for my unorthodox ideas and passion for adventure, my scientific interests range from artificial intelligence to the ultimate nature of reality",
+            "entities": {
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "space.mit.edu/home/tegmark/",
+                            "end": 23,
+                            "expanded_url": "http://space.mit.edu/home/tegmark/",
+                            "start": 0,
+                            "url": "https://t.co/sJZf2ouf4o"
+                        }
+                    ]
+                }
+            },
+            "id": "2530947115",
+            "location": "MIT",
+            "name": "Max Tegmark",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/471772020963700736/bYpXSErt_normal.jpeg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 90447,
+                "following_count": 14,
+                "listed_count": 1440,
+                "tweet_count": 743
+            },
+            "url": "https://t.co/sJZf2ouf4o",
+            "username": "tegmark",
+            "verified": false
+        },
+        {
+            "created_at": "2013-03-27T18:13:53.000Z",
+            "description": "Tesla, SpaceX, Elon Musk, and #FutureTech Go behind the scenes @TeslaratiTeam",
+            "entities": {
+                "description": {
+                    "hashtags": [
+                        {
+                            "end": 41,
+                            "start": 30,
+                            "tag": "FutureTech"
+                        }
+                    ],
+                    "mentions": [
+                        {
+                            "end": 77,
+                            "start": 63,
+                            "username": "TeslaratiTeam"
+                        }
+                    ]
+                },
+                "url": {
+                    "urls": [
+                        {
+                            "display_url": "teslarati.com",
+                            "end": 23,
+                            "expanded_url": "https://www.teslarati.com/",
+                            "start": 0,
+                            "url": "https://t.co/Pwxbo5WHot"
+                        }
+                    ]
+                }
+            },
+            "id": "1308211178",
+            "location": "California",
+            "name": "TESLARATI",
+            "profile_image_url": "https://pbs.twimg.com/profile_images/967139929888243712/kpeiQiVn_normal.jpg",
+            "protected": false,
+            "public_metrics": {
+                "followers_count": 684903,
+                "following_count": 63,
+                "listed_count": 2371,
+                "tweet_count": 19663
+            },
+            "url": "https://t.co/Pwxbo5WHot",
+            "username": "Teslarati",
+            "verified": false
+        }
+    ],
+    "includes": {
+        "tweets": [
+            {
+                "edit_history_tweet_ids": [
+                    "1575590109000323073",
+                    "1575590534529556480"
+                ],
+                "id": "1575590534529556480",
+                "text": "hello\n\nthis is a test to make sure the edit button works, we\u2019ll let you know how it goes https://t.co/XbZmX572Xc"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1577421981535784961"
+                ],
+                "id": "1577421981535784961",
+                "text": "My latest op-ed for Newsweek: \n\nNeocons and the Woke Left Are Joining Hands and Leading Us to Woke War III\n\nhttps://t.co/bMsnzqx9SR"
+            },
+            {
+                "edit_history_tweet_ids": [
+                    "1566632287860670464"
+                ],
+                "id": "1566632287860670464",
+                "text": "Love is Giving first Taking later.\n\nKoGuan Dao is love. \n\nKoGuan Dao is Giving first Taking later.\n\nGiving first and Taking later principle in quantum superposition is our Ancestor Qbit(00,+,-).\n\nOur Ancestor Qbit computes, simulates and projects Existence within Itself. https://t.co/9Z4bXohAh2"
+            }
+        ]
+    },
+    "meta": {
+        "next_token": "R44MPBU7FOMHGZZZ",
+        "result_count": 5
+    }
+}
