@@ -1,8 +1,8 @@
 House 	Name 	main Twitter Handle 	Party 	
-1 	David Brock Smith 	@davidbrocksmith 	R 	
-2 	Gary Leif 	@realgaryleif 	R 	
-3 	Lily Morgan 		R 	
-4 	Duane Stark 	@duane_stark 	R 	
+1 	David Brock Smith 	@davidbrocksmith 	R 	 	 	 	
+2 	Gary Leif 	@realgaryleif 	R
+3 	Lily Morgan 		R
+4 	Duane Stark 	@duane_stark 	R
 5 	Pam Marsh 	@pammarshorhd5 	D 	
 6 	Kim Wallan 		R 	
 7 	Cedric Hayden 	@cedrichaydenor 	R 	

@@ -152,7 +152,9 @@ class ctools:
                                                 "likes" :       {
                                                                         "liking" : GLOBAL_FILE_PATH + "likes.txt",
                                                                         "liked" : GLOBAL_FILE_PATH + "likes.txt",
-                                                                }
+                                                                },
+
+                                                "testfile" : GLOBAL_FILE_PATH + "testfile.txt"
                                                 
                                         },
 
@@ -178,7 +180,7 @@ class ctools:
                                                                         "tweet_id_list" : GLOBAL_FILE_PATH + "tweet_id_list.txt"
                                                                 },      
                                                                         
-                                                "testfile" : "elondump.txt",
+                                                "testfile" : GLOBAL_FILE_PATH + "raw_list.txt",
                                         }
                         }
 

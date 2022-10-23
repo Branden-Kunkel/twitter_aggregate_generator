@@ -1,0 +1,80 @@
+{
+    "data": [
+        {
+            "edit_history_tweet_ids": [
+                "1584227656538939392"
+            ],
+            "id": "1584227656538939392",
+            "text": "@SKMorefield Interesting"
+        },
+        {
+            "edit_history_tweet_ids": [
+                "1584175648146620421"
+            ],
+            "id": "1584175648146620421",
+            "text": "@pcgamer Great game"
+        },
+        {
+            "edit_history_tweet_ids": [
+                "1584175255425540096"
+            ],
+            "id": "1584175255425540096",
+            "text": "Maybe it was a social media algorithm, not even people"
+        },
+        {
+            "edit_history_tweet_ids": [
+                "1584174386998697985"
+            ],
+            "id": "1584174386998697985",
+            "text": "Think about who might have decided \u201cThe Current Thing\u201d before accepting it"
+        },
+        {
+            "edit_history_tweet_ids": [
+                "1584173256415723521"
+            ],
+            "id": "1584173256415723521",
+            "text": "Who decides \u201cThe Current Thing?\u201d\nReal question. I don\u2019t know."
+        },
+        {
+            "edit_history_tweet_ids": [
+                "1584170458815303680"
+            ],
+            "id": "1584170458815303680",
+            "text": "@andst7 Exactly. WaPo are such hypocrites."
+        },
+        {
+            "edit_history_tweet_ids": [
+                "1584157532209090560"
+            ],
+            "id": "1584157532209090560",
+            "text": "Neuralink show &amp; tell now on Nov 30"
+        },
+        {
+            "edit_history_tweet_ids": [
+                "1584155478229102593"
+            ],
+            "id": "1584155478229102593",
+            "text": "@muskQu0tes @SpaceX Had to be done"
+        },
+        {
+            "edit_history_tweet_ids": [
+                "1583996892530511872"
+            ],
+            "id": "1583996892530511872",
+            "text": "@Gfilche @MartinViecha We\u2019ve come a long way"
+        },
+        {
+            "edit_history_tweet_ids": [
+                "1583978878305173505"
+            ],
+            "id": "1583978878305173505",
+            "text": "i know\n|nothing|\nis forever"
+        }
+    ],
+    "meta": {
+        "newest_id": "1584227656538939392",
+        "next_token": "7140dibdnow9c7btw423wysgp2110mirxydxqv39ulxrp",
+        "oldest_id": "1583978878305173505",
+        "result_count": 10
+    }
+}

@@ -17,7 +17,7 @@ class user_profile(cmd.Cmd):
 
 
 
-    def do_run(self, arg):
+    def do_profile(self, arg):
 
         print("\nRunning {}\n".format(self.prompt))
 
@@ -26,41 +26,55 @@ class user_profile(cmd.Cmd):
                 if self.__conf.user_profile_params["search_by_username?"]:
                     with open(self.__conf.file_IO["in"]["user_profile"]["username_list"], mode='r', ) as readfile:
                         for line in readfile:
-                            self.__dump_info(self.__retrieve_info(self.__url_build(usernames=line.strip())))
+                            request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
+                            self.__dump_info(request)
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     with open(self.__conf.file_IO["in"]["user_profile"]["user_id_list"], mode='r') as readfile:
                         for line in readfile:
-                            self.__dump_info(self.__retrieve_info(self.__url_build(user_id=line.strip())))
+                            request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
+                            self.__dump_info(request)
+                return request
             elif self.__conf.user_profile_params["read_from_file?"] == False:
                 if self.__conf.user_profile_params["search_by_username?"]:
-                    self.__dump_info(self.__retrieve_info(self.__url_build(usernames=self.__conf.user_profile_params["usernames"])))
+                    request = self.__retrieve_info(self.__url_build(usernames=self.__conf.user_profile_params["usernames"]))
+                    self.__dump_info(request)
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
-                        self.__dump_info(self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"])))
+                    request = self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"]))
+                    self.__dump_info(request)
+            
+            self.cmdloop()
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
                 print("Error: File not found...")
                 print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
-                return
         
         except KeyError as key_error:
             print("UH-OH! Bad key in: " + str(key_error.args))
-            return
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
-            return
+
     
 
     
     def do_list(self, arg):
         print("\n__configurations__")
         param_list = self.__conf.user_profile_params
+        print("\n   request_params:")
         for value in param_list:
-            print(str(value) + " = " + str(param_list[value]))
+            print("      " + str(value) + " = " + str(param_list[value]))
+        files = self.__conf.file_IO
+        print("\n   out:")
+        for value in files["out"]["user_profile"]:
+            print("      " + str(value) + " = " + str(files["out"]["user_profile"][value]))
+        print("\n   in:")
+        for value in files["in"]["user_profile"]:
+            print("      " + str(value) + " = " + str(files["in"]["user_profile"][value]))
+        print("\n")
 
-
-
+            
+        
     def do_help(self, arg):
         print("help page here!")
 
@@ -127,7 +141,7 @@ class user_profile(cmd.Cmd):
         param_table = self.__conf.user_profile_params["request_params"]
 
         for key in param_table:
-            if param_table[key] == None:
+            if param_table[key] == None or "None":
                 pass
             else:
                 params.update({key : param_table[key]})
@@ -222,11 +236,11 @@ class tweet_lookup(cmd.Cmd):
         print("\nRunning {}\n".format(self.prompt))
 
         try:
-            if self.__conf.tweet_lookup_params["read_from_file?"]:
+            if self.__conf.tweet_lookup_params["read_from_file?"] == True or "True":
                 with open(self.__conf.file_IO["in"]["tweet_lookup"]["tweet_id_list"], mode='r') as readfile:
                     for line in readfile:
                         self.__dump_info(self.__retrieve_info(self.__url_build(line.strip())))
-            else:
+            elif self.__conf.tweet_lookup_params["read_from_file?"] == False or "False":
                 self.__dump_info(self.__retrieve_info(self.__url_build(self.__conf.tweet_lookup_params["tweet_ids"])))
 
         except FileNotFoundError as file_error:
@@ -244,8 +258,17 @@ class tweet_lookup(cmd.Cmd):
     def do_list(self, arg):
         print("\n__configurations__")
         param_list = self.__conf.tweet_lookup_params
+        print("\n   request_params:")
         for value in param_list:
-            print(str(value) + " = " + str(param_list[value]))
+            print("      " + str(value) + " = " + str(param_list[value]))
+        files = self.__conf.file_IO
+        print("\n   out:")
+        for value in files["out"]["tweet_lookup"]:
+            print("      " + str(value) + " = " + str(files["out"]["tweet_lookup"][value]))
+        print("\n   in:")
+        for value in files["in"]["tweet_lookup"]:
+            print("      " + str(value) + " = " + str(files["in"]["tweet_lookup"][value]))
+        print("\n")
 
 
 
@@ -325,7 +348,7 @@ class tweet_lookup(cmd.Cmd):
             param_table = self.__conf.tweet_lookup_params["request_params"]
 
             for key in param_table:
-                if param_table[key] == None:
+                if param_table[key] == None or "None":
                     pass
                 else:
                     params.update({key : param_table[key]})
@@ -531,7 +554,7 @@ class tweet_timeline(cmd.Cmd):
         param_table = self.__conf.tweet_timeline_params["request_params"]
 
         for key in param_table:
-            if param_table[key] == None:
+            if param_table[key] == None or "None":
                 pass
             else:
                 params.update({key : param_table[key]})
@@ -813,7 +836,7 @@ class follows(cmd.Cmd):
         param_table = self.__conf.user_follows_params["request_params"]
 
         for key in param_table:
-            if param_table[key] == None:
+            if param_table[key] == None or "None":
                 pass
             else:
                 params.update({key : param_table[key]})
@@ -1010,21 +1033,30 @@ class likes(cmd.Cmd):
         os.system("python3 infoCLI.py")
 
 
+
     def do_timeline(self, arg):
         console = tweet_timeline()
         console.cmdloop()
+
+
 
     def do_tweet(self, arg):
         console = tweet_lookup()
         console.cmdloop()
 
+
+
     def do_follows(self, arg):
         console = follows()
         console.cmdloop()
 
+
+
     def do_user(self, arg):
         console = user_profile()
         console.cmdloop()
+
+
 
     def __param_engine(self, param_type):
 
@@ -1037,13 +1069,13 @@ class likes(cmd.Cmd):
 
         if param_type == "liking":
             for key in liking_table:
-                if liking_table[key] == None:
+                if liking_table[key] == None or "None":
                     pass
                 else:
                     params.update({key : liking_table[key]})
         elif param_type == "liked":
             for key in liked_table:
-                if liked_table[key] == None:
+                if liked_table[key] == None or "None":
                     pass
                 else:
                     params.update({key : liked_table[key]})
