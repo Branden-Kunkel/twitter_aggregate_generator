@@ -8,13 +8,14 @@ import sys
 import cmd 
     
 
+
 class user_profile(cmd.Cmd):
+
     """handle requests for user profiles"""
 
 
     prompt = "MODULE@INFO-user: "
     __conf = config_tools.ctools()
-
 
 
     def do_profile(self, arg):
@@ -28,21 +29,35 @@ class user_profile(cmd.Cmd):
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
                             self.__dump_info(request)
+                    return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     with open(self.__conf.file_IO["in"]["user_profile"]["user_id_list"], mode='r') as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
                             self.__dump_info(request)
-                return request
+                    return
+                else:
+                    print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
+                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                    return
             elif self.__conf.user_profile_params["read_from_file?"] == False:
                 if self.__conf.user_profile_params["search_by_username?"]:
                     request = self.__retrieve_info(self.__url_build(usernames=self.__conf.user_profile_params["usernames"]))
                     self.__dump_info(request)
+                    return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     request = self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"]))
                     self.__dump_info(request)
-            
-            self.cmdloop()
+                    return
+                else:
+                    print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
+                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                    return
+            else:
+                print("Invalid param type in: request >> read_from_file?: " + str(self.__conf.user_profile_params["read_from_file?"]))
+                print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                return
+
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
@@ -55,25 +70,93 @@ class user_profile(cmd.Cmd):
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
 
-    
+        self.cmdloop()
+
 
     
     def do_list(self, arg):
-        print("\n__configurations__")
+        print("\n__Configurations__")
         param_list = self.__conf.user_profile_params
-        print("\n   request_params:")
+        print("\n   Request:")
         for value in param_list:
             print("      " + str(value) + " = " + str(param_list[value]))
         files = self.__conf.file_IO
-        print("\n   out:")
+        print("\n   Files:")
+        print("       out:")
         for value in files["out"]["user_profile"]:
-            print("      " + str(value) + " = " + str(files["out"]["user_profile"][value]))
-        print("\n   in:")
+            print("             " + str(value) + " = " + str(files["out"]["user_profile"][value]))
+        print("       in:")
         for value in files["in"]["user_profile"]:
-            print("      " + str(value) + " = " + str(files["in"]["user_profile"][value]))
+            print("             " + str(value) + " = " + str(files["in"]["user_profile"][value]))
+        print("\n   GLOBAL FILE PATH:")
+        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
         print("\n")
 
+
+
+    def do_set(self, arg):
+        
+        args_buff = str(arg)
+        arg_list = args_buff.split()
+
+        try:
+
+            if arg_list[0] in ["request"]:
+                if arg_list[1] in self.__conf.user_profile_params:
+                    if arg_list[1] in ["request_params"]:
+                        if arg_list[2] in self.__conf.user_profile_params["request_params"]:
+                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                                if arg_list[3] == "true":
+                                    self.__conf.user_profile_params[arg_list[1]][arg_list[2]] = True
+                                elif arg_list[3] == "false":
+                                    self.__conf.user_profile_params[arg_list[1]][arg_list[2]] = False
+                                else:
+                                    self.__conf.user_profile_params[arg_list[1]][arg_list[2]] = None
+                            else:
+                                self.__conf.user_profile_params[arg_list[1]][arg_list[2]] = arg_list[3]
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in ["true", "false", "none"]:
+                            if arg_list[2] == "true":
+                                self.__conf.user_profile_params[arg_list[1]] = True
+                            elif arg_list[2] == "false":
+                                self.__conf.user_profile_params[arg_list[1]] = False
+                            else:
+                                self.__conf.user_profile_params[arg_list[1]] = None
+                        else:
+                            self.__conf.user_profile_params[arg_list[1]] = arg_list[2]
+                else:
+                    print("Invalid argument in: " + arg_list[1])
+
+            elif arg_list[0] in ["files"]:
+                if arg_list[1] in ["global"]:
+                    self.__conf.GLOBAL_FILE_PATH = arg_list[2]
+                elif arg_list[1] in self.__conf.file_IO:
+                    if arg_list[1] in ["out"]:
+                        if arg_list[2] in self.__conf.file_IO[arg_list[1]]["user_profile"]:
+                            self.__conf.file_IO[arg_list[1]]["user_profile"][arg_list[2]] = arg_list[3]
+                        else:
+                                print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in self.__conf.file_IO["in"]["user_profile"]:
+                            self.__conf.file_IO["in"]["user_profile"][arg_list[2]] = arg_list[3] 
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                else:
+                    print("Invalid argument in:" + arg_list[1])
+            else:
+                print("Invalid option in: " + arg_list[0])
+        
+            self.do_list(arg=None)
+        
+        except KeyError as key_error:
+            print("UH-OH! Bad key in: " + str(key_error.args))
+
+        except TypeError as t_err:
+            print("Error: Found \'None\' in: " + str(t_err.args))
             
+  
         
     def do_help(self, arg):
         print("help page here!")
@@ -128,20 +211,17 @@ class user_profile(cmd.Cmd):
 
     def do_likes(self, arg):
         console = likes()
-        likes.cmdloop()
+        console.cmdloop()
 
 
 
     def __param_engine(self):
 
-        params =    {
-
-                    }
-
+        params =    {}
         param_table = self.__conf.user_profile_params["request_params"]
 
         for key in param_table:
-            if param_table[key] == None or "None":
+            if param_table[key] == None:
                 pass
             else:
                 params.update({key : param_table[key]})
@@ -181,6 +261,7 @@ class user_profile(cmd.Cmd):
 
         request = requests.get(url, auth=auth, params=params)
         info_out = request.json()
+        prettify = json.dumps(info_out, sort_keys=True, indent=4)
 
         if request.status_code != 200:
             print("Error(s): ")
@@ -191,7 +272,8 @@ class user_profile(cmd.Cmd):
         elif request.status_code == 200:    
             if self.__conf.genopts["verbose?"]:
                 print("\nrequest @ " + url + "\n")
-                print("\nResponse successful!\n")
+                print(prettify + "\n")
+                print("Response successful!\n")
 
             return info_out
 
@@ -201,21 +283,14 @@ class user_profile(cmd.Cmd):
 
         try:
 
-            prettify = json.dumps(json_object, indent=4, sort_keys=True)
-
             with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
                 json.dump(json_object, writefile, indent=4, sort_keys=True)
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
                 print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")
-        
-        if self.__conf.genopts["verbose?"]:
-            print(prettify)
-            print("\nJSON successfully written!\n")
-            return
-        else:
-            return    
+
+        return    
 
 #TODOS
 # Error handling
@@ -231,44 +306,120 @@ class tweet_lookup(cmd.Cmd):
     __conf = config_tools.ctools()
 
 
-    def do_run(self, arg):
+    def do_lookup(self, arg):
 
         print("\nRunning {}\n".format(self.prompt))
 
         try:
-            if self.__conf.tweet_lookup_params["read_from_file?"] == True or "True":
+            if self.__conf.tweet_lookup_params["read_from_file?"]:
                 with open(self.__conf.file_IO["in"]["tweet_lookup"]["tweet_id_list"], mode='r') as readfile:
                     for line in readfile:
                         self.__dump_info(self.__retrieve_info(self.__url_build(line.strip())))
-            elif self.__conf.tweet_lookup_params["read_from_file?"] == False or "False":
-                self.__dump_info(self.__retrieve_info(self.__url_build(self.__conf.tweet_lookup_params["tweet_ids"])))
+            elif self.__conf.tweet_lookup_params["read_from_file?"] == False:
+                self.__dump_info(self.__retrieve_info(self.__url_build(self.__conf.tweet_lookup_params["tweet_id"])))
+                return
+            else:
+                print("Invalid param type in: request >> read_from_file?: " + str(self.__conf.tweet_lookup_params["read_from_file?"]))
+                print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                return
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
                 print("Error: File not found...")
                 print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
+            return
         
         except KeyError as key_error:
             print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
+            return
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
+            return
+
 
 
     def do_list(self, arg):
-        print("\n__configurations__")
+        print("\n__Configurations__")
         param_list = self.__conf.tweet_lookup_params
-        print("\n   request_params:")
+        print("\n   Request:")
         for value in param_list:
             print("      " + str(value) + " = " + str(param_list[value]))
         files = self.__conf.file_IO
-        print("\n   out:")
+        print("\n   Files:")
+        print("       out:")
         for value in files["out"]["tweet_lookup"]:
-            print("      " + str(value) + " = " + str(files["out"]["tweet_lookup"][value]))
-        print("\n   in:")
+            print("             " + str(value) + " = " + str(files["out"]["tweet_lookup"][value]))
+        print("       in:")
         for value in files["in"]["tweet_lookup"]:
-            print("      " + str(value) + " = " + str(files["in"]["tweet_lookup"][value]))
+            print("             " + str(value) + " = " + str(files["in"]["tweet_lookup"][value]))
+        print("\n   GLOBAL FILE PATH:")
+        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
         print("\n")
+
+
+
+    def do_set(self, arg):
+
+        args_buff = str(arg)
+        arg_list = args_buff.split()
+
+        try:
+
+            if arg_list[0] in ["request"]:
+                if arg_list[1] in self.__conf.tweet_lookup_params:
+                    if arg_list[1] in ["request_params"]:
+                        if arg_list[2] in self.__conf.tweet_lookup_params["request_params"]:
+                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                                if arg_list[3] == "true":
+                                    self.__conf.tweet_lookup_params[arg_list[1]][arg_list[2]] = True
+                                elif arg_list[3] == "false":
+                                    self.__conf.tweet_lookup_params[arg_list[1]][arg_list[2]] = False
+                                else:
+                                    self.__conf.tweet_lookup_params[arg_list[1]][arg_list[2]] = None
+                            else:
+                                self.__conf.tweet_lookup_params[arg_list[1]][arg_list[2]] = arg_list[3]
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in ["true", "false", "none"]:
+                            if arg_list[2] == "true":
+                                self.__conf.tweet_lookup_params[arg_list[1]] = True
+                            elif arg_list[2] == "false":
+                                self.__conf.tweet_lookup_params[arg_list[1]] = False
+                            else:
+                                self.__conf.tweet_lookup_params[arg_list[1]] = None
+                        else:
+                            self.__conf.tweet_lookup_params[arg_list[1]] = arg_list[2]
+                else:
+                    print("Invalid argument in: " + arg_list[1])
+
+            elif arg_list[0] in ["files"]:
+                if arg_list[1] in ["global"]:
+                    self.__conf.GLOBAL_FILE_PATH = arg_list[2]
+                elif arg_list[1] in self.__conf.file_IO:
+                    if arg_list[1] in ["out"]:
+                        if arg_list[2] in self.__conf.file_IO[arg_list[1]]["tweet_lookup"]:
+                            self.__conf.file_IO[arg_list[1]]["tweet_lookup"][arg_list[2]] = arg_list[3]
+                        else:
+                                print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in self.__conf.file_IO["in"]["tweet_lookup"]:
+                            self.__conf.file_IO["in"]["tweet_lookup"][arg_list[2]] = arg_list[3] 
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                else:
+                    print("Invalid argument in:" + arg_list[1])
+            else:
+                print("Invalid option in: " + arg_list[0])
+        
+            self.do_list(arg=None)
+        
+        except KeyError as key_error:
+            print("UH-OH! Bad key in: " + str(key_error.args))
+
+        except TypeError as t_err:
+            print("Error: Found \'None\' in: " + str(t_err.args))
 
 
 
@@ -295,7 +446,7 @@ class tweet_lookup(cmd.Cmd):
 
 
     def do_exit(self, arg):
-        print("Terminating TAG...")
+        print("Terminating")
         sleep(2)
         sys.exit()
 
@@ -327,7 +478,7 @@ class tweet_lookup(cmd.Cmd):
 
     def do_likes(self, arg):
         console = likes()
-        likes.cmdloop()
+        console.cmdloop()
 
 
 
@@ -344,7 +495,6 @@ class tweet_lookup(cmd.Cmd):
     def __param_engine(self):
 
             params = {}
-
             param_table = self.__conf.tweet_lookup_params["request_params"]
 
             for key in param_table:
@@ -374,6 +524,7 @@ class tweet_lookup(cmd.Cmd):
         request = requests.get(url, auth=auth, params=params)
 
         info_out = request.json()
+        prettify = json.dumps(info_out, sort_keys=True, indent=4)
 
         if request.status_code != 200:
             
@@ -385,8 +536,9 @@ class tweet_lookup(cmd.Cmd):
         elif request.status_code == 200:
             
             if self.__conf.genopts["verbose?"]:
-                print("@" + url)
-                print("Response successful!")
+                print("\nrequest @ " + url + "\n")
+                print(prettify + "\n")
+                print("Response successful!\n")
 
             return info_out
 
@@ -394,19 +546,12 @@ class tweet_lookup(cmd.Cmd):
 
         try:
 
-            prettify = json.dumps(json_object, indent=4, sort_keys=True)
-
             with open(self.__conf.file_IO["out"]["tweet_lookup"]["tweets"], mode='a') as writefile:
                 json.dump(json_object, writefile, indent=4, sort_keys=True)
-                if self.__conf.genopts["verbose?"]:
-                    print(prettify)
-                print("JSON successfully written!")
-
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
                 print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")
-
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
@@ -421,7 +566,7 @@ class tweet_timeline(cmd.Cmd):
     
 
 
-    def do_run(self, arg):
+    def do_timeline(self, arg):
 
         print("\nRunning {}\n".format(self.prompt))
 
@@ -440,10 +585,14 @@ class tweet_timeline(cmd.Cmd):
                                 self.__dump_info(request)
                                 self.__page_count = self.__page_count + 1
                             self.__page_count = 0
-                        else:
+                        elif self.__conf.tweet_timeline_params["pagination"]["paginate?"] == False:
                             self.__page_count = 0
                             return
-            else:
+                        else:
+                            print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.tweet_timeline_params["pagination"]["paginate?"]))
+                            print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                            return
+            elif self.__conf.tweet_timeline_params["read_from_file?"] == False:
                 request = self.__retrieve_timeline(self.__url_build(self.__conf.tweet_timeline_params["user_id"]))
                 self.__dump_info(request)
                 self.__page_count = self.__page_count + 1
@@ -455,15 +604,29 @@ class tweet_timeline(cmd.Cmd):
                         self.__dump_info(request)
                         self.__page_count = self.__page_count + 1
                     self.__page_count = 0
-                else:
+                elif self.__conf.tweet_timeline_params["pagination"]["paginate?"] == False:
                     self.__page_count = 0
                     return
+                else:
+                    print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.tweet_timeline_params["pagination"]["paginate?"]))
+                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                    return
+            else:
+                print("Invalid param type in: request >> read_from_file?: " + str(self.__conf.tweet_timeline_params["read_from_file?"]))
+                print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                return
+
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
                 print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.") 
 
         except KeyError as key_error:
-            print("Done with " + str(key_error.args))
+            if "next_token" in key_error.args:
+                pass
+            else:    
+                print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
+                print("Another Tip: Read the DOCS before you break me!")
+                return
         
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -471,10 +634,99 @@ class tweet_timeline(cmd.Cmd):
 
 
     def do_list(self, arg):
-        print("\n__configurations__")
+        print("\n__Configurations__")
         param_list = self.__conf.tweet_timeline_params
+        print("\n   Request:")
         for value in param_list:
-            print(str(value) + " = " + str(param_list[value]))
+            print("      " + str(value) + " = " + str(param_list[value]))
+        files = self.__conf.file_IO
+        print("\n   Files:")
+        print("       out:")
+        for value in files["out"]["tweet_timeline"]:
+            print("             " + str(value) + " = " + str(files["out"]["tweet_timeline"][value]))
+        print("       in:")
+        for value in files["in"]["tweet_timeline"]:
+            print("             " + str(value) + " = " + str(files["in"]["tweet_timeline"][value]))
+        print("\n   GLOBAL FILE PATH:")
+        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+        print("\n")
+
+
+
+    def do_set(self, arg):
+
+        args_buff = str(arg)
+        arg_list = args_buff.split()
+
+        try:
+
+            if arg_list[0] in ["request"]:
+                if arg_list[1] in self.__conf.tweet_timeline_params:
+                    if arg_list[1] in ["request_params"]:
+                        if arg_list[2] in self.__conf.tweet_timeline_params["request_params"]:
+                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                                if arg_list[3] == "true":
+                                    self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = True
+                                elif arg_list[3] == "false":
+                                    self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = False
+                                else:
+                                    self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = None
+                            else:
+                                self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = arg_list[3]
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                    elif arg_list[1] in ["pagination"]:
+                        if arg_list[2] in self.__conf.tweet_timeline_params["pagination"]:
+                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                                if arg_list[3] == "true":
+                                    self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = True
+                                elif arg_list[3] == "false":
+                                    self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = False
+                                else:
+                                    self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = None
+                            else:
+                                self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = arg_list[3]
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in ["true", "false", "none"]:
+                            if arg_list[2] == "true":
+                                self.__conf.tweet_timeline_params[arg_list[1]] = True
+                            elif arg_list[2] == "false":
+                                self.__conf.tweet_timeline_params[arg_list[1]] = False
+                            else:
+                                self.__conf.tweet_timeline_params[arg_list[1]] = None
+                        else:
+                            self.__conf.tweet_timeline_params[arg_list[1]] = arg_list[2]
+                else:
+                    print("Invalid argument in: " + arg_list[1])
+
+            elif arg_list[0] in ["files"]:
+                if arg_list[1] in ["global"]:
+                    self.__conf.GLOBAL_FILE_PATH = arg_list[2]
+                elif arg_list[1] in self.__conf.file_IO:
+                    if arg_list[1] in ["out"]:
+                        if arg_list[2] in self.__conf.file_IO[arg_list[1]]["tweet_timeline"]:
+                            self.__conf.file_IO[arg_list[1]]["tweet_timeline"][arg_list[2]] = arg_list[3]
+                        else:
+                                print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in self.__conf.file_IO["in"]["tweet_timeline"]:
+                            self.__conf.file_IO["in"]["tweet_timeline"][arg_list[2]] = arg_list[3] 
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                else:
+                    print("Invalid argument in:" + arg_list[1])
+            else:
+                print("Invalid option in: " + arg_list[0])
+        
+            self.do_list(arg=None)
+        
+        except KeyError as key_error:
+            print("UH-OH! Bad key in: " + str(key_error.args))
+
+        except TypeError as t_err:
+            print("Error: Found \'None\' in: " + str(t_err.args))
 
 
 
@@ -496,7 +748,7 @@ class tweet_timeline(cmd.Cmd):
 
 
     def do_exit(self, arg):
-        print("Terminating TAG...")
+        print("Terminating")
         sleep(2)
         sys.exit()
 
@@ -532,7 +784,7 @@ class tweet_timeline(cmd.Cmd):
 
     def do_likes(self, arg):
         console = likes()
-        likes.cmdloop()
+        console.cmdloop()
 
 
 
@@ -541,16 +793,14 @@ class tweet_timeline(cmd.Cmd):
         auth_key_build = f"Bearer " + self.__conf.authorization["bearer_token"]
         r.headers["Authorization"] = auth_key_build 
         r.headers["User-Agent"] = "v2UserTweetsPython"
+
         return r
 
 
 
     def __param_engine(self):
 
-        params =   {
-
-                    }
-
+        params =   {}
         param_table = self.__conf.tweet_timeline_params["request_params"]
 
         for key in param_table:
@@ -563,12 +813,10 @@ class tweet_timeline(cmd.Cmd):
 
 
 
-
     def __url_build(self, user_id):
             
         url = "https://api.twitter.com/2/users/{}/tweets".format(user_id)
-        if self.__conf.genopts["verbose?"]:
-            print("@" + url)
+
         return url
 
 
@@ -592,33 +840,24 @@ class tweet_timeline(cmd.Cmd):
                 
         else:
             if self.__conf.genopts["verbose?"]:
-                print("@" + url)
-                print(prettify)
+                print("\nrequest @ " + url + "\n")
+                print(prettify + "\n")
+                print("Response successful!\n")
             return info_out
 
 
 
     def __dump_info(self, json_obj):
 
-        prettify = json.dumps(json_obj, indent=4, sort_keys=True)
-
         try:
 
             with open(self.__conf.file_IO["out"]["tweet_timeline"]["tweet_timelines"], mode='a') as writefile:
                 json.dump(json_obj, writefile, indent=4, sort_keys=True)
-                if self.__conf.genopts["verbose?"]:
-                    print(prettify)
-                print("JSON successfully written!")
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
                 print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")  
         
-        #TODOS
-        # Error handling
-        # standardize and diversify info IO capability
-        # add ability to add/subtract any related options for this module (especially pagination)
-
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
 class follows(cmd.Cmd):
@@ -629,7 +868,6 @@ class follows(cmd.Cmd):
     __conf = config_tools.ctools()
     __page_count = 0
     
-
 
     def do_followers(self, arg):
 
@@ -648,11 +886,15 @@ class follows(cmd.Cmd):
                                     request = next_request
                                     self.__dump_info(request, "followers")
                                     self.__page_count = self.__page_count + 1
-                        else:
+                        elif self.__conf.user_follows_params["pagination"]["paginate?"] == False:
                             self.__page_count = 0
                             return
+                        else:
+                            print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.user_follows_params["pagination"]["paginate?"]))
+                            print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                            return
 
-            else:
+            elif self.__conf.user_follows_params["read_from_file?"] == False:
                 user_id = self.__conf.user_follows_params["user_id"]
                 request = self.__retrieve_info(self.__url_build(user_id, follows_type="followers"), self.__bearer_oauth_followers)
                 self.__dump_info(request, type="followers")
@@ -664,14 +906,24 @@ class follows(cmd.Cmd):
                         request = next_request
                         self.__dump_info(request, type="followers")
                         self.__page_count = self.__page_count + 1
-                else:
+                elif self.__conf.user_follows_params["pagination"]["paginate?"] == False:
                     self.__page_count = 0
                     return
+                else:
+                    print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.user_follows_params["pagination"]["paginate?"]))
+                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                    return
+            else:
+                print("Invalid param type in: request >> read_from_file?: " + str(self.__conf.user_follows_params["read_from_file?"]))
+                print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                return
+
             self.__page_count = 0
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
                 print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.") 
+            return
 
         except KeyError as key_error:
             if "next_token" in key_error.args:
@@ -679,10 +931,10 @@ class follows(cmd.Cmd):
             else:    
                 print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
                 print("Another Tip: Read the DOCS before you break me!")
-
+                return
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
-
+            return
 
 
     def do_following(self, arg):
@@ -703,10 +955,14 @@ class follows(cmd.Cmd):
                                 request = next_request
                                 self.__dump_info(request, type="following")
                                 self.__page_count = self.__page_count + 1
-                        else:
+                        elif self.__conf.user_follows_params["pagination"]["paginate?"] == False:
                             self.__page_count = 0
                             return
-            else:
+                        else:
+                            print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.user_follows_params["pagination"]["paginate?"]))
+                            print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                            return
+            elif self.__conf.user_follows_params["read_from_file?"] == False:
                 user_id = self.__conf.user_follows_params["user_id"]
                 request = self.__retrieve_info(self.__url_build(user_id, follows_type="following"), self.__bearer_oauth_following)
                 self.__dump_info(request, type="following")
@@ -718,27 +974,126 @@ class follows(cmd.Cmd):
                         request = next_request
                         self.__dump_info(request, type="following")
                         self.__page_count = self.__page_count + 1
-                else:
+                elif self.__conf.user_follows_params["pagination"]["paginate?"] == False:
                     self.__page_count = 0
                     return
+                else:
+                    print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.user_follows_params["pagination"]["paginate?"]))
+                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                    return 
+            else:
+                print("Invalid param type in: request >> read_from_file?: " + str(self.__conf.user_follows_params["read_from_file?"]))
+                print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                return
+
             self.__page_count = 0
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
-                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.") 
+                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")
+                return 
 
         except KeyError as key_error:
             print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
             print("This program comes with a manual to avoid gagglef***s like this :)")
+            return
 
 
     
     def do_list(self, arg):
-        print("\n__configurations__")
+        print("\n__Configurations__")
         param_list = self.__conf.user_follows_params
+        print("\n   Request:")
         for value in param_list:
-            print(str(value) + " = " + str(param_list[value]))
+            print("      " + str(value) + " = " + str(param_list[value]))
+        files = self.__conf.file_IO
+        print("\n   Files:")
+        print("       out:")
+        for value in files["out"]["user_follows"]:
+            print("             " + str(value) + " = " + str(files["out"]["user_follows"][value]))
+        print("       in:")
+        for value in files["in"]["user_follows"]:
+            print("             " + str(value) + " = " + str(files["in"]["user_follows"][value]))
+        print("\n   GLOBAL FILE PATH:")
+        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+        print("\n")
+
+
+
+    def do_set(self, arg):
         
+        args_buff = str(arg)
+        arg_list = args_buff.split()
+
+        try:
+
+            if arg_list[0] in ["request"]:
+                if arg_list[1] in self.__conf.user_follows_params:
+                    if arg_list[1] in ["request_params"]:
+                        if arg_list[2] in self.__conf.user_follows_params["request_params"]:
+                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                                if arg_list[3] == "true":
+                                    self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = True
+                                elif arg_list[3] == "false":
+                                    self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = False
+                                else:
+                                    self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = None
+                            else:
+                                self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = arg_list[3]
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                    elif arg_list[1] in ["pagination"]:
+                        if arg_list[2] in self.__conf.user_follows_params["pagination"]:
+                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                                if arg_list[3] == "true":
+                                    self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = True
+                                elif arg_list[3] == "false":
+                                    self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = False
+                                else:
+                                    self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = None
+                            else:
+                                self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = arg_list[3]
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in ["true", "false", "none"]:
+                            if arg_list[2] == "true":
+                                self.__conf.user_follows_params[arg_list[1]] = True
+                            elif arg_list[2] == "false":
+                                self.__conf.user_follows_params[arg_list[1]] = False
+                            else:
+                                self.__conf.user_follows_params[arg_list[1]] = None
+                        else:
+                            self.__conf.user_follows_params[arg_list[1]] = arg_list[2]
+                else:
+                    print("Invalid argument in: " + arg_list[1])
+
+            elif arg_list[0] in ["files"]:
+                if arg_list[1] in ["global"]:
+                    self.__conf.GLOBAL_FILE_PATH = arg_list[2]
+                elif arg_list[1] in self.__conf.file_IO:
+                    if arg_list[1] in ["out"]:
+                        if arg_list[2] in self.__conf.file_IO[arg_list[1]]["user_follows"]:
+                            self.__conf.file_IO[arg_list[1]]["user_follows"][arg_list[2]] = arg_list[3]
+                        else:
+                                print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in self.__conf.file_IO["in"]["user_follows"]:
+                            self.__conf.file_IO["in"]["user_follows"][arg_list[2]] = arg_list[3] 
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                else:
+                    print("Invalid argument in:" + arg_list[1])
+            else:
+                print("Invalid option in: " + arg_list[0])
+        
+            self.do_list(arg=None)
+        
+        except KeyError as key_error:
+            print("UH-OH! Bad key in: " + str(key_error.args))
+
+        except TypeError as t_err:
+            print("Error: Found \'None\' in: " + str(t_err.args))
 
         
 
@@ -939,7 +1294,12 @@ class likes(cmd.Cmd):
                 print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
         
         except KeyError as key_error:
-            print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
+            if "next_token" in key_error.args:
+                pass
+            else:    
+                print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
+                print("Another Tip: Read the DOCS before you break me!")
+                return
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -993,10 +1353,113 @@ class likes(cmd.Cmd):
     
     
     def do_list(self, arg):
-        print("\n__configurations__")
+        print("\n__Configurations__")
         param_list = self.__conf.likes_params
+        print("\n   Request:")
         for value in param_list:
-            print(str(value) + " = " + str(param_list[value]))
+            print("      " + str(value) + " = " + str(param_list[value]))
+        files = self.__conf.file_IO
+        print("\n   Files:")
+        print("       out:")
+        for value in files["out"]["likes"]:
+            print("             " + str(value) + " = " + str(files["out"]["likes"][value]))
+        print("       in:")
+        for value in files["in"]["likes"]:
+            print("             " + str(value) + " = " + str(files["in"]["likes"][value]))
+        print("\n   GLOBAL FILE PATH:")
+        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+        print("\n")
+
+
+
+
+
+    def do_set(self, arg):
+        
+        args_buff = str(arg)
+        arg_list = args_buff.split()
+
+        try:
+
+            if arg_list[0] in ["request"]:
+                if arg_list[1] in self.__conf.likes_params:
+                    if arg_list[1] in ["liking_request_params"]:
+                        if arg_list[2] in self.__conf.likes_params["liking_request_params"]:
+                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                                if arg_list[3] == "true":
+                                    self.__conf.likes_params[arg_list[1]][arg_list[2]] = True
+                                elif arg_list[3] == "false":
+                                    self.__conf.likes_params[arg_list[1]][arg_list[2]] = False
+                                else:
+                                    self.__conf.likes_params[arg_list[1]][arg_list[2]] = None
+                            else:
+                                self.__conf.likes_params[arg_list[1]][arg_list[2]] = arg_list[3]
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                    elif arg_list[1] in ["liked_request_params"]:
+                        if arg_list[2] in self.__conf.likes_params["liked_request_params"]:
+                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                                if arg_list[3] == "true":
+                                    self.__conf.likes_params[arg_list[1]][arg_list[2]] = True
+                                elif arg_list[3] == "false":
+                                    self.__conf.likes_params[arg_list[1]][arg_list[2]] = False
+                                else:
+                                    self.__conf.likes_params[arg_list[1]][arg_list[2]] = None
+                            else:
+                                self.__conf.likes_params[arg_list[1]][arg_list[2]] = arg_list[3]
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                    elif arg_list[1] in ["pagination"]:
+                        if arg_list[2] in self.__conf.likes_params["pagination"]:
+                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                                if arg_list[3] == "true":
+                                    self.__conf.likes_params[arg_list[1]][arg_list[2]] = True
+                                elif arg_list[3] == "false":
+                                    self.__conf.likes_params[arg_list[1]][arg_list[2]] = False
+                                else:
+                                    self.__conf.likes_params[arg_list[1]][arg_list[2]] = None
+                            else:
+                                self.__conf.likes_params[arg_list[1]][arg_list[2]] = arg_list[3]
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in ["true", "false", "none"]:
+                            if arg_list[2] == "true":
+                                self.__conf.likes_params[arg_list[1]] = True
+                            elif arg_list[2] == "false":
+                                self.__conf.likes_params[arg_list[1]] = False
+                            else:
+                                self.__conf.likes_params[arg_list[1]] = None
+                        else:
+                            self.__conf.likes_params[arg_list[1]] = arg_list[2]
+                else:
+                    print("Invalid argument in: " + arg_list[1])
+            elif arg_list[0] in ["files"]:
+                if arg_list[1] in ["global"]:
+                    self.__conf.GLOBAL_FILE_PATH = arg_list[2]
+                elif arg_list[1] in self.__conf.file_IO:
+                    if arg_list[1] in ["out"]:
+                        if arg_list[2] in self.__conf.file_IO[arg_list[1]]["likes"]:
+                            self.__conf.file_IO[arg_list[1]]["likes"][arg_list[2]] = arg_list[3]
+                        else:
+                                print("Invalid argument in: " + arg_list[2])
+                    else:
+                        if arg_list[2] in self.__conf.file_IO["in"]["likes"]:
+                            self.__conf.file_IO["in"]["likes"][arg_list[2]] = arg_list[3] 
+                        else:
+                            print("Invalid argument in: " + arg_list[2])
+                else:
+                    print("Invalid argument in:" + arg_list[1])
+            else:
+                print("Invalid option in: " + arg_list[0])
+        
+            self.do_list(arg=None)
+        
+        except KeyError as key_error:
+            print("UH-OH! Bad key in: " + str(key_error.args))
+
+        except TypeError as t_err:
+            print("Error: Found \'None\' in: " + str(t_err.args))
 
 
 
