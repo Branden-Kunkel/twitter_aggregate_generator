@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name="Twitter Aggregate Generator",
-        version="1.0.1",
+        version="1.0.2",
         description="A program to collect and aggregate large amounts of twitter data via the Twitter API.",
         author="Branden Kunkel",
         author_email="kunkel.branden6130@gmail.com",

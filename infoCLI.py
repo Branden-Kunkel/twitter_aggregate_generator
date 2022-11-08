@@ -61,8 +61,17 @@ class main_cli(cmd.Cmd):
         print("Terminating TAG...")
         sleep(2)
         sys.exit()
+
     def do_clear(self, arg):
         os.system("clear")
+
+    def do_list(self, arg):
+        print("\nAvailable modules:")
+        print("     user")
+        print("     timeline")
+        print("     tweet")
+        print("     follows")
+        print("     likes")
 
 
 
