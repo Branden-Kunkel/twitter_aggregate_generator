@@ -75,23 +75,61 @@ class user_profile(cmd.Cmd):
 
     
     def do_list(self, arg):
-        print("\n__Configurations__")
-        param_list = self.__conf.user_profile_params
-        print("\n   Request:")
-        for value in param_list:
-            print("      " + str(value) + " = " + str(param_list[value]))
-        files = self.__conf.file_IO
-        print("\n   Files:")
-        print("       out:")
-        for value in files["out"]["user_profile"]:
-            print("             " + str(value) + " = " + str(files["out"]["user_profile"][value]))
-        print("       in:")
-        for value in files["in"]["user_profile"]:
-            print("             " + str(value) + " = " + str(files["in"]["user_profile"][value]))
-        print("\n   GLOBAL FILE PATH:")
-        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-        print("\n")
 
+        commands_list = [   
+                            "profile = run the module with current parameters. No arguments.",
+                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
+                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
+                            "help = print a detailed help page for this module.",
+                            "exit = terminate the entire program instance.",
+                            "main = direct to the main console.",
+                            "timeline = direct to the tweet timeline console.",
+                            "tweet = direct to the tweet lookup console.",
+                            "follows = direct to the follows console.",
+                            "likes = direct to the likes console."
+                        ]
+
+        if arg in ["params"]:
+            print("\n__Configurations__")
+            param_list = self.__conf.user_profile_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["user_profile"]:
+                print("             " + str(value) + " = " + str(files["out"]["user_profile"][value]))
+            print("       in:")
+            for value in files["in"]["user_profile"]:
+                print("             " + str(value) + " = " + str(files["in"]["user_profile"][value]))
+            print("\n   GLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("\n")
+        elif arg in ["commands"]:
+            print("\n__Commands__")
+            for value in commands_list:
+                print("   " + value)
+        else:
+            print("\n__Configurations__")
+            param_list = self.__conf.user_profile_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["user_profile"]:
+                print("             " + str(value) + " = " + str(files["out"]["user_profile"][value]))
+            print("       in:")
+            for value in files["in"]["user_profile"]:
+                print("             " + str(value) + " = " + str(files["in"]["user_profile"][value]))
+            print("\nGLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("__Commands__\n")
+            for value in commands_list:
+                print("   " + value)
+            print("\n")            
 
 
     def do_set(self, arg):
@@ -105,7 +143,7 @@ class user_profile(cmd.Cmd):
                 if arg_list[1] in self.__conf.user_profile_params:
                     if arg_list[1] in ["request_params"]:
                         if arg_list[2] in self.__conf.user_profile_params["request_params"]:
-                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                            if arg_list[3] in ["true", "false", "none"]:
                                 if arg_list[3] == "true":
                                     self.__conf.user_profile_params[arg_list[1]][arg_list[2]] = True
                                 elif arg_list[3] == "false":
@@ -148,13 +186,16 @@ class user_profile(cmd.Cmd):
             else:
                 print("Invalid option in: " + arg_list[0])
         
-            self.do_list(arg=None)
+            self.do_list(arg="params")
         
         except KeyError as key_error:
             print("UH-OH! Bad key in: " + str(key_error.args))
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
+
+        except IndexError as inx_err:
+            print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
             
   
         
@@ -340,22 +381,61 @@ class tweet_lookup(cmd.Cmd):
 
 
     def do_list(self, arg):
-        print("\n__Configurations__")
-        param_list = self.__conf.tweet_lookup_params
-        print("\n   Request:")
-        for value in param_list:
-            print("      " + str(value) + " = " + str(param_list[value]))
-        files = self.__conf.file_IO
-        print("\n   Files:")
-        print("       out:")
-        for value in files["out"]["tweet_lookup"]:
-            print("             " + str(value) + " = " + str(files["out"]["tweet_lookup"][value]))
-        print("       in:")
-        for value in files["in"]["tweet_lookup"]:
-            print("             " + str(value) + " = " + str(files["in"]["tweet_lookup"][value]))
-        print("\n   GLOBAL FILE PATH:")
-        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-        print("\n")
+
+        commands_list = [   
+                            "lookup = run the module with current parameters. No arguments.",
+                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
+                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely (prints both params and commands)."
+                            "help = print a detailed help page for this module.",
+                            "exit = terminate the entire program instance.",
+                            "main = direct to the main console.",
+                            "timeline = direct to the tweet timeline console.",
+                            "user = direct to the user profile console.",
+                            "follows = direct to the follows console.",
+                            "likes = direct to the likes console."
+                        ]
+
+        if arg in ["params"]:
+            print("\n__Configurations__")
+            param_list = self.__conf.tweet_lookup_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["tweet_lookup"]:
+                print("             " + str(value) + " = " + str(files["out"]["tweet_lookup"][value]))
+            print("       in:")
+            for value in files["in"]["tweet_lookup"]:
+                print("             " + str(value) + " = " + str(files["in"]["tweet_lookup"][value]))
+            print("\n   GLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("\n")
+        elif arg in ["commands"]:
+            print("\n__Commands__")
+            for value in commands_list:
+                print("   " + value)
+        else:
+            print("\n__Configurations__")
+            param_list = self.__conf.tweet_lookup_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["tweet_lookup"]:
+                print("             " + str(value) + " = " + str(files["out"]["tweet_lookup"][value]))
+            print("       in:")
+            for value in files["in"]["tweet_lookup"]:
+                print("             " + str(value) + " = " + str(files["in"]["tweet_lookup"][value]))
+            print("\nGLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("__Commands__\n")
+            for value in commands_list:
+                print("   " + value)
+            print("\n")            
 
 
 
@@ -370,7 +450,7 @@ class tweet_lookup(cmd.Cmd):
                 if arg_list[1] in self.__conf.tweet_lookup_params:
                     if arg_list[1] in ["request_params"]:
                         if arg_list[2] in self.__conf.tweet_lookup_params["request_params"]:
-                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                            if arg_list[3] in ["true", "false", "none"]:
                                 if arg_list[3] == "true":
                                     self.__conf.tweet_lookup_params[arg_list[1]][arg_list[2]] = True
                                 elif arg_list[3] == "false":
@@ -413,13 +493,16 @@ class tweet_lookup(cmd.Cmd):
             else:
                 print("Invalid option in: " + arg_list[0])
         
-            self.do_list(arg=None)
+            self.do_list(arg="params")
         
         except KeyError as key_error:
             print("UH-OH! Bad key in: " + str(key_error.args))
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
+
+        except IndexError as inx_err:
+            print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
 
 
 
@@ -634,22 +717,61 @@ class tweet_timeline(cmd.Cmd):
 
 
     def do_list(self, arg):
-        print("\n__Configurations__")
-        param_list = self.__conf.tweet_timeline_params
-        print("\n   Request:")
-        for value in param_list:
-            print("      " + str(value) + " = " + str(param_list[value]))
-        files = self.__conf.file_IO
-        print("\n   Files:")
-        print("       out:")
-        for value in files["out"]["tweet_timeline"]:
-            print("             " + str(value) + " = " + str(files["out"]["tweet_timeline"][value]))
-        print("       in:")
-        for value in files["in"]["tweet_timeline"]:
-            print("             " + str(value) + " = " + str(files["in"]["tweet_timeline"][value]))
-        print("\n   GLOBAL FILE PATH:")
-        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-        print("\n")
+        
+        commands_list = [   
+                            "timeline = run the module with current parameters. No arguments.",
+                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
+                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely (prints both params and commands)."
+                            "help = print a detailed help page for this module.",
+                            "exit = terminate the entire program instance.",
+                            "main = direct to the main console.",
+                            "user = direct to the user profile console.",
+                            "tweet = direct to the tweet lookup console.",
+                            "follows = direct to the follows console.",
+                            "likes = direct to the likes console."
+                        ]
+
+        if arg in ["params"]:
+            print("\n__Configurations__")
+            param_list = self.__conf.tweet_timeline_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["tweet_timeline"]:
+                print("             " + str(value) + " = " + str(files["out"]["tweet_timeline"][value]))
+            print("       in:")
+            for value in files["in"]["tweet_timeline"]:
+                print("             " + str(value) + " = " + str(files["in"]["tweet_timeline"][value]))
+            print("\n   GLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("\n")
+        elif arg in ["commands"]:
+            print("\n__Commands__")
+            for value in commands_list:
+                print("   " + value)
+        else:
+            print("\n__Configurations__")
+            param_list = self.__conf.tweet_timeline_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["tweet_timeline"]:
+                print("             " + str(value) + " = " + str(files["out"]["tweet_timeline"][value]))
+            print("       in:")
+            for value in files["in"]["tweet_timeline"]:
+                print("             " + str(value) + " = " + str(files["in"]["tweet_timeline"][value]))
+            print("\nGLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("__Commands__\n")
+            for value in commands_list:
+                print("   " + value)
+            print("\n")            
 
 
 
@@ -664,7 +786,7 @@ class tweet_timeline(cmd.Cmd):
                 if arg_list[1] in self.__conf.tweet_timeline_params:
                     if arg_list[1] in ["request_params"]:
                         if arg_list[2] in self.__conf.tweet_timeline_params["request_params"]:
-                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                            if arg_list[3] in ["true", "false", "none"]:
                                 if arg_list[3] == "true":
                                     self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = True
                                 elif arg_list[3] == "false":
@@ -677,7 +799,7 @@ class tweet_timeline(cmd.Cmd):
                             print("Invalid argument in: " + arg_list[2])
                     elif arg_list[1] in ["pagination"]:
                         if arg_list[2] in self.__conf.tweet_timeline_params["pagination"]:
-                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                            if arg_list[3] in ["true", "false", "none"]:
                                 if arg_list[3] == "true":
                                     self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = True
                                 elif arg_list[3] == "false":
@@ -720,13 +842,16 @@ class tweet_timeline(cmd.Cmd):
             else:
                 print("Invalid option in: " + arg_list[0])
         
-            self.do_list(arg=None)
+            self.do_list(arg="params")
         
         except KeyError as key_error:
             print("UH-OH! Bad key in: " + str(key_error.args))
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
+
+        except IndexError as inx_err:
+            print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
 
 
 
@@ -1001,22 +1126,62 @@ class follows(cmd.Cmd):
 
     
     def do_list(self, arg):
-        print("\n__Configurations__")
-        param_list = self.__conf.user_follows_params
-        print("\n   Request:")
-        for value in param_list:
-            print("      " + str(value) + " = " + str(param_list[value]))
-        files = self.__conf.file_IO
-        print("\n   Files:")
-        print("       out:")
-        for value in files["out"]["user_follows"]:
-            print("             " + str(value) + " = " + str(files["out"]["user_follows"][value]))
-        print("       in:")
-        for value in files["in"]["user_follows"]:
-            print("             " + str(value) + " = " + str(files["in"]["user_follows"][value]))
-        print("\n   GLOBAL FILE PATH:")
-        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-        print("\n")
+
+        commands_list = [   
+                            "followers = run the module in followers mode. No arguments",
+                            "following = run the module in following mode. No arguments"
+                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
+                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
+                            "help = print a detailed help page for this module.",
+                            "exit = terminate the entire program instance.",
+                            "main = direct to the main console.",
+                            "timeline = direct to the tweet timeline console.",
+                            "tweet = direct to the tweet lookup console.",
+                            "user = direct to the user profile console.",
+                            "likes = direct to the likes console."
+                        ]
+
+        if arg in ["params"]:
+            print("\n__Configurations__")
+            param_list = self.__conf.user_follows_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["user_follows"]:
+                print("             " + str(value) + " = " + str(files["out"]["user_follows"][value]))
+            print("       in:")
+            for value in files["in"]["user_follows"]:
+                print("             " + str(value) + " = " + str(files["in"]["user_follows"][value]))
+            print("\n   GLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("\n")
+        elif arg in ["commands"]:
+            print("\n__Commands__")
+            for value in commands_list:
+                print("   " + value)
+        else:
+            print("\n__Configurations__")
+            param_list = self.__conf.user_follows_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["user_follows"]:
+                print("             " + str(value) + " = " + str(files["out"]["user_follows"][value]))
+            print("       in:")
+            for value in files["in"]["user_follows"]:
+                print("             " + str(value) + " = " + str(files["in"]["user_follows"][value]))
+            print("\nGLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("__Commands__\n")
+            for value in commands_list:
+                print("   " + value)
+            print("\n")            
 
 
 
@@ -1031,7 +1196,7 @@ class follows(cmd.Cmd):
                 if arg_list[1] in self.__conf.user_follows_params:
                     if arg_list[1] in ["request_params"]:
                         if arg_list[2] in self.__conf.user_follows_params["request_params"]:
-                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                            if arg_list[3] in ["true", "false", "none"]:
                                 if arg_list[3] == "true":
                                     self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = True
                                 elif arg_list[3] == "false":
@@ -1044,7 +1209,7 @@ class follows(cmd.Cmd):
                             print("Invalid argument in: " + arg_list[2])
                     elif arg_list[1] in ["pagination"]:
                         if arg_list[2] in self.__conf.user_follows_params["pagination"]:
-                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                            if arg_list[3] in ["true", "false", "none"]:
                                 if arg_list[3] == "true":
                                     self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = True
                                 elif arg_list[3] == "false":
@@ -1087,13 +1252,16 @@ class follows(cmd.Cmd):
             else:
                 print("Invalid option in: " + arg_list[0])
         
-            self.do_list(arg=None)
+            self.do_list(arg="params")
         
         except KeyError as key_error:
             print("UH-OH! Bad key in: " + str(key_error.args))
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
+
+        except IndexError as inx_err:
+            print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
 
         
 
@@ -1353,24 +1521,62 @@ class likes(cmd.Cmd):
     
     
     def do_list(self, arg):
-        print("\n__Configurations__")
-        param_list = self.__conf.likes_params
-        print("\n   Request:")
-        for value in param_list:
-            print("      " + str(value) + " = " + str(param_list[value]))
-        files = self.__conf.file_IO
-        print("\n   Files:")
-        print("       out:")
-        for value in files["out"]["likes"]:
-            print("             " + str(value) + " = " + str(files["out"]["likes"][value]))
-        print("       in:")
-        for value in files["in"]["likes"]:
-            print("             " + str(value) + " = " + str(files["in"]["likes"][value]))
-        print("\n   GLOBAL FILE PATH:")
-        print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-        print("\n")
 
+        commands_list = [   
+                            "liking = run the module in liking mode. No arguments.",
+                            "liked = run the module in liked mode. No arguments."
+                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
+                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
+                            "help = print a detailed help page for this module.",
+                            "exit = terminate the entire program instance.",
+                            "main = direct to the main console.",
+                            "timeline = direct to the tweet timeline console.",
+                            "tweet = direct to the tweet lookup console.",
+                            "follows = direct to the follows console.",
+                            "user = direct to the user profile console."
+                        ]
 
+        if arg in ["params"]:
+            print("\n__Configurations__")
+            param_list = self.__conf.likes_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["likes"]:
+                print("             " + str(value) + " = " + str(files["out"]["likes"][value]))
+            print("       in:")
+            for value in files["in"]["likes"]:
+                print("             " + str(value) + " = " + str(files["in"]["likes"][value]))
+            print("\n   GLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("\n")
+        elif arg in ["commands"]:
+            print("\n__Commands__")
+            for value in commands_list:
+                print("   " + value)
+        else:
+            print("\n__Configurations__")
+            param_list = self.__conf.likes_params
+            print("\n   Request:")
+            for value in param_list:
+                print("      " + str(value) + " = " + str(param_list[value]))
+            files = self.__conf.file_IO
+            print("\n   Files:")
+            print("       out:")
+            for value in files["out"]["likes"]:
+                print("             " + str(value) + " = " + str(files["out"]["likes"][value]))
+            print("       in:")
+            for value in files["in"]["likes"]:
+                print("             " + str(value) + " = " + str(files["in"]["likes"][value]))
+            print("\nGLOBAL FILE PATH:")
+            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
+            print("__Commands__\n")
+            for value in commands_list:
+                print("   " + value)
+            print("\n")            
 
 
 
@@ -1385,7 +1591,7 @@ class likes(cmd.Cmd):
                 if arg_list[1] in self.__conf.likes_params:
                     if arg_list[1] in ["liking_request_params"]:
                         if arg_list[2] in self.__conf.likes_params["liking_request_params"]:
-                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                            if arg_list[3] in ["true", "false", "none"]:
                                 if arg_list[3] == "true":
                                     self.__conf.likes_params[arg_list[1]][arg_list[2]] = True
                                 elif arg_list[3] == "false":
@@ -1398,7 +1604,7 @@ class likes(cmd.Cmd):
                             print("Invalid argument in: " + arg_list[2])
                     elif arg_list[1] in ["liked_request_params"]:
                         if arg_list[2] in self.__conf.likes_params["liked_request_params"]:
-                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                            if arg_list[3] in ["true", "false", "none"]:
                                 if arg_list[3] == "true":
                                     self.__conf.likes_params[arg_list[1]][arg_list[2]] = True
                                 elif arg_list[3] == "false":
@@ -1411,7 +1617,7 @@ class likes(cmd.Cmd):
                             print("Invalid argument in: " + arg_list[2])
                     elif arg_list[1] in ["pagination"]:
                         if arg_list[2] in self.__conf.likes_params["pagination"]:
-                            if arg_list[3] in ["true"] or ["false"] or ["none"]:
+                            if arg_list[3] in ["true", "false", "none"]:
                                 if arg_list[3] == "true":
                                     self.__conf.likes_params[arg_list[1]][arg_list[2]] = True
                                 elif arg_list[3] == "false":
@@ -1453,7 +1659,10 @@ class likes(cmd.Cmd):
             else:
                 print("Invalid option in: " + arg_list[0])
         
-            self.do_list(arg=None)
+            self.do_list(arg="params")
+
+        except IndexError as inx_err:
+            print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
         
         except KeyError as key_error:
             print("UH-OH! Bad key in: " + str(key_error.args))
