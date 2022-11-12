@@ -6,7 +6,7 @@ import config_tools
 import infoMOD
 from time import sleep
 
-version = "v.1.0.1\n"
+version = "v.1.0.0\n"
 
 class main_cli(cmd.Cmd):
     """main console command prompt"""
@@ -47,7 +47,7 @@ class main_cli(cmd.Cmd):
         self.likes_mod.cmdloop()
 
     def do_help(self, arg):
-        print(self.conf.help_pages["main"])
+        print("help page here")
 
     def default(self, line: str) -> None:
         print("Invalid input...")

@@ -60,12 +60,15 @@ class user_profile(cmd.Cmd):
 
 
         except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: File not found...")
-                print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
+                print("Error: I/O file not found")
+                print("Tip: Make sure that params in 'file_IO' are correct/up to date.")
+
+        except IsADirectoryError as dir_err:
+            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
+            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
         
         except KeyError as key_error:
-            print("UH-OH! Bad key in: " + str(key_error.args))
+            print("Config File Error: Bad key in: " + str(key_error.args))
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -129,7 +132,10 @@ class user_profile(cmd.Cmd):
             print("__Commands__\n")
             for value in commands_list:
                 print("   " + value)
-            print("\n")            
+            print("\n")
+
+        return
+            
 
 
     def do_set(self, arg):
@@ -173,12 +179,12 @@ class user_profile(cmd.Cmd):
                 elif arg_list[1] in self.__conf.file_IO:
                     if arg_list[1] in ["out"]:
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["user_profile"]:
-                            self.__conf.file_IO[arg_list[1]]["user_profile"][arg_list[2]] = arg_list[3]
+                            self.__conf.file_IO[arg_list[1]]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
                                 print("Invalid argument in: " + arg_list[2])
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["user_profile"]:
-                            self.__conf.file_IO["in"]["user_profile"][arg_list[2]] = arg_list[3] 
+                            self.__conf.file_IO["in"]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
                             print("Invalid argument in: " + arg_list[2])
                 else:
@@ -189,7 +195,8 @@ class user_profile(cmd.Cmd):
             self.do_list(arg="params")
         
         except KeyError as key_error:
-            print("UH-OH! Bad key in: " + str(key_error.args))
+            print("Error: Bad key in: " + str(key_error.args))
+            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -197,6 +204,7 @@ class user_profile(cmd.Cmd):
         except IndexError as inx_err:
             print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
             
+        return
   
         
     def do_help(self, arg):
@@ -217,6 +225,7 @@ class user_profile(cmd.Cmd):
 
     def do_clear(self, arg):
         os.system("clear")
+        return
 
 
 
@@ -322,14 +331,8 @@ class user_profile(cmd.Cmd):
 
     def __dump_info(self, json_object):
 
-        try:
-
-            with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
-                json.dump(json_object, writefile, indent=4, sort_keys=True)
-
-        except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")
+        with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
+            json.dump(json_object, writefile, indent=4, sort_keys=True)
 
         return    
 
@@ -366,12 +369,16 @@ class tweet_lookup(cmd.Cmd):
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
-                print("Error: File not found...")
+                print("Error: Read file not found")
                 print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
             return
+
+        except IsADirectoryError as dir_err:
+            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
+            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
         
         except KeyError as key_error:
-            print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
+            print("Config File Error: Bad key in " + str(key_error.args))
             return
 
         except TypeError as t_err:
@@ -435,7 +442,9 @@ class tweet_lookup(cmd.Cmd):
             print("__Commands__\n")
             for value in commands_list:
                 print("   " + value)
-            print("\n")            
+            print("\n")     
+
+        return       
 
 
 
@@ -480,12 +489,12 @@ class tweet_lookup(cmd.Cmd):
                 elif arg_list[1] in self.__conf.file_IO:
                     if arg_list[1] in ["out"]:
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["tweet_lookup"]:
-                            self.__conf.file_IO[arg_list[1]]["tweet_lookup"][arg_list[2]] = arg_list[3]
+                            self.__conf.file_IO[arg_list[1]]["tweet_lookup"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
                                 print("Invalid argument in: " + arg_list[2])
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["tweet_lookup"]:
-                            self.__conf.file_IO["in"]["tweet_lookup"][arg_list[2]] = arg_list[3] 
+                            self.__conf.file_IO["in"]["tweet_lookup"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
                             print("Invalid argument in: " + arg_list[2])
                 else:
@@ -496,7 +505,8 @@ class tweet_lookup(cmd.Cmd):
             self.do_list(arg="params")
         
         except KeyError as key_error:
-            print("UH-OH! Bad key in: " + str(key_error.args))
+            print("Error: Bad key in " + str(key_error.args))
+            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -504,10 +514,12 @@ class tweet_lookup(cmd.Cmd):
         except IndexError as inx_err:
             print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
 
+        return
 
 
     def do_help(self, arg):
         print("help page here!")
+        return
 
 
 
@@ -525,6 +537,7 @@ class tweet_lookup(cmd.Cmd):
 
     def do_clear(self, arg):
         os.system("clear")
+        return
 
 
 
@@ -627,14 +640,10 @@ class tweet_lookup(cmd.Cmd):
 
     def __dump_info(self, json_object):
 
-        try:
+        with open(self.__conf.file_IO["out"]["tweet_lookup"]["tweets"], mode='a') as writefile:
+            json.dump(json_object, writefile, indent=4, sort_keys=True)
 
-            with open(self.__conf.file_IO["out"]["tweet_lookup"]["tweets"], mode='a') as writefile:
-                json.dump(json_object, writefile, indent=4, sort_keys=True)
-
-        except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")
+        return
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
@@ -701,14 +710,18 @@ class tweet_timeline(cmd.Cmd):
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
-                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.") 
+                print("Error: Read file not found")
+                print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
+
+        except IsADirectoryError as dir_err:
+            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
+            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!") 
 
         except KeyError as key_error:
             if "next_token" in key_error.args:
                 pass
             else:    
-                print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
-                print("Another Tip: Read the DOCS before you break me!")
+                print("Config File Error: Bad key in " + str(key_error.args))
                 return
         
         except TypeError as t_err:
@@ -829,12 +842,12 @@ class tweet_timeline(cmd.Cmd):
                 elif arg_list[1] in self.__conf.file_IO:
                     if arg_list[1] in ["out"]:
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["tweet_timeline"]:
-                            self.__conf.file_IO[arg_list[1]]["tweet_timeline"][arg_list[2]] = arg_list[3]
+                            self.__conf.file_IO[arg_list[1]]["tweet_timeline"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
                                 print("Invalid argument in: " + arg_list[2])
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["tweet_timeline"]:
-                            self.__conf.file_IO["in"]["tweet_timeline"][arg_list[2]] = arg_list[3] 
+                            self.__conf.file_IO["in"]["tweet_timeline"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
                             print("Invalid argument in: " + arg_list[2])
                 else:
@@ -845,7 +858,8 @@ class tweet_timeline(cmd.Cmd):
             self.do_list(arg="params")
         
         except KeyError as key_error:
-            print("UH-OH! Bad key in: " + str(key_error.args))
+            print("Error: Bad key in " + str(key_error.args))
+            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -857,6 +871,7 @@ class tweet_timeline(cmd.Cmd):
 
     def do_help(self, arg):
         print("Help page here")
+        return
 
 
 
@@ -881,6 +896,7 @@ class tweet_timeline(cmd.Cmd):
 
     def do_clear(self, arg):
         os.system("clear")
+        return
 
 
 
@@ -974,14 +990,10 @@ class tweet_timeline(cmd.Cmd):
 
     def __dump_info(self, json_obj):
 
-        try:
-
-            with open(self.__conf.file_IO["out"]["tweet_timeline"]["tweet_timelines"], mode='a') as writefile:
-                json.dump(json_obj, writefile, indent=4, sort_keys=True)
-
-        except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")  
+        with open(self.__conf.file_IO["out"]["tweet_timeline"]["tweet_timelines"], mode='a') as writefile:
+            json.dump(json_obj, writefile, indent=4, sort_keys=True)
+        
+        return
         
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
 
@@ -1047,15 +1059,19 @@ class follows(cmd.Cmd):
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
-                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.") 
+                print("Error: Read File not found")
+                print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.") 
             return
+
+        except IsADirectoryError as dir_err:
+            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
+            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
 
         except KeyError as key_error:
             if "next_token" in key_error.args:
                 pass
             else:    
-                print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
-                print("Another Tip: Read the DOCS before you break me!")
+                print("Config File Error: Bad key in  " + str(key_error.args))
                 return
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -1115,13 +1131,20 @@ class follows(cmd.Cmd):
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
-                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")
+                print("Error: Read File not found")
+                print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
                 return 
 
+        except IsADirectoryError as dir_err:
+            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
+            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
+
         except KeyError as key_error:
-            print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
-            print("This program comes with a manual to avoid gagglef***s like this :)")
-            return
+            if "next_token" in key_error.args:
+                pass
+            else:
+                print("Config File Error: Bad key in " + str(key_error.args))
+                return
 
 
     
@@ -1239,12 +1262,12 @@ class follows(cmd.Cmd):
                 elif arg_list[1] in self.__conf.file_IO:
                     if arg_list[1] in ["out"]:
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["user_follows"]:
-                            self.__conf.file_IO[arg_list[1]]["user_follows"][arg_list[2]] = arg_list[3]
+                            self.__conf.file_IO[arg_list[1]]["user_follows"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
                                 print("Invalid argument in: " + arg_list[2])
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["user_follows"]:
-                            self.__conf.file_IO["in"]["user_follows"][arg_list[2]] = arg_list[3] 
+                            self.__conf.file_IO["in"]["user_follows"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
                             print("Invalid argument in: " + arg_list[2])
                 else:
@@ -1255,7 +1278,8 @@ class follows(cmd.Cmd):
             self.do_list(arg="params")
         
         except KeyError as key_error:
-            print("UH-OH! Bad key in: " + str(key_error.args))
+            print("Error: Bad key in " + str(key_error.args))
+            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -1267,6 +1291,7 @@ class follows(cmd.Cmd):
 
     def do_help(self, arg):
         print("help page here")
+        return
 
 
 
@@ -1291,6 +1316,7 @@ class follows(cmd.Cmd):
 
     def do_clear(self, arg):
         os.system("clear")
+        return
 
 
 
@@ -1391,23 +1417,20 @@ class follows(cmd.Cmd):
 
         prettify = json.dumps(json_obj, indent=4, sort_keys=True)
 
-        try:
-            if type == "followers":
-                with open(self.__conf.file_IO["out"]["user_follows"]["user_followers"], mode='a') as writefile:
-                    json.dump(json_obj, writefile, indent=4, sort_keys=True)
-                    if self.__conf.genopts["verbose?"]:
-                        print(prettify)
-                    print("JSON successfully written!")
-            elif type == "following":
-                with open(self.__conf.file_IO["out"]["user_follows"]["user_following"], mode='a') as writefile:
-                    json.dump(json_obj, writefile, indent=4, sort_keys=True)
-                    if self.__conf.genopts["verbose?"]:
-                        print(prettify)
-                    print("JSON successfully written!")
+        if type == "followers":
+            with open(self.__conf.file_IO["out"]["user_follows"]["user_followers"], mode='a') as writefile:
+                json.dump(json_obj, writefile, indent=4, sort_keys=True)
+                if self.__conf.genopts["verbose?"]:
+                    print(prettify)
+                print("JSON successfully written!")
+        elif type == "following":
+            with open(self.__conf.file_IO["out"]["user_follows"]["user_following"], mode='a') as writefile:
+                json.dump(json_obj, writefile, indent=4, sort_keys=True)
+                if self.__conf.genopts["verbose?"]:
+                    print(prettify)
+                print("JSON successfully written!")
 
-        except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")  
+        return  
         
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=
@@ -1458,15 +1481,18 @@ class likes(cmd.Cmd):
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
-                print("Error: File not found...")
+                print("Error: Read file not found")
                 print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
+
+        except IsADirectoryError as dir_err:
+            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
+            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
         
         except KeyError as key_error:
             if "next_token" in key_error.args:
                 pass
             else:    
-                print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
-                print("Another Tip: Read the DOCS before you break me!")
+                print("Config File Error: Bad key in " + str(key_error.args))
                 return
 
         except TypeError as t_err:
@@ -1509,11 +1535,18 @@ class likes(cmd.Cmd):
 
         except FileNotFoundError as file_error:
             if file_error.errno == errno.ENOENT:
-                print("Error: File not found...")
+                print("Error: Read file not found")
                 print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
+
+        except IsADirectoryError as dir_err:
+            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
+            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
         
         except KeyError as key_error:
-            print("UH-OH! Bad key in \'config.py\' : " + str(key_error.args))
+            if "next_token" in key_error.args:
+                pass
+            else:
+                print("Config File Error: Bad key in " + str(key_error.args))
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -1646,12 +1679,12 @@ class likes(cmd.Cmd):
                 elif arg_list[1] in self.__conf.file_IO:
                     if arg_list[1] in ["out"]:
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["likes"]:
-                            self.__conf.file_IO[arg_list[1]]["likes"][arg_list[2]] = arg_list[3]
+                            self.__conf.file_IO[arg_list[1]]["likes"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
                                 print("Invalid argument in: " + arg_list[2])
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["likes"]:
-                            self.__conf.file_IO["in"]["likes"][arg_list[2]] = arg_list[3] 
+                            self.__conf.file_IO["in"]["likes"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
                             print("Invalid argument in: " + arg_list[2])
                 else:
@@ -1665,7 +1698,8 @@ class likes(cmd.Cmd):
             print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
         
         except KeyError as key_error:
-            print("UH-OH! Bad key in: " + str(key_error.args))
+            print("Error: Bad key in " + str(key_error.args))
+            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
@@ -1674,6 +1708,7 @@ class likes(cmd.Cmd):
 
     def do_help(self, arg):
         print("help page here!")
+        return
 
 
 
@@ -1691,6 +1726,7 @@ class likes(cmd.Cmd):
 
     def do_clear(self, arg):
         os.system("clear")
+        return
 
 
 
@@ -1808,26 +1844,19 @@ class likes(cmd.Cmd):
 
     def __dump_info(self, json_object, type=""):
 
-        try:
+        prettify = json.dumps(json_object, indent=4, sort_keys=True)
 
-            prettify = json.dumps(json_object, indent=4, sort_keys=True)
+        if type == "liking":
+            with open(self.__conf.file_IO["out"]["likes"]["liking"], mode='a') as writefile:
+                json.dump(json_object, writefile, indent=4, sort_keys=True)
+                if self.__conf.genopts["verbose?"]:
+                    print(prettify)
+                print("JSON successfully written!")
+        elif type == "liked":
+            with open(self.__conf.file_IO["out"]["likes"]["liked"], mode='a') as writefile:
+                json.dump(json_object, writefile, indent=4, sort_keys=True)
+                if self.__conf.genopts["verbose?"]:
+                    print(prettify)
+                print("JSON successfully written!")
 
-            if type == "liking":
-                with open(self.__conf.file_IO["out"]["likes"]["liking"], mode='a') as writefile:
-                    json.dump(json_object, writefile, indent=4, sort_keys=True)
-                    if self.__conf.genopts["verbose?"]:
-                        print(prettify)
-                    print("JSON successfully written!")
-            elif type == "liked":
-                with open(self.__conf.file_IO["out"]["likes"]["liked"], mode='a') as writefile:
-                    json.dump(json_object, writefile, indent=4, sort_keys=True)
-                    if self.__conf.genopts["verbose?"]:
-                        print(prettify)
-                    print("JSON successfully written!")
-
-        except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: File not found.\nTip: check that params for file_IO are correct/up to date.")
-        except IsADirectoryError as dir_err:
-            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
-            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")    
+        return    
