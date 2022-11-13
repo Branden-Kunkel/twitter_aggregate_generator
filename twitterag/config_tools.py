@@ -7,7 +7,7 @@ class ctools:
 
         authorization = {
                                 
-                                "bearer_token" : None, # string
+                                "bearer_token" : "AAAAAAAAAAAAAAAAAAAAAB0ThAEAAAAAXyFc9qroqhUxhIk3advvnkqgSPw%3DXTCuvsSRPXoi3oL5hA2p0rQKWwn8Qlrpcm7m91X9lVDmoAZ0D8", # string
                                 "api_key" : None, # string
                                 "api_secret_key" : None, # string
                         }
@@ -56,7 +56,7 @@ class ctools:
 
 
         user_profile_params =   {       
-                                        "usernames" : None, # string
+                                        "usernames" : "elonmusk", # string
 
                                         "user_id" : None, # string
 
