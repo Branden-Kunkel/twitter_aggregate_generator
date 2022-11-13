@@ -594,7 +594,7 @@ class tweet_lookup(cmd.Cmd):
             param_table = self.__conf.tweet_lookup_params["request_params"]
 
             for key in param_table:
-                if param_table[key] == None or "None":
+                if param_table[key] == None:
                     pass
                 else:
                     params.update({key : param_table[key]})
@@ -945,7 +945,7 @@ class tweet_timeline(cmd.Cmd):
         param_table = self.__conf.tweet_timeline_params["request_params"]
 
         for key in param_table:
-            if param_table[key] == None or "None":
+            if param_table[key] == None:
                 pass
             else:
                 params.update({key : param_table[key]})
@@ -1385,7 +1385,7 @@ class follows(cmd.Cmd):
         param_table = self.__conf.user_follows_params["request_params"]
 
         for key in param_table:
-            if param_table[key] == None or "None":
+            if param_table[key] == None:
                 pass
             else:
                 params.update({key : param_table[key]})
@@ -1777,13 +1777,13 @@ class likes(cmd.Cmd):
 
         if param_type == "liking":
             for key in liking_table:
-                if liking_table[key] == None or "None":
+                if liking_table[key] == None:
                     pass
                 else:
                     params.update({key : liking_table[key]})
         elif param_type == "liked":
             for key in liked_table:
-                if liked_table[key] == None or "None":
+                if liked_table[key] == None:
                     pass
                 else:
                     params.update({key : liked_table[key]})
