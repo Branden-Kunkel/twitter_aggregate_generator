@@ -1,9 +1,13 @@
 # main module for TAG project
+import user_profile
+import user_follows
+import tweet_lookup
+import tweet_timeline
+import likes
+import config_tools
 import os
 import sys
 import cmd
-import config_tools
-import infoMOD
 from time import sleep
 
 version = "v.1.0.0\n"
@@ -11,40 +15,30 @@ version = "v.1.0.0\n"
 class main_cli(cmd.Cmd):
     """main console command prompt"""
  
-    user_mod = infoMOD.user_profile()
-    timeline_mod = infoMOD.tweet_timeline()
-    follows_mod = infoMOD.follows()
-    tweet_lookup_mod = infoMOD.tweet_lookup()
-    likes_mod = infoMOD.likes()
+    user_profile_console = user_profile.user_profile()
+    user_follows_console = user_follows.follows()
+    tweet_lookup_console = tweet_lookup.tweet_lookup()
+    tweet_timeline_console = tweet_timeline.tweet_timeline()
+    likes_console = likes.likes()
     conf = config_tools.ctools()
 
     intro = version + "Main TAG console. Enter 'help' or '?' at anytime for usage."
     prompt = "MODULE@INFO:"
 
     def do_user(self, arg):
-        print("Loading user console...")
-        sleep(1)
-        self.user_mod.cmdloop()
+        self.user_profile_console.cmdloop()
 
     def do_timeline(self, arg):
-        print("Loading tweet-timeline console...")
-        sleep(1)
-        self.timeline_mod.cmdloop()
+        self.tweet_timeline_console.cmdloop()
 
     def do_tweet(self, arg):
-        print("loading tweet-lookup console...")
-        sleep(1)
-        self.tweet_lookup_mod.cmdloop()
+        self.tweet_lookup_console.cmdloop()
 
     def do_follows(self, arg):
-        print("Loading user follows console...")
-        sleep(1)
-        self.follows_mod.cmdloop()
+        self.user_follows_console.cmdloop()
 
     def do_likes(self, arg):
-        print("loading likes console...")
-        sleep(1)
-        self.likes_mod.cmdloop()
+        self.likes_console.cmdloop()
 
     def do_help(self, arg):
         print("help page here")
@@ -58,7 +52,7 @@ class main_cli(cmd.Cmd):
         return
         
     def do_exit(self, arg):
-        print("Terminating TAG...")
+        print("Terminating")
         sleep(2)
         sys.exit()
 
@@ -75,8 +69,8 @@ class main_cli(cmd.Cmd):
 
 
 
-def info_console():
+def main():
     cli = main_cli()
     cli.cmdloop()
 
-info_console()
+main()

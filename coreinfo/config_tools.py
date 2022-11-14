@@ -56,7 +56,7 @@ class ctools:
 
 
         user_profile_params =   {       
-                                        "usernames" : "elonmusk", # string
+                                        "usernames" : None, # string
 
                                         "user_id" : None, # string
 
