@@ -69,8 +69,8 @@ class main_cli(cmd.Cmd):
 
 
 
-def info_console():
+def main():
     cli = main_cli()
     cli.cmdloop()
 
-info_console()
+main()
