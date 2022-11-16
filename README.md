@@ -14,7 +14,7 @@ that are planned to be integrated soon are:
 - command piping
 - a small SDK 
 - a compiled version of this program
-- increased access elevation and API ednpoints available
+- increased access elevation and API endpoints available
 
 To look at future modules bieng tested, take a look at the 'testing' branch for this project. To see the next update that will be pushed to 'master'
 see the 'update' branch. Thank you for taking the time to check out the project!
