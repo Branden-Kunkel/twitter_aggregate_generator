@@ -76,10 +76,12 @@ class tweet_timeline(cmd.Cmd):
             if file_error.errno == errno.ENOENT:
                 print("Error: Read file not found")
                 print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
-
+            return 
+            
         except IsADirectoryError as dir_err:
             print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
             print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!") 
+            return 
 
         except KeyError as key_error:
             if "next_token" in key_error.args:
@@ -89,7 +91,8 @@ class tweet_timeline(cmd.Cmd):
                 return
         
         except TypeError as t_err:
-            print("Error: Found \'None\' in: " + str(t_err.args))
+            print("Error: Found \'None\' in a required parameter ")
+            return
 
 
 
