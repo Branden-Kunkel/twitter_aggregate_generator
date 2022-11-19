@@ -9,7 +9,7 @@ import requests
 import os
 import sys
 import cmd 
-import errno
+
 
 class user_profile(cmd.Cmd):
 
