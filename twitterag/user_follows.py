@@ -80,28 +80,21 @@ class follows(cmd.Cmd):
         except IsADirectoryError as dir_err:
             print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
             print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
-<<<<<<< HEAD
 
         except KeyError as key_error:
-=======
             return
             
         except KeyError as key_error:
-
->>>>>>> update
             if "next_token" in key_error.args:
                 pass
             else:    
                 print("Config File Error: Bad key in  " + str(key_error.args))
                 return
-<<<<<<< HEAD
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
-=======
 
         except TypeError as t_err:
             print("Error: Found \'None\' in a required parameter ")
->>>>>>> update
             return
 
 

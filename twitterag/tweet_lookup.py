@@ -46,22 +46,15 @@ class tweet_lookup(cmd.Cmd):
         except IsADirectoryError as dir_err:
             print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
             print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
-<<<<<<< HEAD
-        
-=======
             return 
             
->>>>>>> update
         except KeyError as key_error:
             print("Config File Error: Bad key in " + str(key_error.args))
             return
 
         except TypeError as t_err:
-<<<<<<< HEAD
             print("Error: Found \'None\' in: " + str(t_err.args))
-=======
             print("Error: Found \'None\' in a required parameter ")
->>>>>>> update
             return
 
 
