@@ -133,27 +133,27 @@ class ctools:
                                 "out" : {
 
                                                 "user_profile" :        {
-                                                                                "user_profiles" : GLOBAL_FILE_PATH + None, # string
+                                                                                "user_profiles" : GLOBAL_FILE_PATH + "", # string
                                                                         },
 
                                                 "tweet_timeline" :      {
-                                                                                "tweet_timelines" : GLOBAL_FILE_PATH + None, # string
+                                                                                "tweet_timelines" : GLOBAL_FILE_PATH + "", # string
                                                                         },
 
                                                 "user_follows" :        {
-                                                                                "user_followers" : GLOBAL_FILE_PATH + None, # string
+                                                                                "user_followers" : GLOBAL_FILE_PATH + "", # string
 
-                                                                                "user_following" : GLOBAL_FILE_PATH + None, # string
+                                                                                "user_following" : GLOBAL_FILE_PATH + "", # string
                                                                         },
 
                                                 "tweet_lookup" :        {
-                                                                                "tweets" : GLOBAL_FILE_PATH + None, # string
+                                                                                "tweets" : GLOBAL_FILE_PATH + "", # string
                                                                         },
 
                                                 "likes" :               {
-                                                                                "liking" : GLOBAL_FILE_PATH + None, # string
+                                                                                "liking" : GLOBAL_FILE_PATH + "", # string
 
-                                                                                "liked" : GLOBAL_FILE_PATH + None, # string
+                                                                                "liked" : GLOBAL_FILE_PATH + "", # string
                                                                         },
                                                 
                                         },
@@ -161,27 +161,27 @@ class ctools:
 
                                 "in" :  {
                                                 "user_profile" :        {
-                                                                                "username_list" : GLOBAL_FILE_PATH + None, # string
+                                                                                "username_list" : GLOBAL_FILE_PATH + "", # string
 
-                                                                                "user_id_list" : GLOBAL_FILE_PATH + None, # string
+                                                                                "user_id_list" : GLOBAL_FILE_PATH + "", # string
                                                                         },
 
                                                 "tweet_timeline" :      {
-                                                                                "user_id_list" : GLOBAL_FILE_PATH + None, # string
+                                                                                "user_id_list" : GLOBAL_FILE_PATH + "", # string
                                                                         },
 
                                                 "user_follows" :        {
-                                                                                "user_id_list" : GLOBAL_FILE_PATH + None, # string
+                                                                                "user_id_list" : GLOBAL_FILE_PATH + "", # string
                                                                         },
 
                                                 "tweet_lookup" :        {
-                                                                                "tweet_id_list" : GLOBAL_FILE_PATH + None # string
+                                                                                "tweet_id_list" : GLOBAL_FILE_PATH + "" # string
                                                                         },
 
                                                 "likes" :               {
-                                                                                "user_id_list" : GLOBAL_FILE_PATH + None, # string
+                                                                                "user_id_list" : GLOBAL_FILE_PATH + "", # string
 
-                                                                                "tweet_id_list" : GLOBAL_FILE_PATH + None, # string
+                                                                                "tweet_id_list" : GLOBAL_FILE_PATH + "", # string
                                                                         },      
                                         }
                         }

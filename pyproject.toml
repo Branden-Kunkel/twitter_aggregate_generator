@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "Twitter_Aggregate_Generator"
 version = "1.0.0"
 authors = [{name="Branden Kunkel", email="kunkel.branden6130@gmail.com"}]
-requires-python = ">=3.8.10"
+requires-python = ">=3.8"
 classifiers = 	[
 			"Development Status :: 3 - Alpha",
 			"Intended Audience :: Education",
@@ -20,5 +20,8 @@ readme = "README.md"
 
 [project.urls]
 homepage = "https://github.com/Branden-Kunkel/twitter_aggregate_generator"
+
+[tool.setuptools]
+packages = ["twitterag", "twitterag.coreinfo"]
  
 
