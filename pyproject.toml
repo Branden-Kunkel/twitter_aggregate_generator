@@ -23,6 +23,6 @@ readme = "README.md"
 homepage = "https://github.com/Branden-Kunkel/twitter_aggregate_generator"
 
 [tool.setuptools]
-packages = ["twitterag", "twitterag.coreinfo"]
+packages = ["twitterag"]
  
 
