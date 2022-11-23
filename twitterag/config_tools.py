@@ -126,7 +126,7 @@ class ctools:
                         }
 
 
-        GLOBAL_FILE_PATH = "/home/kinder/Documents/python/TwitterAG/testing/files/" # string
+        GLOBAL_FILE_PATH = "" # string
 
 
         file_IO =       {
