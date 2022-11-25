@@ -1,8 +1,8 @@
-import user_follows
-import tweet_lookup
-import tweet_timeline
-import likes
-import config_tools
+import twitterag.user_follows as user_follows
+import twitterag.tweet_lookup as tweet_lookup
+import twitterag.tweet_timeline as tweet_timeline
+import twitterag.likes as likes
+import twitterag.config_tools as config_tools
 import json
 from time import sleep
 import requests

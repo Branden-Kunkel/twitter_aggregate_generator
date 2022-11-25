@@ -1,10 +1,10 @@
 #! usr/bin/env python
-import user_profile
-import user_follows
-import tweet_lookup
-import tweet_timeline
-import likes
-import config_tools
+import twitterag.user_profile as user_profile
+import twitterag.user_follows as user_follows
+import twitterag.tweet_lookup as tweet_lookup
+import twitterag.tweet_timeline as tweet_timeline
+import twitterag.likes as likes
+import twitterag.config_tools as config_tools
 import os
 import sys
 import cmd
