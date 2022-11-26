@@ -310,7 +310,9 @@ class follows(cmd.Cmd):
         
 
     def do_help(self, arg):
-        print("help page here")
+        with open("HELP.txt", mode='r') as helpfile:
+            for line in helpfile:
+                print(line)
         return
 
 

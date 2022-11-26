@@ -1,0 +1,35 @@
+This is the TAG help page: For more in depth documentation please refer to the github repo @https://github.com/Branden-Kunkel/twitter_aggregate_generator
+
+
+Commands:
+
+	- 'help' or '?' = show this page
+	- 'list[arg]' = show request and file parameters, as well as commands where arg is 'commands' or 'params' (will list modules if in the main console)
+	- 'set[arg]' = set parameters for the program/console to use where arg is 'request' or 'files'. See docs for usage. 
+	- 'exit' = terminate the current instance of TAG	
+	- run type commands by module/console:
+		- user_profile = 'profile'
+		- user_follows = 'following' or 'followers'
+		- tweet_lookup = 'lookup'
+		- tweet_timeline = 'timeline'
+		- likes = 'liking' or 'liked'
+	
+
+
+
+
+Troubleshooting:
+
+	If you are getting error messages from the API itself, check to make sure that:
+		- There are no spaces after commas in request_params
+		- usernames, user ids or tweet ids are properly spelled/formatted
+		- spelling in all request_params dictionary items is correct/properly formatted
+		- you are specifying the right amount of target identifiers for the current module
+		- your authenticication tokens are correct
+
+	If you encounter a Traceback, please report it to the author(s)
+
+	If the program can not find any files specified, then check that GLOBAL_FILE_PATH is properly spelled and formatted.
+
+	Make sure to check out any active issues in the source repo! Any known an current issues are documented there.
+

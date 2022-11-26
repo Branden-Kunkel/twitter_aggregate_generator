@@ -10,7 +10,7 @@ import sys
 import cmd
 from time import sleep
 
-version = "v.1.0.2\n"
+version = "v.1.0.0\n"
 
 class main_cli(cmd.Cmd):
     """main console command prompt"""
@@ -41,7 +41,10 @@ class main_cli(cmd.Cmd):
         self.likes_console.cmdloop()
 
     def do_help(self, arg):
-        print("help page here")
+        with open("HELP.txt", mode='r') as helpfile:
+            for line in helpfile:
+                print(line)
+        return
 
     def default(self, line: str) -> None:
         print("Invalid input...")

@@ -4,7 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Twitter_Aggregate_Generator"
+<<<<<<< HEAD
 version = "2.0.0"
+=======
+version = "1.0.0"
+>>>>>>> update
 authors = [{name="Branden Kunkel", email="kunkel.branden6130@gmail.com"}]
 requires-python = ">=3.8"
 classifiers = 	[
