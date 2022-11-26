@@ -1,36 +1,35 @@
 This is the TAG help page: For more in depth documentation please refer to the github repo @https://github.com/Branden-Kunkel/twitter_aggregate_generator
 
 
-Commands, listed by command = behavior:
+Commands:
 
-	- help or ? = show this page
-	- list[arg] = show request and file parameters, as well as commands where arg is 'commands' or 'params'
-	- set[arg] = set parameters for the program/console to use. See docs for usage 
-	- 'run' type commands listed by module = command:
-		- user_profile = profile
-		- user_follows = following or followers
-		- tweet_lookup = lookup
-		- tweet_timeline = timeline
-		- likes = liking or liked
-	- exit = terminate the current instance of TAG
+	- 'help' or '?' = show this page
+	- 'list[arg]' = show request and file parameters, as well as commands where arg is 'commands' or 'params' (will list modules if in the main console)
+	- 'set[arg]' = set parameters for the program/console to use where arg is 'request' or 'files'. See docs for usage. 
+	- 'exit' = terminate the current instance of TAG	
+	- run type commands by module/console:
+		- user_profile = 'profile'
+		- user_follows = 'following' or 'followers'
+		- tweet_lookup = 'lookup'
+		- tweet_timeline = 'timeline'
+		- likes = 'liking' or 'liked'
+	
 
-		
-Parameters:
 
-	All paramater types and layout is handled by the 'set' command. Any parameters that affect the bahavior of an API request will be accessed using the 'request' arg when using 'set'. 
-For file IO parameters, pass 'files' as the argument to 'set'. Parameter configurations are saved in memory for each module/console until instance termination in TAG, even when traversing between different consoles.
-Parameters can also be changed in the hard code of config_tools.py in the package directory. This is not preferred over using 'set' unless you are setiing up a large campaign or setting defaults for future use. 
-Furthermore, all modules will take a list of target identifiers in .txt form for mass data retrieval. This option can be switched on by setting 'read_from_file? = True" and setting the appropriate file_IO parameters to follow.
 
 
 Troubleshooting:
 
-	If you are getting error messages from the API itself check to make sure that:
+	If you are getting error messages from the API itself, check to make sure that:
 		- There are no spaces after commas in request_params
 		- usernames, user ids or tweet ids are properly spelled/formatted
 		- spelling in all request_params dictionary items is correct/properly formatted
+		- you are specifying the right amount of target identifiers for the current module
+		- your authenticication tokens are correct
+
+	If you encounter a Traceback, please report it to the author(s)
 
 	If the program can not find any files specified, then check that GLOBAL_FILE_PATH is properly spelled and formatted.
-	
-	Make sure to check out any active issues in the source repo!
+
+	Make sure to check out any active issues in the source repo! Any known an current issues are documented there.
 
