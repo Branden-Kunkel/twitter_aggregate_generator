@@ -242,7 +242,9 @@ class tweet_timeline(cmd.Cmd):
 
 
     def do_help(self, arg):
-        print("Help page here")
+        with open("HELP.txt", mode='r') as helpfile:
+            for line in helpfile:
+                print(line)
         return
 
 
