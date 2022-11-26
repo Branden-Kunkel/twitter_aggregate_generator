@@ -10,7 +10,7 @@ import sys
 import cmd
 from time import sleep
 
-version = "v.1.0.0\n"
+version = "v.1.0.1\n"
 
 class main_cli(cmd.Cmd):
     """main console command prompt"""
@@ -41,9 +41,8 @@ class main_cli(cmd.Cmd):
         self.likes_console.cmdloop()
 
     def do_help(self, arg):
-        with open("HELP.txt", mode='r') as helpfile:
-            for line in helpfile:
-                print(line)
+        self.do_list(arg=None)
+        print("\nFor in depth usage and information, see README.md in the source repo\n")
         return
 
     def default(self, line: str) -> None:
