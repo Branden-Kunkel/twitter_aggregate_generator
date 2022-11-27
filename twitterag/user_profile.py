@@ -118,6 +118,9 @@ class user_profile(cmd.Cmd):
             print("Error: Found \'None\' in a required parameter ")
             return
 
+        except IndexError as ind_err:
+            pass
+
         self.cmdloop()
 
 
