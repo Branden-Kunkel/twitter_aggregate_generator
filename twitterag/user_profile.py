@@ -9,7 +9,7 @@ import requests
 import os
 import sys
 import cmd 
-import twitterag.stream.strip as strip
+import twitterag.stream.strip as stripjson
 
 
 
@@ -40,11 +40,12 @@ class user_profile(cmd.Cmd):
                                     key_list = []
                                     for arg in arg_list[1:]:
                                         key_list += arg
-                                    self.__dump_info(strip.strip(request, key_list, line, "user_profile"))
-                            elif arg_list == None:
+                                    self.__dump_info(stripjson.strip(request, key_list, line, "user_profile"))
+                            elif IndexError:
                                 self.__dump_info(request)
                             else:
                                 print("Error: Invalid argument in " + arg_list[0])
+                                return
                     return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     with open(self.__conf.file_IO["in"]["user_profile"]["user_id_list"], mode='r') as readfile:
@@ -55,11 +56,12 @@ class user_profile(cmd.Cmd):
                                     key_list = []
                                     for arg in arg_list[1:]:
                                         key_list += arg
-                                    self.__dump_info(strip.strip(request, key_list, line, "user_profile"))
-                            elif arg_list == None:
+                                    self.__dump_info(stripjson.strip(request, key_list, line, "user_profile"))
+                            elif IndexError:
                                 self.__dump_info(request)
                             else:
                                 print("Error: Invalid argument in " + arg_list[0])
+                                return
                     return
                 else:
                     print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
@@ -73,11 +75,14 @@ class user_profile(cmd.Cmd):
                             key_list = []
                             for arg in arg_list[1:]:
                                 key_list += arg
-                            self.__dump_info(strip.strip(request, key_list, self.__conf.user_profile_params["usernames"], "user_profile"))
-                    elif arg_list == None:
+                            self.__dump_info(stripjson.strip(request, key_list, self.__conf.user_profile_params["usernames"], "user_profile"))
+                            return
+                    elif arg_list[0] == None:
                         self.__dump_info(request)
+                        return
                     else:
                         print("Error: Invalid argument in " + arg_list[0])
+                        return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     request = self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"]))
                     if arg_list[0] in ["strip"]:
@@ -85,9 +90,11 @@ class user_profile(cmd.Cmd):
                             key_list = []
                             for arg in arg_list[1:]:
                                 key_list += arg
-                            self.__dump_info(strip.strip(request, key_list, self.__conf.user_profile_params["user_id"], "user_profile"))
-                    elif arg_list == None:
+                            self.__dump_info(stripjson.strip(request, key_list, self.__conf.user_profile_params["user_id"], "user_profile"))
+                            return
+                    elif arg_list[0] == None:
                         self.__dump_info(request)
+                        return
                     else:
                         print("Error: Invalid argument in " + arg_list[0])
                     return

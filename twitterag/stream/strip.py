@@ -3,7 +3,7 @@ import json
 
 def strip(json_obj, dict_keys, target_id, target_type):
 
-    if json_obj or dict_keys or target_id or target_type == None:
+    if [json_obj, dict_keys, target_id, target_type] == None:
 
         print("Error: One or more parameters came back as \'None\' type.")
         return
