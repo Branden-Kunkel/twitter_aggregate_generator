@@ -9,6 +9,8 @@ import requests
 import os
 import sys
 import cmd 
+import twitterag.stream.strip as strip
+
 
 
 class user_profile(cmd.Cmd):
@@ -22,6 +24,9 @@ class user_profile(cmd.Cmd):
 
     def do_profile(self, arg):
 
+        arg_buff = str(arg)
+        arg_list = arg_buff.split()
+
         print("\nRunning {}\n".format(self.prompt))
 
         try:
@@ -30,13 +35,31 @@ class user_profile(cmd.Cmd):
                     with open(self.__conf.file_IO["in"]["user_profile"]["username_list"], mode='r', ) as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
-                            self.__dump_info(request)
+                            if arg_list[0] in ["strip"]:
+                                if arg_list[0] == "strip":
+                                    key_list = []
+                                    for arg in arg_list[1:]:
+                                        key_list += arg
+                                    self.__dump_info(strip.strip(request, key_list, line, "user_profile"))
+                            elif arg_list == None:
+                                self.__dump_info(request)
+                            else:
+                                print("Error: Invalid argument in " + arg_list[0])
                     return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     with open(self.__conf.file_IO["in"]["user_profile"]["user_id_list"], mode='r') as readfile:
                         for line in readfile:
-                            request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
-                            self.__dump_info(request)
+                            request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
+                            if arg_list[0] in ["strip"]:
+                                if arg_list[0] == "strip":
+                                    key_list = []
+                                    for arg in arg_list[1:]:
+                                        key_list += arg
+                                    self.__dump_info(strip.strip(request, key_list, line, "user_profile"))
+                            elif arg_list == None:
+                                self.__dump_info(request)
+                            else:
+                                print("Error: Invalid argument in " + arg_list[0])
                     return
                 else:
                     print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
@@ -45,11 +68,28 @@ class user_profile(cmd.Cmd):
             elif self.__conf.user_profile_params["read_from_file?"] == False:
                 if self.__conf.user_profile_params["search_by_username?"]:
                     request = self.__retrieve_info(self.__url_build(usernames=self.__conf.user_profile_params["usernames"]))
-                    self.__dump_info(request)
-                    return
+                    if arg_list[0] in ["strip"]:
+                        if arg_list[0] == "strip":
+                            key_list = []
+                            for arg in arg_list[1:]:
+                                key_list += arg
+                            self.__dump_info(strip.strip(request, key_list, self.__conf.user_profile_params["usernames"], "user_profile"))
+                    elif arg_list == None:
+                        self.__dump_info(request)
+                    else:
+                        print("Error: Invalid argument in " + arg_list[0])
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     request = self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"]))
-                    self.__dump_info(request)
+                    if arg_list[0] in ["strip"]:
+                        if arg_list[0] == "strip":
+                            key_list = []
+                            for arg in arg_list[1:]:
+                                key_list += arg
+                            self.__dump_info(strip.strip(request, key_list, self.__conf.user_profile_params["user_id"], "user_profile"))
+                    elif arg_list == None:
+                        self.__dump_info(request)
+                    else:
+                        print("Error: Invalid argument in " + arg_list[0])
                     return
                 else:
                     print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
