@@ -9,8 +9,7 @@ import requests
 import os
 import sys
 import cmd 
-import twitterag.stream.strip as stripjson
-
+import twitterag.stream.strip as strip_json
 
 
 class user_profile(cmd.Cmd):
@@ -24,10 +23,10 @@ class user_profile(cmd.Cmd):
 
     def do_profile(self, arg):
 
+        print("\nRunning {}\n".format(self.prompt))
+
         arg_buff = str(arg)
         arg_list = arg_buff.split()
-
-        print("\nRunning {}\n".format(self.prompt))
 
         try:
             if self.__conf.user_profile_params["read_from_file?"]:
@@ -35,33 +34,18 @@ class user_profile(cmd.Cmd):
                     with open(self.__conf.file_IO["in"]["user_profile"]["username_list"], mode='r', ) as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
+                            self.__dump_info(request)
                             if arg_list[0] in ["strip"]:
                                 if arg_list[0] == "strip":
-                                    key_list = []
-                                    for arg in arg_list[1:]:
-                                        key_list += arg
-                                    self.__dump_info(stripjson.strip(request, key_list, line, "user_profile"))
-                            elif IndexError:
-                                self.__dump_info(request)
+                                    self.__dump_info(strip_json.strip(request, arg_list[1:], line, "user"))
                             else:
-                                print("Error: Invalid argument in " + arg_list[0])
-                                return
+                                print("\nError: Invalid argument in " + arg_list[0] + "\n")
                     return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     with open(self.__conf.file_IO["in"]["user_profile"]["user_id_list"], mode='r') as readfile:
                         for line in readfile:
-                            request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
-                            if arg_list[0] in ["strip"]:
-                                if arg_list[0] == "strip":
-                                    key_list = []
-                                    for arg in arg_list[1:]:
-                                        key_list += arg
-                                    self.__dump_info(stripjson.strip(request, key_list, line, "user_profile"))
-                            elif IndexError:
-                                self.__dump_info(request)
-                            else:
-                                print("Error: Invalid argument in " + arg_list[0])
-                                return
+                            request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
+                            self.__dump_info(request)
                     return
                 else:
                     print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
@@ -70,33 +54,11 @@ class user_profile(cmd.Cmd):
             elif self.__conf.user_profile_params["read_from_file?"] == False:
                 if self.__conf.user_profile_params["search_by_username?"]:
                     request = self.__retrieve_info(self.__url_build(usernames=self.__conf.user_profile_params["usernames"]))
-                    if arg_list[0] in ["strip"]:
-                        if arg_list[0] == "strip":
-                            key_list = []
-                            for arg in arg_list[1:]:
-                                key_list += arg
-                            self.__dump_info(stripjson.strip(request, key_list, self.__conf.user_profile_params["usernames"], "user_profile"))
-                            return
-                    elif arg_list[0] == None:
-                        self.__dump_info(request)
-                        return
-                    else:
-                        print("Error: Invalid argument in " + arg_list[0])
-                        return
+                    self.__dump_info(request)
+                    return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     request = self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"]))
-                    if arg_list[0] in ["strip"]:
-                        if arg_list[0] == "strip":
-                            key_list = []
-                            for arg in arg_list[1:]:
-                                key_list += arg
-                            self.__dump_info(stripjson.strip(request, key_list, self.__conf.user_profile_params["user_id"], "user_profile"))
-                            return
-                    elif arg_list[0] == None:
-                        self.__dump_info(request)
-                        return
-                    else:
-                        print("Error: Invalid argument in " + arg_list[0])
+                    self.__dump_info(request)
                     return
                 else:
                     print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
@@ -124,9 +86,6 @@ class user_profile(cmd.Cmd):
         except TypeError as t_err:
             print("Error: Found \'None\' in a required parameter ")
             return
-
-        except IndexError as ind_err:
-            pass
 
         self.cmdloop()
 
@@ -263,9 +222,8 @@ class user_profile(cmd.Cmd):
   
         
     def do_help(self, arg):
-        with open("HELP.txt", mode='r') as helpfile:
-            for line in helpfile:
-                print(line)
+        self.do_list(arg="commands")
+        print("\nFor in depth usage and information, see README.md in the source repo\n")
         return
 
 
@@ -387,9 +345,19 @@ class user_profile(cmd.Cmd):
 
 
 
-    def __dump_info(self, json_object):
+    def __dump_info(self, json_object, strip_file=False):
 
-        with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
-            json.dump(json_object, writefile, indent=4, sort_keys=True)
+        if strip_file == False:
+            with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
+                json.dump(json_object, writefile, indent=4, sort_keys=True)
 
-        return    
+        elif strip_file:
+            config_file_path = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
+            strip_appended_file_path = "strip-" + config_file_path
+            with open(strip_appended_file_path, mode='a') as writefile:
+                json.dump(json_object, writefile, indent=4, sort_keys=True)
+        else: 
+            print("Error: argument \'strip_file\' must be bool, found other type.")
+            
+        return
+
