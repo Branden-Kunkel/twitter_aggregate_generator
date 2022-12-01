@@ -8,7 +8,8 @@ from time import sleep
 import requests
 import os
 import sys
-import cmd 
+import cmd
+import twitterag.stream.strip as json_strip 
 
 
 class user_profile(cmd.Cmd):
@@ -25,18 +26,28 @@ class user_profile(cmd.Cmd):
         print("\nRunning {}\n".format(self.prompt))
 
         try:
+
+            arg_buff = str(arg)
+            arg_list = arg_buff.split()
+
             if self.__conf.user_profile_params["read_from_file?"]:
                 if self.__conf.user_profile_params["search_by_username?"]:
                     with open(self.__conf.file_IO["in"]["user_profile"]["username_list"], mode='r', ) as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
-                            self.__dump_info(request)
+                            if arg_list[0] in ["strip"]:
+                                self.__dump_info(json_strip.strip(request, arg_list[1], line, "user_profile"))
+                            else:
+                                self.__dump_info(request)
                     return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     with open(self.__conf.file_IO["in"]["user_profile"]["user_id_list"], mode='r') as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
-                            self.__dump_info(request)
+                            if arg_list[0] in ["strip"]:
+                                self.__dump_info(json_strip.strip(request, arg_list[1], line, "user_profile"))
+                            else:
+                                self.__dump_info(request)
                     return
                 else:
                     print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
@@ -45,11 +56,17 @@ class user_profile(cmd.Cmd):
             elif self.__conf.user_profile_params["read_from_file?"] == False:
                 if self.__conf.user_profile_params["search_by_username?"]:
                     request = self.__retrieve_info(self.__url_build(usernames=self.__conf.user_profile_params["usernames"]))
-                    self.__dump_info(request)
+                    if arg_list[0] in ["strip"]:
+                        self.__dump_info(json_strip.strip(request, arg_list[1], self.__conf.user_profile_params["usernames"], "user_profile"))
+                    else:
+                        self.__dump_info(request)
                     return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     request = self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"]))
-                    self.__dump_info(request)
+                    if arg_list[0] in ["strip"]:
+                        self.__dump_info(json_strip.strip(request, arg_list[1], self.__conf.user_profile_params["user_id"], "user_profile"))
+                    else:
+                        self.__dump_info(request)
                     return
                 else:
                     print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
@@ -77,6 +94,9 @@ class user_profile(cmd.Cmd):
         except TypeError as t_err:
             print("Error: Found \'None\' in a required parameter ")
             return
+
+        except IndexError as inx_err:
+            print(str(inx_err))
 
         self.cmdloop()
 
