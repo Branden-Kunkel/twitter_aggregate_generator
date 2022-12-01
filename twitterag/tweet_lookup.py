@@ -190,11 +190,9 @@ class tweet_lookup(cmd.Cmd):
 
 
     def do_help(self, arg):
-        with open("HELP.txt", mode='r') as helpfile:
-            for line in helpfile:
-                print(line)
+        self.do_list(arg="commands")
+        print("\nFor in depth usage and information, see README.md in the source repo\n")
         return
-
 
 
     def default(self, line: str):
