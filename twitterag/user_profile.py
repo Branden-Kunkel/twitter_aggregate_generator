@@ -8,13 +8,8 @@ from time import sleep
 import requests
 import os
 import sys
-<<<<<<< HEAD
-import cmd 
-import twitterag.stream.strip as strip_json
-=======
 import cmd
 import twitterag.stream.strip as json_strip 
->>>>>>> update
 
 
 class user_profile(cmd.Cmd):
@@ -30,9 +25,6 @@ class user_profile(cmd.Cmd):
 
         print("\nRunning {}\n".format(self.prompt))
 
-        arg_buff = str(arg)
-        arg_list = arg_buff.split()
-
         try:
 
             arg_buff = str(arg)
@@ -43,26 +35,17 @@ class user_profile(cmd.Cmd):
                     with open(self.__conf.file_IO["in"]["user_profile"]["username_list"], mode='r', ) as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
-<<<<<<< HEAD
-                            self.__dump_info(request)
                             if arg_list[0] in ["strip"]:
-                                if arg_list[0] == "strip":
-                                    self.__dump_info(strip_json.strip(request, arg_list[1:], line, "user"))
-                            else:
-                                print("\nError: Invalid argument in " + arg_list[0] + "\n")
-=======
-                            if arg_list[0] in ["strip"]:
-                                self.__dump_info(json_strip.strip(request, arg_list[1], line, "user_profile"))
+                                self.__dump_info(json_strip.strip(request, arg_list[1:], line, "user_profile"))
                             else:
                                 self.__dump_info(request)
->>>>>>> update
                     return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     with open(self.__conf.file_IO["in"]["user_profile"]["user_id_list"], mode='r') as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
                             if arg_list[0] in ["strip"]:
-                                self.__dump_info(json_strip.strip(request, arg_list[1], line, "user_profile"))
+                                self.__dump_info(json_strip.strip(request, arg_list[1:], line, "user_profile"))
                             else:
                                 self.__dump_info(request)
                     return
@@ -74,14 +57,14 @@ class user_profile(cmd.Cmd):
                 if self.__conf.user_profile_params["search_by_username?"]:
                     request = self.__retrieve_info(self.__url_build(usernames=self.__conf.user_profile_params["usernames"]))
                     if arg_list[0] in ["strip"]:
-                        self.__dump_info(json_strip.strip(request, arg_list[1], self.__conf.user_profile_params["usernames"], "user_profile"))
+                        self.__dump_info(json_strip.strip(request, arg_list[1:], self.__conf.user_profile_params["usernames"], "user_profile"))
                     else:
                         self.__dump_info(request)
                     return
                 elif self.__conf.user_profile_params["search_by_username?"] == False:
                     request = self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"]))
                     if arg_list[0] in ["strip"]:
-                        self.__dump_info(json_strip.strip(request, arg_list[1], self.__conf.user_profile_params["user_id"], "user_profile"))
+                        self.__dump_info(json_strip.strip(request, arg_list[1:], self.__conf.user_profile_params["user_id"], "user_profile"))
                     else:
                         self.__dump_info(request)
                     return
@@ -373,19 +356,9 @@ class user_profile(cmd.Cmd):
 
 
 
-    def __dump_info(self, json_object, strip_file=False):
+    def __dump_info(self, json_object):
 
-        if strip_file == False:
-            with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
-                json.dump(json_object, writefile, indent=4, sort_keys=True)
+        with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
+            json.dump(json_object, writefile, indent=4, sort_keys=True)
 
-        elif strip_file:
-            config_file_path = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
-            strip_appended_file_path = "strip-" + config_file_path
-            with open(strip_appended_file_path, mode='a') as writefile:
-                json.dump(json_object, writefile, indent=4, sort_keys=True)
-        else: 
-            print("Error: argument \'strip_file\' must be bool, found other type.")
-            
-        return
-
+        return    
