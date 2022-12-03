@@ -9,9 +9,9 @@ import requests
 import os
 import sys
 import cmd 
-import cmd
-import twitterag.stream.strip as json_strip 
-import twitterag.exceptions.auth_except as auth_err
+import cmd 
+import twitterag.exceptions.auth_except as Auth_EX
+
 
 
 class user_profile(cmd.Cmd):
@@ -33,70 +33,40 @@ class user_profile(cmd.Cmd):
             search_by_username_bool = self.__conf.user_profile_params["search_by_username?"]
             io_usernames_readfile = self.__conf.file_IO["in"]["user_profile"]["username_list"]
             io_userid_readfile = self.__conf.file_IO["in"]["user_profile"]["user_id_list"]
-            io_writefile = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
             usernames_string = self.__conf.user_profile_params["usernames"]
             user_id_string = self.__conf.user_profile_params["user_id"]
 
-            target_type = "User_Profile"
+            shell_args_arg_buffer = str(arg)
+            shell_args = shell_args_arg_buffer.split()
 
-            pipeable_commands = ["strip"]
-
-            arg_buff = str(arg)
-            arg_list = arg_buff.split()
-
-            if read_from_file_bool:
+            if read_from_file_bool == True:
                 if search_by_username_bool:
                     with open(io_usernames_readfile, mode='r', ) as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
                             self.__dump_info(request)
-                            if arg_list[0] in pipeable_commands:
-                                if arg_list[0] == "strip":
-                                    self.__dump_info(json_strip.strip(io_writefile, arg_list[1:], target_type))
-                                else:
-                                    self.__dump_info(request)
-                            else:
-                                raise auth_err.InvalidArgument(arg_list[0])
                     return
                 elif search_by_username_bool == False:
                     with open(io_userid_readfile, mode='r') as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
-                            if arg_list[0] in pipeable_commands:
-                                if arg_list[0] == "strip":
-                                    self.__dump_info(json_strip.strip(io_writefile, arg_list[1:], target_type))
-                                else:
-                                    self.__dump_info(request)
-                            else:
-                                raise auth_err.InvalidArgument(arg_list[0])
+                            self.__dump_info(request)
                     return
                 else:
-                    raise auth_err.InvalidParameterType(search_by_username_bool)
+                    raise Auth_EX.ParamTypeError
             elif read_from_file_bool == False:
                 if search_by_username_bool:
                     request = self.__retrieve_info(self.__url_build(usernames_string))
-                    if arg_list[0] in pipeable_commands:
-                        if arg_list[0] == "strip":
-                            self.__dump_info(json_strip.strip(io_writefile, arg_list[1:], target_type))
-                        else:
-                            self.__dump_info(request)
-                    else:
-                        raise auth_err.InvalidArgument(arg_list[0])
+                    self.__dump_info(request)
                     return
                 elif search_by_username_bool == False:
                     request = self.__retrieve_info(self.__url_build(user_id=user_id_string))
-                    if arg_list[0] in pipeable_commands:
-                        if arg_list[0] == "strip":
-                            self.__dump_info(json_strip.strip(io_writefile, arg_list[1:], "user_profile"))
-                        else:
-                            self.__dump_info(request)
-                    else:
-                        raise auth_err.InvalidArgument(arg_list[0])
+                    self.__dump_info(request)
                     return
                 else:
-                    raise auth_err.InvalidParameterType(search_by_username_bool)
+                    raise Auth_EX.ParamTypeError
             else:
-                raise auth_err.InvalidParameterType(read_from_file_bool)
+                raise Auth_EX.ParamTypeError
 
 
         except FileNotFoundError:
@@ -105,15 +75,17 @@ class user_profile(cmd.Cmd):
             return
 
         except IsADirectoryError as dir_err:
-            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
-            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
+            if dir_err.errno == 21:
+                print("Error: readfile not found, only a directory. file_IO path is probably empty")
 
         except KeyError as key_error:
             print("Config File Error: Bad key in: " + str(key_error.args))
             return
 
-        except IndexError as inx_err:
-            print(str(inx_err))
+        except Auth_EX.ParamTypeError:
+            pass
+
+
 
         self.cmdloop()
 
@@ -201,7 +173,7 @@ class user_profile(cmd.Cmd):
                             else:
                                 self.__conf.user_profile_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise auth_err.InvalidArgument(arg_list[2])
                     else:
                         if arg_list[2] in ["true", "false", "none"]:
                             if arg_list[2] == "true":
@@ -213,7 +185,7 @@ class user_profile(cmd.Cmd):
                         else:
                             self.__conf.user_profile_params[arg_list[1]] = arg_list[2]
                 else:
-                    print("Invalid argument in: " + arg_list[1])
+                    raise auth_err.InvalidArgument(arg_list[1])
 
             elif arg_list[0] in ["files"]:
                 if arg_list[1] in ["global"]:
@@ -223,16 +195,16 @@ class user_profile(cmd.Cmd):
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["user_profile"]:
                             self.__conf.file_IO[arg_list[1]]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
-                                print("Invalid argument in: " + arg_list[2])
+                                raise auth_err.InvalidArgument(arg_list[2])
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["user_profile"]:
                             self.__conf.file_IO["in"]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise auth_err.InvalidArgument(arg_list[2])
                 else:
-                    print("Invalid argument in:" + arg_list[1])
+                    raise auth_err.InvalidArgument(arg_list[1])
             else:
-                print("Invalid option in: " + arg_list[0])
+                raise auth_err.InvalidArgument(arg_list[0])
         
             self.do_list(arg="params")
         

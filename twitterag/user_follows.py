@@ -17,27 +17,36 @@ class follows(cmd.Cmd):
 
     prompt = "MODULE@INFO-follows: "
     __conf = config_tools.ctools()
+    
     __page_count = 0
     
 
     def do_followers(self, arg):
 
         try:
+
+            pagination_bool = self.__conf.user_follows_params["pagination"]["paginate?"]
+            pagination_page_count = self.__conf.user_follows_params["pagination"]["page_count"]
+            read_from_file_bool = self.__conf.user_follows_params["read_from_file?"]
+            io_userid_readfile = self.__conf.file_IO["in"]["user_follows"]["user_id_list"]
+            io_writefile = self.__conf.file_IO["out"]["user_follows"]["user_followers"]
+            user_id_string = self.__conf.user_follows_params["user_id"]
+
             print("\nRunning {}\n".format(self.prompt))
-            if self.__conf.user_follows_params["read_from_file?"]:
-                with open(self.__conf.file_IO["in"]["user_follows"]["user_id_list"]) as readfile:
+            if read_from_file_bool:
+                with open(io_userid_readfile) as readfile:
                     for line in readfile:
                         request = self.__retrieve_info(self.__url_build(line.strip(), "followers"), self.__bearer_oauth_followers)
                         self.__dump_info(request, "followers")
                         self.__page_count = self.__page_count + 1
-                        if self.__conf.user_follows_params["pagination"]["paginate?"]:
-                            while self.__page_count <= self.__conf.user_follows_params["pagination"]["page_count"]:
+                        if pagination_bool:
+                            while self.__page_count <= pagination_page_count:
                                     self.__conf.user_follows_params["request_params"]["pagination_token"] = request["meta"]["next_token"]
                                     next_request = self.__retrieve_info(self.__url_build(user_id=line.split(), follows_type="followers"), self.__bearer_oauth_followers)
                                     request = next_request
                                     self.__dump_info(request, "followers")
                                     self.__page_count = self.__page_count + 1
-                        elif self.__conf.user_follows_params["pagination"]["paginate?"] == False:
+                        elif pagination_bool == False:
                             self.__page_count = 0
                             return
                         else:
