@@ -33,7 +33,7 @@ class user_profile(cmd.Cmd):
             search_by_username_bool = self.__conf.user_profile_params["search_by_username?"]
             io_usernames_readfile = self.__conf.file_IO["in"]["user_profile"]["username_list"]
             io_userid_readfile = self.__conf.file_IO["in"]["user_profile"]["user_id_list"]
-            io_writefile = self.__conf.user_profile_params["out"]["user_profile"]["user_profiles"]
+            io_writefile = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
             usernames_string = self.__conf.user_profile_params["usernames"]
             user_id_string = self.__conf.user_profile_params["user_id"]
 
@@ -248,7 +248,7 @@ class user_profile(cmd.Cmd):
             
         return
   
-  
+
         
     def do_help(self, arg):
         self.do_list(arg="commands")
