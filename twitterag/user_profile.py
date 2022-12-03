@@ -8,8 +8,10 @@ from time import sleep
 import requests
 import os
 import sys
+import cmd 
 import cmd
 import twitterag.stream.strip as json_strip 
+import twitterag.exceptions.auth_except as auth_err
 
 
 class user_profile(cmd.Cmd):
@@ -27,58 +29,77 @@ class user_profile(cmd.Cmd):
 
         try:
 
+            read_from_file_bool = self.__conf.user_profile_params["read_from_file?"]
+            search_by_username_bool = self.__conf.user_profile_params["search_by_username?"]
+            io_usernames_readfile = self.__conf.file_IO["in"]["user_profile"]["username_list"]
+            io_userid_readfile = self.__conf.file_IO["in"]["user_profile"]["user_id_list"]
+            io_writefile = self.__conf.user_profile_params["out"]["user_profile"]["user_profiles"]
+            usernames_string = self.__conf.user_profile_params["usernames"]
+            user_id_string = self.__conf.user_profile_params["user_id"]
+
+            target_type = "User_Profile"
+
+            pipeable_commands = ["strip"]
+
             arg_buff = str(arg)
             arg_list = arg_buff.split()
 
-            if self.__conf.user_profile_params["read_from_file?"]:
-                if self.__conf.user_profile_params["search_by_username?"]:
-                    with open(self.__conf.file_IO["in"]["user_profile"]["username_list"], mode='r', ) as readfile:
+            if read_from_file_bool:
+                if search_by_username_bool:
+                    with open(io_usernames_readfile, mode='r', ) as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
-                            if arg_list[0] in ["strip"]:
-                                self.__dump_info(json_strip.strip(request, arg_list[1:], line, "user_profile"))
+                            self.__dump_info(request)
+                            if arg_list[0] in pipeable_commands:
+                                if arg_list[0] == "strip":
+                                    self.__dump_info(json_strip.strip(io_writefile, arg_list[1:], target_type))
+                                else:
+                                    self.__dump_info(request)
                             else:
-                                self.__dump_info(request)
+                                raise auth_err.InvalidArgument(arg_list[0])
                     return
-                elif self.__conf.user_profile_params["search_by_username?"] == False:
-                    with open(self.__conf.file_IO["in"]["user_profile"]["user_id_list"], mode='r') as readfile:
+                elif search_by_username_bool == False:
+                    with open(io_userid_readfile, mode='r') as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
-                            if arg_list[0] in ["strip"]:
-                                self.__dump_info(json_strip.strip(request, arg_list[1:], line, "user_profile"))
+                            if arg_list[0] in pipeable_commands:
+                                if arg_list[0] == "strip":
+                                    self.__dump_info(json_strip.strip(io_writefile, arg_list[1:], target_type))
+                                else:
+                                    self.__dump_info(request)
                             else:
-                                self.__dump_info(request)
+                                raise auth_err.InvalidArgument(arg_list[0])
                     return
                 else:
-                    print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
-                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                    return
-            elif self.__conf.user_profile_params["read_from_file?"] == False:
-                if self.__conf.user_profile_params["search_by_username?"]:
-                    request = self.__retrieve_info(self.__url_build(usernames=self.__conf.user_profile_params["usernames"]))
-                    if arg_list[0] in ["strip"]:
-                        self.__dump_info(json_strip.strip(request, arg_list[1:], self.__conf.user_profile_params["usernames"], "user_profile"))
+                    raise auth_err.InvalidParameterType(search_by_username_bool)
+            elif read_from_file_bool == False:
+                if search_by_username_bool:
+                    request = self.__retrieve_info(self.__url_build(usernames_string))
+                    if arg_list[0] in pipeable_commands:
+                        if arg_list[0] == "strip":
+                            self.__dump_info(json_strip.strip(io_writefile, arg_list[1:], target_type))
+                        else:
+                            self.__dump_info(request)
                     else:
-                        self.__dump_info(request)
+                        raise auth_err.InvalidArgument(arg_list[0])
                     return
-                elif self.__conf.user_profile_params["search_by_username?"] == False:
-                    request = self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"]))
-                    if arg_list[0] in ["strip"]:
-                        self.__dump_info(json_strip.strip(request, arg_list[1:], self.__conf.user_profile_params["user_id"], "user_profile"))
+                elif search_by_username_bool == False:
+                    request = self.__retrieve_info(self.__url_build(user_id=user_id_string))
+                    if arg_list[0] in pipeable_commands:
+                        if arg_list[0] == "strip":
+                            self.__dump_info(json_strip.strip(io_writefile, arg_list[1:], "user_profile"))
+                        else:
+                            self.__dump_info(request)
                     else:
-                        self.__dump_info(request)
+                        raise auth_err.InvalidArgument(arg_list[0])
                     return
                 else:
-                    print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
-                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                    return
+                    raise auth_err.InvalidParameterType(search_by_username_bool)
             else:
-                print("Invalid param type in: request >> read_from_file?: " + str(self.__conf.user_profile_params["read_from_file?"]))
-                print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                return
+                raise auth_err.InvalidParameterType(read_from_file_bool)
 
 
-        except FileNotFoundError as file_error:
+        except FileNotFoundError:
             print("Error: I/O file not found")
             print("Tip: Make sure that params in 'file_IO' are correct/up to date.")
             return
@@ -89,10 +110,6 @@ class user_profile(cmd.Cmd):
 
         except KeyError as key_error:
             print("Config File Error: Bad key in: " + str(key_error.args))
-            return
-
-        except TypeError as t_err:
-            print("Error: Found \'None\' in a required parameter ")
             return
 
         except IndexError as inx_err:
@@ -231,6 +248,7 @@ class user_profile(cmd.Cmd):
             
         return
   
+  
         
     def do_help(self, arg):
         self.do_list(arg="commands")
@@ -360,5 +378,6 @@ class user_profile(cmd.Cmd):
 
         with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
             json.dump(json_object, writefile, indent=4, sort_keys=True)
+            
+        return
 
-        return    

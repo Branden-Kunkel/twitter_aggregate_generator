@@ -1,46 +1,36 @@
 # Module to strip and sort desired keys from TwitterAG JSON responses
 import json
 
-<<<<<<< HEAD
-def strip(json_obj, search_keys, target_id, target_type):
+def strip(file_path, search_keys, target_type):
 
-    output_dictionary = {}
+    try:
 
-    for value in search_keys:
-        for key in json_obj:
-            if key in value:
-                output_dictionary.update({target_type : {target_id : {key : json_obj[key]}}})
-
-    info_out = json.dumps(output_dictionary)
-    
-    
-    return info_out
-=======
-def strip(json_obj, search_key, target_id, target_type):
-
-    output_dictionary = {}
-    target = str(target_id)
-    t_type = str(target_type)
-
-    output_dictionary.update([("target_types", target_type)])
-
-    for key in json_obj:
-        if key in ["data"]:
-            for sub_key in json_obj[key]:
-                if search_key == sub_key:
-                    output_dictionary.update([(target, json_obj[key][sub_key])])
-        else:
-            pass
-
-    info_out = json.dumps(output_dictionary)
-
-    return info_out
-           # for sub_key in json_obj[key]:
-               # if value == sub_key:
-                   # output_dictionary.update({target_id : {value : json_obj[key][sub_key]}})
+        new_write_dict = {}
 
 
-    #info_out = json.dumps(output_dictionary)
-    
-    #return info_out
->>>>>>> update
+        with open(file_path, mode='r') as readfile:
+
+            parsable_json_object = json.load(readfile)
+
+            for value in search_keys:
+                for key in parsable_json_object:
+                    if key in ["data"]:
+                        for sub_key in parsable_json_object[key]:
+                            if value == sub_key:
+                                new_write_dict.update({sub_key : parsable_json_object[key][sub_key]})
+                            else:
+                                pass
+                    else:
+                        pass
+
+        file_name_annotation = "strip-{}.json".format(str(target_type))
+        info_out = json.dumps(new_write_dict, indent=4, sort_keys=True)
+
+        with open(file_name_annotation, mode='a') as writefile:
+            json.dump(info_out, writefile, indent=4, sort_keys=True)
+
+        return
+
+    except FileNotFoundError as fp_err:
+        print("Error: File not found. This is an odd behavior. Please report to dev @kunkel.branden6130@gmail.com")
+        return
