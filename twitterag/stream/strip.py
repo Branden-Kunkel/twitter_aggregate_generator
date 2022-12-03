@@ -10,9 +10,11 @@ def strip(file_path, search_keys, target_type):
 
         with open(file_path, mode='r') as readfile:
 
-            parsable_json_object = json.load(readfile)
+            json_buffer = {}
 
-            for value in search_keys:
+            print(json_buffer)
+
+            """for value in search_keys:
                 for key in parsable_json_object:
                     if key in ["data"]:
                         for sub_key in parsable_json_object[key]:
@@ -24,13 +26,13 @@ def strip(file_path, search_keys, target_type):
                         pass
 
         file_name_annotation = "strip-{}.json".format(str(target_type))
-        info_out = json.dumps(new_write_dict, indent=4, sort_keys=True)
+        info_out = json.dumps(new_write_dict[], indent=4, sort_keys=True)
 
         with open(file_name_annotation, mode='a') as writefile:
             json.dump(info_out, writefile, indent=4, sort_keys=True)
 
         return
-
+"""
     except FileNotFoundError as fp_err:
         print("Error: File not found. This is an odd behavior. Please report to dev @kunkel.branden6130@gmail.com")
         return
