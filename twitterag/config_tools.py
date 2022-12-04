@@ -1,10 +1,12 @@
-# Twitter-AG configuration file. See docs before editing!
+# Twitter-AG configuration file. See docs before editing! 
+#       The vast majority of variables in TAG are attributes of this class.
 
 class ctools:
 
         """configuration tools"""
 
-
+        # dict for API authorization. These should be set and not touched again. 
+        #       There is no access to this dict from the d0_set() function
         authorization = {
                                 
                                 "bearer_token" : None, # string
@@ -125,7 +127,6 @@ class ctools:
                                                                 },
                         }
 
-
         GLOBAL_FILE_PATH = "" # string
 
 
@@ -186,7 +187,8 @@ class ctools:
                                         }
                         }
 
-
+        # genopts is reserved for general options that are infrequently used. 
+        #       Currently, only verbose is an option. Reccomend that this is just left on (True)
         genopts =       {
                                 "verbose?" : True # bool
                         }

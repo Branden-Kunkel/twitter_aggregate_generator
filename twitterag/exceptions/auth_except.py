@@ -1,3 +1,4 @@
+## Author created exceptions go here##
 
 class Error(Exception):
     pass

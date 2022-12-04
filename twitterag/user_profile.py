@@ -1,3 +1,9 @@
+import twitterag.user_follows as user_follows
+import twitterag.tweet_lookup as tweet_lookup
+import twitterag.tweet_timeline as tweet_timeline
+import twitterag.likes as likes
+import twitterag.config_tools as config_tools
+import twitterag.exceptions.auth_except as AuthEX
 import json
 import requests
 import os
@@ -5,25 +11,19 @@ import sys
 import cmd 
 import cmd 
 from time import sleep
-import twitterag.user_follows as user_follows
-import twitterag.tweet_lookup as tweet_lookup
-import twitterag.tweet_timeline as tweet_timeline
-import twitterag.likes as likes
-import twitterag.config_tools as config_tools
-import twitterag.exceptions.auth_except as AuthEX
 
 
 
 # User Profile Shell using Python standard library 'CMD'
 #   
-#   All shell commands are class methods prefixed with 'do_'. Ex. do_help(), or do_profile()
+#   All shell commands are class methods prefixed with 'do_'. Example - do_help(), or do_profile()
 #   All class methods/attributes are private unless they are a shell command method. 
-#   Private attribute '__conf' is the configuration class instance. A vast majority of variables derive from here
-#   'AuthEX' is the shorthand for author defined exceptions
-#   Error handling is all done within the class method 'do_profile' with the exception of the 'do_set' method which needs its own logic for errors
-#   Besides 'do_profile', the class method 'retrieve_info()' is the aggregating method for this class. To see the flow of parameters/data then start here
+#   Private attribute '__conf' is the configuration class instance. The vast majority of variables derive from this class
+#   'AuthEX' is the shorthand for author defined exceptions imported from 'twitterag.exceptions' sub package
+#   Besides 'do_profile', the class method 'retrieve_info()' is the aggregating method for this class. To see the flow of data and/or parameters, then start here
 #
  
+
  
 class user_profile(cmd.Cmd):
 
@@ -31,6 +31,7 @@ class user_profile(cmd.Cmd):
 
 
     prompt = "MODULE@INFO-user: "
+
     __conf = config_tools.ctools()
 
 
@@ -81,18 +82,20 @@ class user_profile(cmd.Cmd):
 
 
         except FileNotFoundError:
-            print("\nError: I/O file not found")
-            print("Tip: Make sure that params in 'file_IO' are correct/up to date.\n")
+            print("Error: Readfile not found.")
             return
 
         except IsADirectoryError as dir_err:
             if dir_err.errno == 21:
-                print("\nError: readfile not found, only a directory. file_IO path is probably empty.\n")
+                print("\nError: Readfile not found, only a directory. file_IO path is probably empty.\n")
             return
 
         except KeyError as key_error:
             print("\nConfig File Error: Bad key found in config file.\n")
             return
+
+        except TypeError as t_err:
+            print("Error: Found \'None\' in: " + str(t_err.args))
 
         except AuthEX.ParamTypeError:
             print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
@@ -106,6 +109,7 @@ class user_profile(cmd.Cmd):
         io_usernames_readfile = self.__conf.file_IO["in"]["user_profile"]["username_list"]
         io_user_id_readfile = self.__conf.file_IO["in"]["user_profile"]["user_id_list"]
         io_writefile = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
+        io_global = self.__conf.GLOBAL_FILE_PATH
 
         print("\n__Request__\n")
         print(str(request_params) + "\n")
@@ -115,6 +119,8 @@ class user_profile(cmd.Cmd):
         print("        " + io_user_id_readfile)
         print("    OUT:")
         print("        " + io_writefile)
+        print("    GLOBAL")
+        print("        " + io_global)
         print("\n")
 
         return
@@ -175,21 +181,25 @@ class user_profile(cmd.Cmd):
             else:
                 raise AuthEX.ShellArgError
         
-            self.do_list()
+            self.do_list(arg=None)
         
         except KeyError as key_error:
             print("Error: Bad key in: " + str(key_error.args))
             print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
+            return
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
+            return
 
         except IndexError as inx_err:
             print("Error: Not enough arguments, or too many for this functionality. Use \'help\' or \'?\' for basic command usage")
+            return
 
         except AuthEX.ShellArgError:
             print("Error: Invalid shell argument specified.")
-            
+            return
+        
         return
   
 
