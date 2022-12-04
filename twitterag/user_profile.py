@@ -10,7 +10,7 @@ import os
 import sys
 import cmd 
 import cmd 
-import twitterag.exceptions.auth_except as Auth_EX
+import twitterag.exceptions.auth_except as AuthEX
 
 
 
@@ -40,7 +40,7 @@ class user_profile(cmd.Cmd):
             shell_args = shell_args_arg_buffer.split()
 
             if read_from_file_bool == True:
-                if search_by_username_bool:
+                if search_by_username_bool == True:
                     with open(io_usernames_readfile, mode='r', ) as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
@@ -53,9 +53,9 @@ class user_profile(cmd.Cmd):
                             self.__dump_info(request)
                     return
                 else:
-                    raise Auth_EX.ParamTypeError
+                    raise AuthEX.ParamTypeError
             elif read_from_file_bool == False:
-                if search_by_username_bool:
+                if search_by_username_bool == True:
                     request = self.__retrieve_info(self.__url_build(usernames_string))
                     self.__dump_info(request)
                     return
@@ -64,89 +64,47 @@ class user_profile(cmd.Cmd):
                     self.__dump_info(request)
                     return
                 else:
-                    raise Auth_EX.ParamTypeError
+                    raise AuthEX.ParamTypeError
             else:
-                raise Auth_EX.ParamTypeError
+                raise AuthEX.ParamTypeError
 
 
         except FileNotFoundError:
-            print("Error: I/O file not found")
-            print("Tip: Make sure that params in 'file_IO' are correct/up to date.")
+            print("\nError: I/O file not found")
+            print("Tip: Make sure that params in 'file_IO' are correct/up to date.\n")
             return
 
         except IsADirectoryError as dir_err:
             if dir_err.errno == 21:
-                print("Error: readfile not found, only a directory. file_IO path is probably empty")
-
-        except KeyError as key_error:
-            print("Config File Error: Bad key in: " + str(key_error.args))
+                print("\nError: readfile not found, only a directory. file_IO path is probably empty.\n")
             return
 
-        except Auth_EX.ParamTypeError:
-            pass
+        except KeyError as key_error:
+            print("\nConfig File Error: Bad key found in config file.\n")
+            return
 
-
-
-        self.cmdloop()
+        except AuthEX.ParamTypeError:
+            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
+            return
 
 
     
     def do_list(self, arg):
 
-        commands_list = [   
-                            "profile = run the module with current parameters. No arguments.",
-                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
-                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
-                            "help = print a detailed help page for this module.",
-                            "exit = terminate the entire program instance.",
-                            "main = direct to the main console.",
-                            "timeline = direct to the tweet timeline console.",
-                            "tweet = direct to the tweet lookup console.",
-                            "follows = direct to the follows console.",
-                            "likes = direct to the likes console."
-                        ]
+        request_params = json.dumps(self.__conf.user_profile_params, indent=4, sort_keys=True)
+        io_usernames_readfile = self.__conf.file_IO["in"]["user_profile"]["username_list"]
+        io_user_id_readfile = self.__conf.file_IO["in"]["user_profile"]["user_id_list"]
+        io_writefile = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
 
-        if arg in ["params"]:
-            print("\n__Configurations__")
-            param_list = self.__conf.user_profile_params
-            print("\n   Request:")
-            for value in param_list:
-                print("      " + str(value) + " = " + str(param_list[value]))
-            files = self.__conf.file_IO
-            print("\n   Files:")
-            print("       out:")
-            for value in files["out"]["user_profile"]:
-                print("             " + str(value) + " = " + str(files["out"]["user_profile"][value]))
-            print("       in:")
-            for value in files["in"]["user_profile"]:
-                print("             " + str(value) + " = " + str(files["in"]["user_profile"][value]))
-            print("\n   GLOBAL FILE PATH:")
-            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-            print("\n")
-        elif arg in ["commands"]:
-            print("\n__Commands__")
-            for value in commands_list:
-                print("   " + value)
-        else:
-            print("\n__Configurations__")
-            param_list = self.__conf.user_profile_params
-            print("\n   Request:")
-            for value in param_list:
-                print("      " + str(value) + " = " + str(param_list[value]))
-            files = self.__conf.file_IO
-            print("\n   Files:")
-            print("       out:")
-            for value in files["out"]["user_profile"]:
-                print("             " + str(value) + " = " + str(files["out"]["user_profile"][value]))
-            print("       in:")
-            for value in files["in"]["user_profile"]:
-                print("             " + str(value) + " = " + str(files["in"]["user_profile"][value]))
-            print("\nGLOBAL FILE PATH:")
-            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-            print("__Commands__\n")
-            for value in commands_list:
-                print("   " + value)
-            print("\n")
+        print("\n__Request__\n")
+        print(str(request_params) + "\n")
+        print("\n__Files__\n")
+        print("    IN:")
+        print("        " + io_usernames_readfile)
+        print("        " + io_user_id_readfile)
+        print("    OUT:")
+        print("        " + io_writefile)
+        print("\n")
 
         return
             
@@ -173,7 +131,7 @@ class user_profile(cmd.Cmd):
                             else:
                                 self.__conf.user_profile_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            raise auth_err.InvalidArgument(arg_list[2])
+                            raise AuthEX.ShellArgError
                     else:
                         if arg_list[2] in ["true", "false", "none"]:
                             if arg_list[2] == "true":
@@ -185,7 +143,7 @@ class user_profile(cmd.Cmd):
                         else:
                             self.__conf.user_profile_params[arg_list[1]] = arg_list[2]
                 else:
-                    raise auth_err.InvalidArgument(arg_list[1])
+                    raise AuthEX.ShellArgError
 
             elif arg_list[0] in ["files"]:
                 if arg_list[1] in ["global"]:
@@ -195,18 +153,18 @@ class user_profile(cmd.Cmd):
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["user_profile"]:
                             self.__conf.file_IO[arg_list[1]]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
-                                raise auth_err.InvalidArgument(arg_list[2])
+                                raise AuthEX.ShellArgError
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["user_profile"]:
                             self.__conf.file_IO["in"]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
-                            raise auth_err.InvalidArgument(arg_list[2])
+                            raise AuthEX.ShellArgError
                 else:
-                    raise auth_err.InvalidArgument(arg_list[1])
+                    raise AuthEX.ShellArgError
             else:
-                raise auth_err.InvalidArgument(arg_list[0])
+                raise AuthEX.ShellArgError
         
-            self.do_list(arg="params")
+            self.do_list()
         
         except KeyError as key_error:
             print("Error: Bad key in: " + str(key_error.args))
@@ -216,15 +174,33 @@ class user_profile(cmd.Cmd):
             print("Error: Found \'None\' in: " + str(t_err.args))
 
         except IndexError as inx_err:
-            print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
+            print("Error: Not enough arguments, or too many for this functionality. Use \'help\' or \'?\' for basic command usage")
+
+        except AuthEX.ShellArgError:
+            print("Error: Invalid shell argument specified.")
             
         return
   
 
         
     def do_help(self, arg):
-        self.do_list(arg="commands")
-        print("\nFor in depth usage and information, see README.md in the source repo\n")
+        commands_list = [   
+                            "profile = run the module with current parameters. No arguments.",
+                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
+                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
+                            "help = print a detailed help page for this module.",
+                            "exit = terminate the entire program instance.",
+                            "main = direct to the main console.",
+                            "timeline = direct to the tweet timeline console.",
+                            "tweet = direct to the tweet lookup console.",
+                            "follows = direct to the follows console.",
+                            "likes = direct to the likes console."
+                        ]
+        print("\n__Commands__\n")
+
+        for value in commands_list:
+            print("    " + value + "\n")
+
         return
 
 
