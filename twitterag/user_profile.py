@@ -1,19 +1,30 @@
-import twitterag.user_follows as user_follows
-import twitterag.tweet_lookup as tweet_lookup
-import twitterag.tweet_timeline as tweet_timeline
-import twitterag.likes as likes
-import twitterag.config_tools as config_tools
 import json
-from time import sleep
 import requests
 import os
 import sys
 import cmd 
 import cmd 
+from time import sleep
+import twitterag.user_follows as user_follows
+import twitterag.tweet_lookup as tweet_lookup
+import twitterag.tweet_timeline as tweet_timeline
+import twitterag.likes as likes
+import twitterag.config_tools as config_tools
 import twitterag.exceptions.auth_except as AuthEX
 
 
 
+# User Profile Shell using Python standard library 'CMD'
+#   
+#   All shell commands are class methods prefixed with 'do_'. Ex. do_help(), or do_profile()
+#   All class methods/attributes are private unless they are a shell command method. 
+#   Private attribute '__conf' is the configuration class instance. A vast majority of variables derive from here
+#   'AuthEX' is the shorthand for author defined exceptions
+#   Error handling is all done within the class method 'do_profile' with the exception of the 'do_set' method which needs its own logic for errors
+#   Besides 'do_profile', the class method 'retrieve_info()' is the aggregating method for this class. To see the flow of parameters/data then start here
+#
+ 
+ 
 class user_profile(cmd.Cmd):
 
     """handle requests for user profiles"""
@@ -256,7 +267,7 @@ class user_profile(cmd.Cmd):
         likes_console = likes.likes()
         likes_console.cmdloop()
 
-
+ 
 
     def __param_engine(self):
 
