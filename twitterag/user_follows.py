@@ -3,99 +3,112 @@ import twitterag.tweet_lookup as tweet_lookup
 import twitterag.tweet_timeline as tweet_timeline
 import twitterag.likes as likes
 import twitterag.config_tools as config_tools
+import twitterag.exceptions.auth_except as AuthEX
 import json
 from time import sleep
 import requests
 import os
 import sys
 import cmd
-import errno
+
+
+
+# User Follows Shell using Python standard library 'CMD'
+#   
+#   All shell commands are class methods prefixed with 'do_'. Example - do_help(), or do_profile()
+#   All class methods/attributes are private unless they are a shell command method. 
+#   Private attribute '__conf' is the configuration class instance. The vast majority of variables derive from this class
+#   'AuthEX' is the shorthand for author defined exceptions imported from 'twitterag.exceptions' sub package
+#   Besides 'do_profile', the class method 'retrieve_info()' is the aggregating method for this class. To see the flow of data and/or parameters, then start here
+#
+
+
 
 class follows(cmd.Cmd):
     """ retrieves user follows """
 
 
     prompt = "MODULE@INFO-follows: "
+    
     __conf = config_tools.ctools()
+    
     __page_count = 0
     
 
     def do_followers(self, arg):
 
+        print("\nRunning {}\n".format(self.prompt))
+
         try:
-            print("\nRunning {}\n".format(self.prompt))
-            if self.__conf.user_follows_params["read_from_file?"]:
-                with open(self.__conf.file_IO["in"]["user_follows"]["user_id_list"]) as readfile:
+
+            pagination_bool = self.__conf.user_follows_params["pagination"]["paginate?"]
+            pagination_page_count = self.__conf.user_follows_params["pagination"]["page_count"]
+            read_from_file_bool = self.__conf.user_follows_params["read_from_file?"]
+            io_userid_readfile = self.__conf.file_IO["in"]["user_follows"]["user_id_list"]
+            user_id_string = self.__conf.user_follows_params["user_id"]
+
+            if read_from_file_bool == True:
+                with open(io_userid_readfile, mode='r') as readfile:
                     for line in readfile:
                         request = self.__retrieve_info(self.__url_build(line.strip(), "followers"), self.__bearer_oauth_followers)
                         self.__dump_info(request, "followers")
                         self.__page_count = self.__page_count + 1
-                        if self.__conf.user_follows_params["pagination"]["paginate?"]:
-                            while self.__page_count <= self.__conf.user_follows_params["pagination"]["page_count"]:
+                        if pagination_bool == True:
+                            while self.__page_count <= pagination_page_count:
                                     self.__conf.user_follows_params["request_params"]["pagination_token"] = request["meta"]["next_token"]
                                     next_request = self.__retrieve_info(self.__url_build(user_id=line.split(), follows_type="followers"), self.__bearer_oauth_followers)
                                     request = next_request
                                     self.__dump_info(request, "followers")
                                     self.__page_count = self.__page_count + 1
-                        elif self.__conf.user_follows_params["pagination"]["paginate?"] == False:
+                            self.__page_count = 0
+                            return
+                        elif pagination_bool == False:
                             self.__page_count = 0
                             return
                         else:
-                            print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.user_follows_params["pagination"]["paginate?"]))
-                            print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                            return
-
-            elif self.__conf.user_follows_params["read_from_file?"] == False:
-                user_id = self.__conf.user_follows_params["user_id"]
-                request = self.__retrieve_info(self.__url_build(user_id, follows_type="followers"), self.__bearer_oauth_followers)
+                            raise AuthEX.ParamTypeError
+            elif read_from_file_bool == False:
+                request = self.__retrieve_info(self.__url_build(user_id_string, follows_type="followers"), self.__bearer_oauth_followers)
                 self.__dump_info(request, type="followers")
                 self.__page_count = self.__page_count + 1
-                if self.__conf.user_follows_params["pagination"]["paginate?"]:
-                    while self.__page_count <= self.__conf.user_follows_params["pagination"]["page_count"]:
+                if pagination_bool == True:
+                    while self.__page_count <= pagination_page_count:
                         self.__conf.user_follows_params["request_params"]["pagination_token"] = request["meta"]["next_token"]
-                        next_request = self.__retrieve_info(self.__url_build(user_id, follows_type="followers"), self.__bearer_oauth_followers)
+                        next_request = self.__retrieve_info(self.__url_build(user_id_string, follows_type="followers"), self.__bearer_oauth_followers)
                         request = next_request
                         self.__dump_info(request, type="followers")
                         self.__page_count = self.__page_count + 1
-                elif self.__conf.user_follows_params["pagination"]["paginate?"] == False:
+                    self.__page_count = 0
+                    return
+                elif pagination_bool == False:
                     self.__page_count = 0
                     return
                 else:
-                    print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.user_follows_params["pagination"]["paginate?"]))
-                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                    return
+                    raise AuthEX.ParamTypeError
             else:
-                print("Invalid param type in: request >> read_from_file?: " + str(self.__conf.user_follows_params["read_from_file?"]))
-                print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                return
+                raise AuthEX.ParamTypeError
 
-            self.__page_count = 0
 
-        except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: Read File not found")
-                print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.") 
+        except FileNotFoundError:
+            print("Error: Readfile not found.")
             return
 
         except IsADirectoryError as dir_err:
-            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
-            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
+            if dir_err.errno == 21:
+                print("\nError: Readfile not found, only a directory. file_IO path is probably empty.\n")
+            return
 
         except KeyError as key_error:
+            print("\nConfig File Error: Bad key found in config file.\n")
             return
-            
-        except KeyError as key_error:
-            if "next_token" in key_error.args:
-                pass
-            else:    
-                print("Config File Error: Bad key in  " + str(key_error.args))
-                return
+
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
 
-        except TypeError as t_err:
-            print("Error: Found \'None\' in a required parameter ")
+        except AuthEX.ParamTypeError:
+            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
             return
+
 
 
     def do_following(self, arg):
@@ -103,129 +116,96 @@ class follows(cmd.Cmd):
         print("\nRunning {}\n".format(self.prompt))
 
         try:
-            if self.__conf.user_follows_params["read_from_file?"]:
-                with open(self.__conf.file_IO["in"]["user_follows"]["user_id_list"]) as readfile:
+
+            pagination_bool = self.__conf.user_follows_params["pagination"]["paginate?"]
+            pagination_page_count = self.__conf.user_follows_params["pagination"]["page_count"]
+            read_from_file_bool = self.__conf.user_follows_params["read_from_file?"]
+            io_userid_readfile = self.__conf.file_IO["in"]["user_follows"]["user_id_list"]
+            user_id_string = self.__conf.user_follows_params["user_id"]
+
+            if read_from_file_bool == True:
+                with open(io_userid_readfile, mode='r') as readfile:
                     for line in readfile:
                         request = self.__retrieve_info(self.__url_build(line.strip(), follows_type="following"), self.__bearer_oauth_following)
                         self.__dump_info(request, type="following")
                         self.__page_count = self.__page_count + 1
-                        if self.__conf.user_follows_params["pagination"]["paginate?"]:
-                            while self.__page_count <= self.__conf.user_follows_params["pagination"]["page_count"]:
+                        if pagination_bool == True:
+                            while self.__page_count <= pagination_page_count:
                                 self.__conf.user_follows_params["request_params"]["pagination_token"] = request["meta"]["next_token"]
                                 next_request = self.__retrieve_info(self.__url_build(user_id=line.strip(), follows_type="following"), self.__bearer_oauth_following)
                                 request = next_request
                                 self.__dump_info(request, type="following")
                                 self.__page_count = self.__page_count + 1
-                        elif self.__conf.user_follows_params["pagination"]["paginate?"] == False:
+                            return
+                        elif pagination_bool == False:
                             self.__page_count = 0
                             return
                         else:
-                            print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.user_follows_params["pagination"]["paginate?"]))
-                            print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                            return
-            elif self.__conf.user_follows_params["read_from_file?"] == False:
-                user_id = self.__conf.user_follows_params["user_id"]
-                request = self.__retrieve_info(self.__url_build(user_id, follows_type="following"), self.__bearer_oauth_following)
+                            raise AuthEX.ParamTypeError
+            elif read_from_file_bool == False:
+                request = self.__retrieve_info(self.__url_build(user_id_string, follows_type="following"), self.__bearer_oauth_following)
                 self.__dump_info(request, type="following")
                 self.__page_count = self.__page_count + 1
-                if self.__conf.user_follows_params["pagination"]["paginate?"]:
-                    while self.__page_count <= self.__conf.user_follows_params["pagination"]["page_count"]:
+                if pagination_bool == True:
+                    while self.__page_count <= pagination_page_count:
                         self.__conf.user_follows_params["request_params"]["pagination_token"] = request["meta"]["next_token"]
-                        next_request = self.__retrieve_info(self.__url_build(user_id, follows_type="following"), self.__bearer_oauth_following)
+                        next_request = self.__retrieve_info(self.__url_build(user_id_string, follows_type="following"), self.__bearer_oauth_following)
                         request = next_request
                         self.__dump_info(request, type="following")
                         self.__page_count = self.__page_count + 1
-                elif self.__conf.user_follows_params["pagination"]["paginate?"] == False:
+                elif pagination_bool == False:
                     self.__page_count = 0
                     return
                 else:
-                    print("Invalid param type in: request >> pagination >> paginate?: " + str(self.__conf.user_follows_params["pagination"]["paginate?"]))
-                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                    return 
+                    raise AuthEX.ParamTypeError
             else:
-                print("Invalid param type in: request >> read_from_file?: " + str(self.__conf.user_follows_params["read_from_file?"]))
-                print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                return
+                raise AuthEX.ParamTypeError
 
             self.__page_count = 0
 
-        except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: Read File not found")
-                print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
-                return 
+        except FileNotFoundError:
+            print("Error: Readfile not found.")
 
         except IsADirectoryError as dir_err:
-            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
-            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
+            if dir_err.errno == 21:
+                print("\nError: Readfile not found, only a directory. file_IO path is probably empty.\n")
+            return
 
         except KeyError as key_error:
-            if "next_token" in key_error.args:
-                pass
-            else:
-                print("Config File Error: Bad key in " + str(key_error.args))
-                return
+            print("\nConfig File Error: Bad key found in config file.\n")
+            return
+
+        except TypeError as t_err:
+            print("Error: Found \'None\' in: " + str(t_err.args))
+
+        except AuthEX.ParamTypeError:
+            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
+            return
+
 
 
     
     def do_list(self, arg):
 
-        commands_list = [   
-                            "followers = run the module in followers mode. No arguments",
-                            "following = run the module in following mode. No arguments"
-                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
-                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
-                            "help = print a detailed help page for this module.",
-                            "exit = terminate the entire program instance.",
-                            "main = direct to the main console.",
-                            "timeline = direct to the tweet timeline console.",
-                            "tweet = direct to the tweet lookup console.",
-                            "user = direct to the user profile console.",
-                            "likes = direct to the likes console."
-                        ]
+        request_params = json.dumps(self.__conf.user_follows_params, indent=4, sort_keys=True)
+        io_user_id_readfile = self.__conf.file_IO["in"]["user_follows"]["user_id_list"]
+        io_following_writefile = self.__conf.file_IO["out"]["user_follows"]["user_followers"]
+        io_followers_writefile = self.__conf.file_IO["out"]["user_follows"]["user_following"]
+        io_global = self.__conf.GLOBAL_FILE_PATH
 
-        if arg in ["params"]:
-            print("\n__Configurations__")
-            param_list = self.__conf.user_follows_params
-            print("\n   Request:")
-            for value in param_list:
-                print("      " + str(value) + " = " + str(param_list[value]))
-            files = self.__conf.file_IO
-            print("\n   Files:")
-            print("       out:")
-            for value in files["out"]["user_follows"]:
-                print("             " + str(value) + " = " + str(files["out"]["user_follows"][value]))
-            print("       in:")
-            for value in files["in"]["user_follows"]:
-                print("             " + str(value) + " = " + str(files["in"]["user_follows"][value]))
-            print("\n   GLOBAL FILE PATH:")
-            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-            print("\n")
-        elif arg in ["commands"]:
-            print("\n__Commands__")
-            for value in commands_list:
-                print("   " + value)
-        else:
-            print("\n__Configurations__")
-            param_list = self.__conf.user_follows_params
-            print("\n   Request:")
-            for value in param_list:
-                print("      " + str(value) + " = " + str(param_list[value]))
-            files = self.__conf.file_IO
-            print("\n   Files:")
-            print("       out:")
-            for value in files["out"]["user_follows"]:
-                print("             " + str(value) + " = " + str(files["out"]["user_follows"][value]))
-            print("       in:")
-            for value in files["in"]["user_follows"]:
-                print("             " + str(value) + " = " + str(files["in"]["user_follows"][value]))
-            print("\nGLOBAL FILE PATH:")
-            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-            print("__Commands__\n")
-            for value in commands_list:
-                print("   " + value)
-            print("\n")            
+        print("\n__Request__\n")
+        print(str(request_params) + "\n")
+        print("\n__Files__\n")
+        print("    IN:")
+        print("        " + io_user_id_readfile)
+        print("    OUT:")
+        print("        " + io_followers_writefile)
+        print("        " + io_following_writefile)
+        print("    GLOBAL:")
+        print("        " + io_global)
+        print("\n")
 
+        return
 
 
     def do_set(self, arg):
@@ -249,7 +229,7 @@ class follows(cmd.Cmd):
                             else:
                                 self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise AuthEX.ShellArgError
                     elif arg_list[1] in ["pagination"]:
                         if arg_list[2] in self.__conf.user_follows_params["pagination"]:
                             if arg_list[3] in ["true", "false", "none"]:
@@ -262,7 +242,7 @@ class follows(cmd.Cmd):
                             else:
                                 self.__conf.user_follows_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise AuthEX.ShellArgError
                     else:
                         if arg_list[2] in ["true", "false", "none"]:
                             if arg_list[2] == "true":
@@ -274,8 +254,7 @@ class follows(cmd.Cmd):
                         else:
                             self.__conf.user_follows_params[arg_list[1]] = arg_list[2]
                 else:
-                    print("Invalid argument in: " + arg_list[1])
-
+                    raise AuthEX.ShellArgError
             elif arg_list[0] in ["files"]:
                 if arg_list[1] in ["global"]:
                     self.__conf.GLOBAL_FILE_PATH = arg_list[2]
@@ -284,34 +263,58 @@ class follows(cmd.Cmd):
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["user_follows"]:
                             self.__conf.file_IO[arg_list[1]]["user_follows"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
-                                print("Invalid argument in: " + arg_list[2])
+                                raise AuthEX.ShellArgError
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["user_follows"]:
                             self.__conf.file_IO["in"]["user_follows"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise AuthEX.ShellArgError
                 else:
-                    print("Invalid argument in:" + arg_list[1])
+                    raise AuthEX.ShellArgError
             else:
-                print("Invalid option in: " + arg_list[0])
+                raise AuthEX.ShellArgError
         
-            self.do_list(arg="params")
+            self.do_list()
         
         except KeyError as key_error:
             print("Error: Bad key in " + str(key_error.args))
             print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
+            return
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
+            return
 
         except IndexError as inx_err:
             print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
+            return
 
+        except AuthEX.ShellArgError:
+            print("Error: Invalid shell argument specified.")
+            return
+
+        return
         
 
     def do_help(self, arg):
-        self.do_list(arg="commands")
-        print("\nFor in depth usage and information, see README.md in the source repo\n")
+        commands_list = [   
+                            "following = run the console with current params, returning who the target user is following",
+                            "followers = run the console with current params, returning who is following the target user.",
+                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
+                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
+                            "help = print a detailed help page for this module.",
+                            "exit = terminate the entire program instance.",
+                            "main = direct to the main console.",
+                            "timeline = direct to the tweet timeline console.",
+                            "profile = direct to the user profile console.",
+                            "tweet = direct to the tweet lookup console.",
+                            "likes = direct to the likes console."
+                        ]
+        print("\n__Commands__\n")
+
+        for value in commands_list:
+            print("    " + value + "\n")
+
         return
 
 

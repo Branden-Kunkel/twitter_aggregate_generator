@@ -3,21 +3,35 @@ import twitterag.tweet_lookup as tweet_lookup
 import twitterag.tweet_timeline as tweet_timeline
 import twitterag.likes as likes
 import twitterag.config_tools as config_tools
+import twitterag.exceptions.auth_except as AuthEX
 import json
-from time import sleep
 import requests
 import os
 import sys
-import cmd
-import twitterag.stream.strip as json_strip 
+import cmd 
+import cmd 
+from time import sleep
 
 
+
+# User Profile Shell using Python standard library 'CMD'
+#   
+#   All shell commands are class methods prefixed with 'do_'. Example - do_help(), or do_profile()
+#   All class methods/attributes are private unless they are a shell command method. 
+#   Private attribute '__conf' is the configuration class instance. The vast majority of variables derive from this class
+#   'AuthEX' is the shorthand for author defined exceptions imported from 'twitterag.exceptions' sub package
+#   Besides 'do_profile', the class method 'retrieve_info()' is the aggregating method for this class. To see the flow of data and/or parameters, then start here
+#
+ 
+
+ 
 class user_profile(cmd.Cmd):
 
     """handle requests for user profiles"""
 
 
     prompt = "MODULE@INFO-user: "
+
     __conf = config_tools.ctools()
 
 
@@ -27,137 +41,87 @@ class user_profile(cmd.Cmd):
 
         try:
 
-            arg_buff = str(arg)
-            arg_list = arg_buff.split()
+            read_from_file_bool = self.__conf.user_profile_params["read_from_file?"]
+            search_by_username_bool = self.__conf.user_profile_params["search_by_username?"]
+            io_usernames_readfile = self.__conf.file_IO["in"]["user_profile"]["username_list"]
+            io_userid_readfile = self.__conf.file_IO["in"]["user_profile"]["user_id_list"]
+            usernames_string = self.__conf.user_profile_params["usernames"]
+            user_id_string = self.__conf.user_profile_params["user_id"]
 
-            if self.__conf.user_profile_params["read_from_file?"]:
-                if self.__conf.user_profile_params["search_by_username?"]:
-                    with open(self.__conf.file_IO["in"]["user_profile"]["username_list"], mode='r', ) as readfile:
+            shell_args_arg_buffer = str(arg)
+            shell_args = shell_args_arg_buffer.split()
+
+            if read_from_file_bool == True:
+                if search_by_username_bool == True:
+                    with open(io_usernames_readfile, mode='r', ) as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
-                            if arg_list[0] in ["strip"]:
-                                self.__dump_info(json_strip.strip(request, arg_list[1], line, "user_profile"))
-                            else:
-                                self.__dump_info(request)
+                            self.__dump_info(request)
                     return
-                elif self.__conf.user_profile_params["search_by_username?"] == False:
-                    with open(self.__conf.file_IO["in"]["user_profile"]["user_id_list"], mode='r') as readfile:
+                elif search_by_username_bool == False:
+                    with open(io_userid_readfile, mode='r') as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
-                            if arg_list[0] in ["strip"]:
-                                self.__dump_info(json_strip.strip(request, arg_list[1], line, "user_profile"))
-                            else:
-                                self.__dump_info(request)
+                            self.__dump_info(request)
                     return
                 else:
-                    print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
-                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
+                    raise AuthEX.ParamTypeError
+            elif read_from_file_bool == False:
+                if search_by_username_bool == True:
+                    request = self.__retrieve_info(self.__url_build(usernames_string))
+                    self.__dump_info(request)
                     return
-            elif self.__conf.user_profile_params["read_from_file?"] == False:
-                if self.__conf.user_profile_params["search_by_username?"]:
-                    request = self.__retrieve_info(self.__url_build(usernames=self.__conf.user_profile_params["usernames"]))
-                    if arg_list[0] in ["strip"]:
-                        self.__dump_info(json_strip.strip(request, arg_list[1], self.__conf.user_profile_params["usernames"], "user_profile"))
-                    else:
-                        self.__dump_info(request)
-                    return
-                elif self.__conf.user_profile_params["search_by_username?"] == False:
-                    request = self.__retrieve_info(self.__url_build(user_id=self.__conf.user_profile_params["user_id"]))
-                    if arg_list[0] in ["strip"]:
-                        self.__dump_info(json_strip.strip(request, arg_list[1], self.__conf.user_profile_params["user_id"], "user_profile"))
-                    else:
-                        self.__dump_info(request)
+                elif search_by_username_bool == False:
+                    request = self.__retrieve_info(self.__url_build(user_id=user_id_string))
+                    self.__dump_info(request)
                     return
                 else:
-                    print("Invalid param type in: request >> search_by_username?: " + str(self.__conf.user_profile_params["search_by_username?"]))
-                    print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                    return
+                    raise AuthEX.ParamTypeError
             else:
-                print("Invalid param type in: request >> read_from_file?: " + str(self.__conf.user_profile_params["read_from_file?"]))
-                print("**Parameter of type BOOL can ONLY be \'True\' OR \'False\'")
-                return
+                raise AuthEX.ParamTypeError
 
 
-        except FileNotFoundError as file_error:
-            print("Error: I/O file not found")
-            print("Tip: Make sure that params in 'file_IO' are correct/up to date.")
+        except FileNotFoundError:
+            print("Error: Readfile not found.")
             return
 
         except IsADirectoryError as dir_err:
-            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
-            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
+            if dir_err.errno == 21:
+                print("\nError: Readfile not found, only a directory. file_IO path is probably empty.\n")
+            return
 
         except KeyError as key_error:
-            print("Config File Error: Bad key in: " + str(key_error.args))
+            print("\nConfig File Error: Bad key found in config file.\n")
             return
 
         except TypeError as t_err:
-            print("Error: Found \'None\' in a required parameter ")
+            print("Error: Found \'None\' in: " + str(t_err.args))
+
+        except AuthEX.ParamTypeError:
+            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
             return
-
-        except IndexError as inx_err:
-            print(str(inx_err))
-
-        self.cmdloop()
 
 
     
     def do_list(self, arg):
 
-        commands_list = [   
-                            "profile = run the module with current parameters. No arguments.",
-                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
-                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
-                            "help = print a detailed help page for this module.",
-                            "exit = terminate the entire program instance.",
-                            "main = direct to the main console.",
-                            "timeline = direct to the tweet timeline console.",
-                            "tweet = direct to the tweet lookup console.",
-                            "follows = direct to the follows console.",
-                            "likes = direct to the likes console."
-                        ]
+        request_params = json.dumps(self.__conf.user_profile_params, indent=4, sort_keys=True)
+        io_usernames_readfile = self.__conf.file_IO["in"]["user_profile"]["username_list"]
+        io_user_id_readfile = self.__conf.file_IO["in"]["user_profile"]["user_id_list"]
+        io_writefile = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
+        io_global = self.__conf.GLOBAL_FILE_PATH
 
-        if arg in ["params"]:
-            print("\n__Configurations__")
-            param_list = self.__conf.user_profile_params
-            print("\n   Request:")
-            for value in param_list:
-                print("      " + str(value) + " = " + str(param_list[value]))
-            files = self.__conf.file_IO
-            print("\n   Files:")
-            print("       out:")
-            for value in files["out"]["user_profile"]:
-                print("             " + str(value) + " = " + str(files["out"]["user_profile"][value]))
-            print("       in:")
-            for value in files["in"]["user_profile"]:
-                print("             " + str(value) + " = " + str(files["in"]["user_profile"][value]))
-            print("\n   GLOBAL FILE PATH:")
-            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-            print("\n")
-        elif arg in ["commands"]:
-            print("\n__Commands__")
-            for value in commands_list:
-                print("   " + value)
-        else:
-            print("\n__Configurations__")
-            param_list = self.__conf.user_profile_params
-            print("\n   Request:")
-            for value in param_list:
-                print("      " + str(value) + " = " + str(param_list[value]))
-            files = self.__conf.file_IO
-            print("\n   Files:")
-            print("       out:")
-            for value in files["out"]["user_profile"]:
-                print("             " + str(value) + " = " + str(files["out"]["user_profile"][value]))
-            print("       in:")
-            for value in files["in"]["user_profile"]:
-                print("             " + str(value) + " = " + str(files["in"]["user_profile"][value]))
-            print("\nGLOBAL FILE PATH:")
-            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-            print("__Commands__\n")
-            for value in commands_list:
-                print("   " + value)
-            print("\n")
+        print("\n__Request__\n")
+        print(str(request_params) + "\n")
+        print("\n__Files__\n")
+        print("    IN:")
+        print("        " + io_usernames_readfile)
+        print("        " + io_user_id_readfile)
+        print("    OUT:")
+        print("        " + io_writefile)
+        print("    GLOBAL")
+        print("        " + io_global)
+        print("\n")
 
         return
             
@@ -184,7 +148,7 @@ class user_profile(cmd.Cmd):
                             else:
                                 self.__conf.user_profile_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise AuthEX.ShellArgError
                     else:
                         if arg_list[2] in ["true", "false", "none"]:
                             if arg_list[2] == "true":
@@ -196,7 +160,7 @@ class user_profile(cmd.Cmd):
                         else:
                             self.__conf.user_profile_params[arg_list[1]] = arg_list[2]
                 else:
-                    print("Invalid argument in: " + arg_list[1])
+                    raise AuthEX.ShellArgError
 
             elif arg_list[0] in ["files"]:
                 if arg_list[1] in ["global"]:
@@ -206,35 +170,58 @@ class user_profile(cmd.Cmd):
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["user_profile"]:
                             self.__conf.file_IO[arg_list[1]]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
-                                print("Invalid argument in: " + arg_list[2])
+                                raise AuthEX.ShellArgError
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["user_profile"]:
                             self.__conf.file_IO["in"]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise AuthEX.ShellArgError
                 else:
-                    print("Invalid argument in:" + arg_list[1])
+                    raise AuthEX.ShellArgError
             else:
-                print("Invalid option in: " + arg_list[0])
+                raise AuthEX.ShellArgError
         
-            self.do_list(arg="params")
+            self.do_list(arg=None)
         
         except KeyError as key_error:
             print("Error: Bad key in: " + str(key_error.args))
             print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
+            return
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
+            return
 
         except IndexError as inx_err:
-            print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
-            
+            print("Error: Not enough arguments, or too many for this functionality. Use \'help\' or \'?\' for basic command usage")
+            return
+
+        except AuthEX.ShellArgError:
+            print("Error: Invalid shell argument specified.")
+            return
+        
         return
   
+
         
     def do_help(self, arg):
-        self.do_list(arg="commands")
-        print("\nFor in depth usage and information, see README.md in the source repo\n")
+        commands_list = [   
+                            "profile = run the module with current parameters. No arguments.",
+                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
+                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
+                            "help = print a detailed help page for this module.",
+                            "exit = terminate the entire program instance.",
+                            "main = direct to the main console.",
+                            "timeline = direct to the tweet timeline console.",
+                            "tweet = direct to the tweet lookup console.",
+                            "follows = direct to the follows console.",
+                            "likes = direct to the likes console."
+                        ]
+        print("\n__Commands__\n")
+
+        for value in commands_list:
+            print("    " + value + "\n")
+
         return
 
 
@@ -290,7 +277,7 @@ class user_profile(cmd.Cmd):
         likes_console = likes.likes()
         likes_console.cmdloop()
 
-
+ 
 
     def __param_engine(self):
 
@@ -360,5 +347,6 @@ class user_profile(cmd.Cmd):
 
         with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
             json.dump(json_object, writefile, indent=4, sort_keys=True)
+            
+        return
 
-        return    

@@ -1,4 +1,4 @@
-# Twitter Aggregate Generator - **v.1.0.1**
+# Twitter Aggregate Generator - **v.1.1.0**
 
 ## Intro:
 

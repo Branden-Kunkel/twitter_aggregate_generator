@@ -3,13 +3,26 @@ import twitterag.tweet_lookup as tweet_lookup
 import twitterag.tweet_timeline as tweet_timeline
 import twitterag.user_profile as user_profile
 import twitterag.config_tools as config_tools
+import twitterag.exceptions.auth_except as AuthEX
 import json
 from time import sleep
 import requests
 import os
 import sys
 import cmd
-import errno
+
+
+
+# Likes Shell using Python standard library 'CMD'
+#   
+#   All shell commands are class methods prefixed with 'do_'. Example - do_help(), or do_profile()
+#   All class methods/attributes are private unless they are a shell command method. 
+#   Private attribute '__conf' is the configuration class instance. The vast majority of variables derive from this class
+#   'AuthEX' is the shorthand for author defined exceptions imported from 'twitterag.exceptions' sub package
+#   Besides 'do_profile', the class method 'retrieve_info()' is the aggregating method for this class. To see the flow of data and/or parameters, then start here
+#
+
+
 
 class likes(cmd.Cmd):
 
@@ -25,175 +38,177 @@ class likes(cmd.Cmd):
 
         print("\nRunning {}\n".format(self.prompt))
 
-        user_id = self.__conf.likes_params["user_id"]
 
         try:
-            if self.__conf.likes_params["read_from_file?"]:
-                with open(self.__conf.file_IO["in"]["likes"]["user_id_list"], mode='r') as readfile:
+
+            read_from_file_bool = self.__conf.likes_params["read_from_file?"]
+            pagination_bool = self.__conf.likes_params["pagination"]["paginate?"]
+            pagination_page_count = self.__conf.likes_params["pagination"]["page_count"]
+            user_id_string = self.__conf.likes_params["user_id"]
+            io_liked_readfile = self.__conf.file_IO["in"]["likes"]["user_id_list"]
+
+            if read_from_file_bool == True:
+                with open(io_liked_readfile, mode='r') as readfile:
                     for line in readfile:
                         request = self.__retrieve_info(self.__url_build(user_id=line.strip(), url_type="liked"), self.__bearer_oauth_liked, self.__param_engine("liked"))
                         self.__dump_info(request, "liked")
                         self.__page_count = self.__page_count + 1
-                        if self.__conf.likes_params["pagination"]["paginate?"]:
-                            while self.__page_count <= self.__conf.likes_params["pagination"]["page_count"]:
+                        if pagination_bool == True:
+                            while self.__page_count <= pagination_page_count:
                                 self.__conf.likes_params["liked_request_params"]["pagination_token"] = request["meta"]["next_token"]
                                 next_request = self.__retrieve_info(self.__url_build(user_id=line.strip(), url_type="liked"), oauth_type=self.__bearer_oauth_liked, params_type=self.__param_engine("liked"))
                                 request = next_request
                                 self.__dump_info(request, type="liked")
                                 self.__page_count = self.__page_count + 1
-                self.__page_count = 0
-            else:
-                request = self.__retrieve_info(self.__url_build(user_id=user_id, url_type="liked"), self.__bearer_oauth_liked, self.__param_engine("liked"))
+                            self.__page_count = 0
+                            return
+                        elif pagination_bool == False:
+                            self.__page_count = 0
+                            return
+                        else:
+                            raise AuthEX.ParamTypeError
+            elif read_from_file_bool == False:
+                request = self.__retrieve_info(self.__url_build(user_id=user_id_string, url_type="liked"), self.__bearer_oauth_liked, self.__param_engine("liked"))
                 self.__dump_info(request, "liked")
                 self.__page_count = self.__page_count + 1
-                if self.__conf.likes_params["pagination"]["paginate?"]:
-                    while self.__page_count <= self.__conf.likes_params["pagination"]["page_count"]:
+                if pagination_bool == True:
+                    while self.__page_count <= pagination_page_count:
                         self.__conf.likes_params["liked_request_params"]["pagination_token"] = request["meta"]["next_token"]
-                        next_request = self.__retrieve_info(self.__url_build(user_id=user_id, url_type="liked"), oauth_type=self.__bearer_oauth_liked, params_type=self.__param_engine("liked"))
+                        next_request = self.__retrieve_info(self.__url_build(user_id=user_id_string, url_type="liked"), oauth_type=self.__bearer_oauth_liked, params_type=self.__param_engine("liked"))
                         request = next_request
                         self.__dump_info(request, type="liked")
                         self.__page_count = self.__page_count + 1
-                self.__page_count = 0
+                    self.__page_count = 0
+                    return
+                elif pagination_bool == False:
+                    self.__page_count = 0
+                    return
+                else:
+                    raise AuthEX.ParamTypeError
+            else:
+                raise AuthEX.ParamTypeError
 
-        except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: Read file not found")
-                print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
+        except FileNotFoundError:
+            print("Error: Readfile not found.")
+            return
 
         except IsADirectoryError as dir_err:
-            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
-            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
-            return 
-            
-        except IsADirectoryError as dir_err:
-            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
-            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
-            return 
+            if dir_err.errno == 21:
+                print("\nError: Readfile not found, only a directory. file_IO path is probably empty.\n")
+            return
 
         except KeyError as key_error:
-            if "next_token" in key_error.args:
-                pass
-            else:    
-                print("Config File Error: Bad key in " + str(key_error.args))
-                return
+            print("\nConfig File Error: Bad key found in config file.\n")
+            return
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
-            print("Error: Found \'None\' in a required parameter ")
+
+        except AuthEX.ParamTypeError:
+            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
             return
+
         
 
     def do_liking(self, arg):
 
         print("\nRunning {}\n".format(self.prompt))
 
-        tweet_id = self.__conf.likes_params["tweet_id"]
-
         try:
-            if self.__conf.likes_params["read_from_file?"]:
-                with open(self.__conf.file_IO["in"]["likes"]["tweet_id_list"], mode='r') as readfile:
+
+            read_from_file_bool = self.__conf.likes_params["read_from_file?"]
+            pagination_bool = self.__conf.likes_params["pagination"]["paginate?"]
+            pagination_page_count = self.__conf.likes_params["pagination"]["page_count"]
+            tweet_id_string = self.__conf.likes_params["tweet_id"]
+            io_liking_readfile = self.__conf.file_IO["in"]["likes"]["tweet_id_list"] 
+
+            if read_from_file_bool == True:
+                with open(io_liking_readfile, mode='r') as readfile:
                     for line in readfile:
                         request = self.__retrieve_info(self.__url_build(tweet_id=line.strip(), url_type="liking"), self.__bearer_oauth_liking, self.__param_engine("liking"))
                         self.__dump_info(request, "liking")
                         self.__page_count = self.__page_count + 1
-                        if self.__conf.likes_params["pagination"]["paginate?"]:
-                            while self.__page_count <= self.__conf.likes_params["pagination"]["page_count"]:
+                        if pagination_bool == True:
+                            while self.__page_count <= pagination_page_count:
                                 self.__conf.likes_params["liking_request_params"]["pagination_token"] = request["meta"]["next_token"]
                                 next_request = self.__retrieve_info(self.__url_build(tweet_id=line.strip(), url_type="liking"), oauth_type=self.__bearer_oauth_liking, params_type=self.__param_engine("liked"))
                                 request = next_request
                                 self.__dump_info(request, type="liking")
                                 self.__page_count = self.__page_count + 1
-                self.__page_count = 0
-            else:
-                request = self.__retrieve_info(self.__url_build(tweet_id=tweet_id, url_type="liking"), self.__bearer_oauth_liking, self.__param_engine("liked"))
+                            self.__page_count = 0
+                            return
+                        elif pagination_bool == False:
+                            self.__page_count = 0
+                            return
+                        else:
+                            raise AuthEX.ParamTypeError
+            elif read_from_file_bool == False:
+                request = self.__retrieve_info(self.__url_build(tweet_id=tweet_id_string, url_type="liking"), self.__bearer_oauth_liking, self.__param_engine("liked"))
                 self.__dump_info(request, "liking")
                 self.__page_count = self.__page_count + 1
-                if self.__conf.likes_params["pagination"]["paginate?"]:
-                    while self.__page_count <= self.__conf.likes_params["pagination"]["page_count"]:
+                if pagination_bool == True:
+                    while self.__page_count <= pagination_page_count:
                         self.__conf.likes_params["liking_request_params"]["pagination_token"] = request["meta"]["next_token"]
-                        next_request = self.__retrieve_info(self.__url_build(tweet_id=tweet_id, url_type="liking"), oauth_type=self.__bearer_oauth_liking, params_type=self.__param_engine("liked"))
+                        next_request = self.__retrieve_info(self.__url_build(tweet_id=tweet_id_string, url_type="liking"), oauth_type=self.__bearer_oauth_liking, params_type=self.__param_engine("liked"))
                         request = next_request
                         self.__dump_info(request, type="liking")
                         self.__page_count = self.__page_count + 1
-                self.__page_count = 0
+                    self.__page_count = 0
+                    return
+                elif pagination_bool == False:
+                    self.__page_count = 0
+                    return
+                else:
+                    raise AuthEX.ParamTypeError
+            else:
+                raise AuthEX.ParamTypeError
 
-        except FileNotFoundError as file_error:
-            if file_error.errno == errno.ENOENT:
-                print("Error: Read file not found")
-                print("Tip: Make sure that params in 'file_IO[\"in\"]' are correct/up to date.")
+        except FileNotFoundError:
+            print("Error: Readfile not found.")
+            return
 
         except IsADirectoryError as dir_err:
-            print("Error " + str(dir_err.args[0]) + ": " + str(dir_err.strerror))
-            print("TIP: It is likely that your GLOBAL_FILE_PATH is incorrect OR that the a file point in file_IO params is empty!")
-        
+            if dir_err.errno == 21:
+                print("\nError: Readfile not found, only a directory. file_IO path is probably empty.\n")
+            return
+
         except KeyError as key_error:
-            if "next_token" in key_error.args:
-                pass
-            else:
-                print("Config File Error: Bad key in " + str(key_error.args))
+            print("\nConfig File Error: Bad key found in config file.\n")
+            return
 
         except TypeError as t_err:
             print("Error: Found \'None\' in: " + str(t_err.args))
+
+        except AuthEX.ParamTypeError:
+            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
+            return
+
         
     
     
     def do_list(self, arg):
 
-        commands_list = [   
-                            "liking = run the module in liking mode. No arguments.",
-                            "liked = run the module in liked mode. No arguments."
-                            "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
-                            "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
-                            "help = print a detailed help page for this module.",
-                            "exit = terminate the entire program instance.",
-                            "main = direct to the main console.",
-                            "timeline = direct to the tweet timeline console.",
-                            "tweet = direct to the tweet lookup console.",
-                            "follows = direct to the follows console.",
-                            "user = direct to the user profile console."
-                        ]
+        request_params = json.dumps(self.__conf.likes_params, indent=4, sort_keys=True)
+        io_liking_readfile = self.__conf.file_IO["in"]["likes"]["tweet_id_list"]
+        io_liked_readfile = self.__conf["in"]["likes"]["user_id_list"]
+        io_liking_writefile = self.__conf.file_IO["out"]["likes"]["liking"]
+        io_liked_writefile = self.__conf["out"]["likes"]["liked"]
+        io_global = self.__conf.GLOBAL_FILE_PATH
 
-        if arg in ["params"]:
-            print("\n__Configurations__")
-            param_list = self.__conf.likes_params
-            print("\n   Request:")
-            for value in param_list:
-                print("      " + str(value) + " = " + str(param_list[value]))
-            files = self.__conf.file_IO
-            print("\n   Files:")
-            print("       out:")
-            for value in files["out"]["likes"]:
-                print("             " + str(value) + " = " + str(files["out"]["likes"][value]))
-            print("       in:")
-            for value in files["in"]["likes"]:
-                print("             " + str(value) + " = " + str(files["in"]["likes"][value]))
-            print("\n   GLOBAL FILE PATH:")
-            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-            print("\n")
-        elif arg in ["commands"]:
-            print("\n__Commands__")
-            for value in commands_list:
-                print("   " + value)
-        else:
-            print("\n__Configurations__")
-            param_list = self.__conf.likes_params
-            print("\n   Request:")
-            for value in param_list:
-                print("      " + str(value) + " = " + str(param_list[value]))
-            files = self.__conf.file_IO
-            print("\n   Files:")
-            print("       out:")
-            for value in files["out"]["likes"]:
-                print("             " + str(value) + " = " + str(files["out"]["likes"][value]))
-            print("       in:")
-            for value in files["in"]["likes"]:
-                print("             " + str(value) + " = " + str(files["in"]["likes"][value]))
-            print("\nGLOBAL FILE PATH:")
-            print("         " + str(self.__conf.GLOBAL_FILE_PATH))
-            print("__Commands__\n")
-            for value in commands_list:
-                print("   " + value)
-            print("\n")            
+        print("\n__Request__\n")
+        print(str(request_params) + "\n")
+        print("\n__Files__\n")
+        print("    IN:")
+        print("        " + io_liking_readfile)
+        print("        " + io_liked_readfile)
+        print("    OUT:")
+        print("        " + io_liking_writefile)
+        print("        " + io_liked_writefile)
+        print("    GLOBAL:")
+        print("        " + io_global)
+        print("\n")
+
+        return                 
 
 
 
@@ -291,8 +306,24 @@ class likes(cmd.Cmd):
 
 
     def do_help(self, arg):
-        self.do_list(arg="commands")
-        print("\nFor in depth usage and information, see README.md in the source repo\n")
+        commands_list = [   
+                                    "liking = run the module with current parameters, returning which user have liked a target tweet id",
+                                    "liked = run the module with current parameters, returning which tweets a target user id has liked",
+                                    "set [arg]* = where arg is either \'files\' or \'params\', following args are keys in a dictionary structure, and last arg is the value to be set.",
+                                    "list [arg] = where arg is \'params\', \'commands\' or omitted completely."
+                                    "help = print a detailed help page for this module.",
+                                    "exit = terminate the entire program instance.",
+                                    "main = direct to the main console.",
+                                    "user = direct to the tweet user profile console.",
+                                    "timeline = direct to the tweet timeline console.",
+                                    "follows = direct to the follows console.",
+                                    "lookup = direct to the tweet lookup console."
+                                ]
+        print("\n__Commands__\n")
+
+        for value in commands_list:
+            print("    " + value + "\n")
+
         return
 
 
