@@ -10,7 +10,7 @@ import sys
 import cmd
 from time import sleep
 
-version = "v.1.0.1\n"
+version = "v.1.1.0\n"
 
 class main_cli(cmd.Cmd):
     """main console command prompt"""
