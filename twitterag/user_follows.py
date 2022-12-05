@@ -274,7 +274,7 @@ class follows(cmd.Cmd):
             else:
                 raise AuthEX.ShellArgError
         
-            self.do_list()
+            self.do_list(arg=None)
         
         except KeyError as key_error:
             print("Error: Bad key in " + str(key_error.args))

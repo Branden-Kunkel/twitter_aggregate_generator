@@ -291,7 +291,7 @@ class likes(cmd.Cmd):
             else:
                 print("Invalid option in: " + arg_list[0])
         
-            self.do_list(arg="params")
+            self.do_list(arg=None)
 
         except IndexError as inx_err:
             print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
