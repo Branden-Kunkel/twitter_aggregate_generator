@@ -53,7 +53,7 @@ class user_profile(cmd.Cmd):
 
             if read_from_file_bool == True:
                 if search_by_username_bool == True:
-                    with open(io_usernames_readfile, mode='r', ) as readfile:
+                    with open(io_usernames_readfile, mode='r') as readfile:
                         for line in readfile:
                             request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
                             self.__dump_info(request)
@@ -82,7 +82,7 @@ class user_profile(cmd.Cmd):
 
 
         except FileNotFoundError:
-            print("Error: Readfile not found.")
+            print("\nError: Readfile not found.\n")
             return
 
         except IsADirectoryError as dir_err:
@@ -95,10 +95,10 @@ class user_profile(cmd.Cmd):
             return
 
         except TypeError as t_err:
-            print("Error: Found \'None\' in: " + str(t_err.args))
+            print("\nError: Found \'None\' in: " + str(t_err.args) + "\n")
 
         except AuthEX.ParamTypeError:
-            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
+            print("\nConfig File Error: Invalid or unexpected parameter found in config file.\n")
             return
 
 
@@ -349,4 +349,7 @@ class user_profile(cmd.Cmd):
             json.dump(json_object, writefile, indent=4, sort_keys=True)
             
         return
+
+
+        
 
