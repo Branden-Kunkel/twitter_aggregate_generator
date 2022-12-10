@@ -12,4 +12,12 @@ class ParamTypeError(Error):
     """exception for invalid parameter (config) variable types"""
     pass
 
+class JsonFormatError(Error):
+    """exception for unexpected json response key"""
+    pass
+
+class OutputFileError(Error):
+    """exception for specified output file being something other than .json"""
+    pass
+
 

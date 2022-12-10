@@ -343,12 +343,49 @@ class user_profile(cmd.Cmd):
 
 
 
-    def __dump_info(self, json_object):
+    def __dump_info(self, json_object, frame_id):
 
-        with open(self.__conf.file_IO["out"]["user_profile"]["user_profiles"], mode='a') as writefile:
-            json.dump(json_object, writefile, indent=4, sort_keys=True)
+        try:
+
+            writefile_path = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
+            file_extension = os.path.splitext(writefile_path)[1]
+
+            if file_extension in [".json"]:
+
+                info_out = {}
+
+                info_out.update({str(frame_id) : {}})
+
+                for key in json_object:
+                    if key == "data":
+                        for sub_key in json_object[key]:
+                            info_out.update({str(frame_id) : sub_key})
+                    else:
+                        raise AuthEX.JsonFormatError        
+
+                with open(writefile_path, mode='a') as writefile:
+
+                    json.dump(info_out, writefile, indent=4, sort_keys=True)
+                    
+                return
             
-        return
+            else:
+                raise AuthEX.OutputFileError
+
+        except AuthEX.JsonFormatError:
+            print("\nError: Unexpected json object key. Passing formatting.")
+            print("Please report this to developers\n") 
+            with open(writefile_path, mode='a') as writefile:
+                json.dump(json_object, indent=4, sort_keys=True)
+            return
+
+        except AuthEX.OutputFileError:
+            print("Error: Writefile is not of .json type")
+            return
+
+
+        
+
 
 
         
