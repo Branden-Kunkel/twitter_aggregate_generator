@@ -37,7 +37,7 @@ class user_profile(cmd.Cmd):
 
     def do_profile(self, arg):
 
-        print("\nRunning {}\n".format(self.prompt))
+        print("\nRunning {}\n".format(self.prompt) + "\n ")
 
         try:
 
@@ -65,7 +65,7 @@ class user_profile(cmd.Cmd):
                             self.__dump_info(request)
                     return
                 else:
-                    raise AuthEX.ParamTypeError
+                    raise AuthEX.ParamTypeError(search_by_username_bool)
             elif read_from_file_bool == False:
                 if search_by_username_bool == True:
                     request = self.__retrieve_info(self.__url_build(usernames_string))
@@ -76,9 +76,9 @@ class user_profile(cmd.Cmd):
                     self.__dump_info(request)
                     return
                 else:
-                    raise AuthEX.ParamTypeError
+                    raise AuthEX.ParamTypeError(search_by_username_bool)
             else:
-                raise AuthEX.ParamTypeError
+                raise AuthEX.ParamTypeError(search_by_username_bool)
 
 
         except FileNotFoundError:
@@ -87,40 +87,38 @@ class user_profile(cmd.Cmd):
 
         except IsADirectoryError as dir_err:
             if dir_err.errno == 21:
-                print("\nError: Readfile not found, only a directory. file_IO path is probably empty.\n")
+                print("\nError: Directory found instead of readfile. file_IO path is probably empty.\n")
             return
 
         except KeyError as key_error:
             print("\nConfig File Error: Bad key found in config file.\n")
             return
 
-        except TypeError as t_err:
-            print("\nError: Found \'None\' in: " + str(t_err.args) + "\n")
-
-        except AuthEX.ParamTypeError:
-            print("\nConfig File Error: Invalid or unexpected parameter found in config file.\n")
+        except AuthEX.ParamTypeError as err:
+            print("\nConfig File Error: Invalid parameter type: " + err + ".\n")
             return
 
 
     
     def do_list(self, arg):
 
-        request_params = json.dumps(self.__conf.user_profile_params, indent=4, sort_keys=True)
-        io_usernames_readfile = self.__conf.file_IO["in"]["user_profile"]["username_list"]
-        io_user_id_readfile = self.__conf.file_IO["in"]["user_profile"]["user_id_list"]
-        io_writefile = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
+        request_params = self.__conf.user_profile_params
+        io_readfiles = self.__conf.file_IO["in"]["user_profile"]
+        io_writefiles = self.__conf.file_IO["out"]["user_profile"]
         io_global = self.__conf.GLOBAL_FILE_PATH
 
         print("\n__Request__\n")
-        print(str(request_params) + "\n")
+        for value in request_params:
+            print("    " + value + " : " + str(request_params[value]))
         print("\n__Files__\n")
         print("    IN:")
-        print("        " + io_usernames_readfile)
-        print("        " + io_user_id_readfile)
+        for value in io_readfiles:
+            print("        " + value + " : " + str(io_readfiles[value]))
         print("    OUT:")
-        print("        " + io_writefile)
+        for value in io_writefiles:
+            print("        " + value + " : " + str(io_writefiles[value]))
         print("    GLOBAL")
-        print("        " + io_global)
+        print("        " + str(io_global))
         print("\n")
 
         return
@@ -148,7 +146,7 @@ class user_profile(cmd.Cmd):
                             else:
                                 self.__conf.user_profile_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            raise AuthEX.ShellArgError
+                            raise AuthEX.ShellArgError(arg_list[2])
                     else:
                         if arg_list[2] in ["true", "false", "none"]:
                             if arg_list[2] == "true":
@@ -160,7 +158,7 @@ class user_profile(cmd.Cmd):
                         else:
                             self.__conf.user_profile_params[arg_list[1]] = arg_list[2]
                 else:
-                    raise AuthEX.ShellArgError
+                    raise AuthEX.ShellArgError(arg_list[1])
 
             elif arg_list[0] in ["files"]:
                 if arg_list[1] in ["global"]:
@@ -170,34 +168,34 @@ class user_profile(cmd.Cmd):
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["user_profile"]:
                             self.__conf.file_IO[arg_list[1]]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
-                                raise AuthEX.ShellArgError
+                                raise AuthEX.ShellArgError(arg_list[2])
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["user_profile"]:
                             self.__conf.file_IO["in"]["user_profile"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
-                            raise AuthEX.ShellArgError
+                            raise AuthEX.ShellArgError(arg_list[2])
                 else:
-                    raise AuthEX.ShellArgError
+                    raise AuthEX.ShellArgError(arg_list[1])
             else:
-                raise AuthEX.ShellArgError
+                raise AuthEX.ShellArgError(arg_list[0])
         
             self.do_list(arg=None)
         
         except KeyError as key_error:
-            print("Error: Bad key in: " + str(key_error.args))
-            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
+            print("\nError: Bad key in: " + str(key_error.args) + ".\n")
+            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args.\n")
             return
 
         except TypeError as t_err:
-            print("Error: Found \'None\' in: " + str(t_err.args))
+            print("\nError: Found \'None\' in: " + str(t_err.args) + ".\n")
             return
 
         except IndexError as inx_err:
-            print("Error: Not enough arguments, or too many for this functionality. Use \'help\' or \'?\' for basic command usage")
+            print("\nError: Not enough arguments, or too many for this functionality. Use \'help\' or \'?\' for basic command usage.\n")
             return
 
-        except AuthEX.ShellArgError:
-            print("Error: Invalid shell argument specified.")
+        except AuthEX.ShellArgError as err:
+            print("\nError: Invalid shell argument specified: " + err + ".\n")
             return
         
         return
@@ -343,50 +341,34 @@ class user_profile(cmd.Cmd):
 
 
 
-    def __dump_info(self, json_object, frame_id):
+    def __dump_info(self, json_object):
 
         try:
 
             writefile_path = self.__conf.file_IO["out"]["user_profile"]["user_profiles"]
             file_extension = os.path.splitext(writefile_path)[1]
 
+            if os.path.isfile(writefile_path):
+                pass
+            else:
+                raise FileNotFoundError
+
             if file_extension in [".json"]:
-
-                info_out = {}
-
-                info_out.update({str(frame_id) : {}})
-
-                for key in json_object:
-                    if key == "data":
-                        for sub_key in json_object[key]:
-                            info_out.update({str(frame_id) : sub_key})
-                    else:
-                        raise AuthEX.JsonFormatError        
-
                 with open(writefile_path, mode='a') as writefile:
-
-                    json.dump(info_out, writefile, indent=4, sort_keys=True)
-                    
-                return
-            
+                    json.dump(json_object, writefile, indent=4, sort_keys=True)
+                return    
             else:
                 raise AuthEX.OutputFileError
 
-        except AuthEX.JsonFormatError:
-            print("\nError: Unexpected json object key. Passing formatting.")
-            print("Please report this to developers\n") 
-            with open(writefile_path, mode='a') as writefile:
-                json.dump(json_object, indent=4, sort_keys=True)
-            return
-
         except AuthEX.OutputFileError:
-            print("Error: Writefile is not of .json type")
+            print("\nError: Writefile is not of .json type.\n")
+            return
+        
+        except FileNotFoundError:
+            print("\nError: Writefile not found.\n")
             return
 
-
-        
-
-
-
-        
-
+        except IsADirectoryError:
+            print("\nError: Writefile not found, found directory instead.\n")
+            return    
+            

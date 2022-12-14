@@ -1,22 +1,33 @@
 ## Author created exceptions go here##
 
-class Error(Exception):
-    pass
-
-
-class ShellArgError(Error):
+class ShellArgError(Exception):
     """exception for when a shell argument is not in scope"""
-    pass
+    
+    def __init__(self, shell_argument):
 
-class ParamTypeError(Error):
+        self.shell_arg = shell_argument
+
+    def __str__(self) -> str:
+        
+        return(repr(self.shell_arg))
+
+
+class ParamTypeError(Exception):
     """exception for invalid parameter (config) variable types"""
-    pass
+    
+    def __init__(self, parameter):
+        
+        self.parameter = parameter
 
-class JsonFormatError(Error):
+    def __str__(self):
+        
+        return(repr(self.parameter))
+
+class JsonFormatError(Exception):
     """exception for unexpected json response key"""
     pass
 
-class OutputFileError(Error):
+class OutputFileError(Exception):
     """exception for specified output file being something other than .json"""
     pass
 
