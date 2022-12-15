@@ -4,8 +4,9 @@ import twitterag.user_profile as user_profile
 import twitterag.likes as likes
 import twitterag.config_tools as config_tools
 import twitterag.exceptions.auth_except as AuthEX
-import json
 from time import sleep
+import re
+import json
 import requests
 import os
 import sys
@@ -51,23 +52,27 @@ class tweet_timeline(cmd.Cmd):
             if read_from_file_bool == True:
                 with open(io_userid_readfile, mode='r') as readfile:
                     for line in readfile:
-                        request = self.__retrieve_timeline(self.__url_build(line.strip()))
-                        self.__dump_info(request)
-                        self.__page_count = self.__page_count + 1
-                        if pagination_bool == True:
-                            while self.__page_count <= pagination_page_count:
-                                self.__conf.tweet_timeline_params["request_params"]["pagination_token"] = request["meta"]["next_token"]
-                                next_request = self.__retrieve_timeline(self.__url_build(line.strip()))
-                                request = next_request
-                                self.__dump_info(request)
-                                self.__page_count = self.__page_count + 1
-                            self.__page_count = 0
-                            return
-                        elif pagination_bool == False:
-                            self.__page_count = 0
-                            return
+                        if self.__input_file_check(line):
+                            request = self.__retrieve_timeline(self.__url_build(line.strip()))
+                            self.__dump_info(request)
+                            self.__page_count = self.__page_count + 1
+                            if pagination_bool == True:
+                                while self.__page_count <= pagination_page_count:
+                                    self.__conf.tweet_timeline_params["request_params"]["pagination_token"] = request["meta"]["next_token"]
+                                    next_request = self.__retrieve_timeline(self.__url_build(line.strip()))
+                                    request = next_request
+                                    self.__dump_info(request)
+                                    self.__page_count = self.__page_count + 1
+                                self.__page_count = 0
+                                return
+                            elif pagination_bool == False:
+                                self.__page_count = 0
+                                return
+                            else:
+                                raise AuthEX.ParamTypeError(pagination_bool)
                         else:
-                            raise AuthEX.ParamTypeError
+                            print("\nNo data. Skipping line.\n")
+                            pass
             elif read_from_file_bool == False:
                 request = self.__retrieve_timeline(self.__url_build(user_id_string))
                 self.__dump_info(request)
@@ -85,31 +90,27 @@ class tweet_timeline(cmd.Cmd):
                     self.__page_count = 0
                     return
                 else:
-                    raise AuthEX.ParamTypeError
+                    raise AuthEX.ParamTypeError(pagination_bool)
             else:
-                raise AuthEX.ParamTypeError
+                raise AuthEX.ParamTypeError(read_from_file_bool)
 
 
         except FileNotFoundError:
-            print("Error: Readfile not found.")
+            print("\nError: Readfile not found.\n")
             return
 
         except IsADirectoryError as dir_err:
             if dir_err.errno == 21:
-                print("\nError: Readfile not found, only a directory. file_IO path is probably empty.\n")
+                print("\nError: Directory found instead of readfile. file_IO path is probably empty.\n")
             return
 
         except KeyError as key_error:
             print("\nConfig File Error: Bad key found in config file.\n")
             return
 
-        except TypeError as t_err:
-            print("Error: Found \'None\' in: " + str(t_err.args))
-
-        except AuthEX.ParamTypeError:
-            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
+        except AuthEX.ParamTypeError as err:
+            print("\nConfig File Error: Invalid parameter type: " + str(err) + ".\n")
             return
-
 
 
 
@@ -156,7 +157,7 @@ class tweet_timeline(cmd.Cmd):
                             else:
                                 self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            raise AuthEX.ShellArgError
+                            raise AuthEX.ShellArgError(arg_list[2])
                     elif arg_list[1] in ["pagination"]:
                         if arg_list[2] in self.__conf.tweet_timeline_params["pagination"]:
                             if arg_list[3] in ["true", "false", "none"]:
@@ -169,7 +170,7 @@ class tweet_timeline(cmd.Cmd):
                             else:
                                 self.__conf.tweet_timeline_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            raise AuthEX.ShellArgError
+                            raise AuthEX.ShellArgError(arg_list[2])
                     else:
                         if arg_list[2] in ["true", "false", "none"]:
                             if arg_list[2] == "true":
@@ -181,7 +182,7 @@ class tweet_timeline(cmd.Cmd):
                         else:
                             self.__conf.tweet_timeline_params[arg_list[1]] = arg_list[2]
                 else:
-                    raise AuthEX.ShellArgError
+                    raise AuthEX.ShellArgError(arg_list[1])
 
             elif arg_list[0] in ["files"]:
                 if arg_list[1] in ["global"]:
@@ -191,34 +192,34 @@ class tweet_timeline(cmd.Cmd):
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["tweet_timeline"]:
                             self.__conf.file_IO[arg_list[1]]["tweet_timeline"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
-                            raise AuthEX.ShellArgError
+                            raise AuthEX.ShellArgError(arg_list[2])
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["tweet_timeline"]:
                             self.__conf.file_IO["in"]["tweet_timeline"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
-                            raise AuthEX.ShellArgError
+                            raise AuthEX.ShellArgError(arg_list[2])
                 else:
-                    raise AuthEX.ShellArgError
+                    raise AuthEX.ShellArgError(arg_list[1])
             else:
-                raise AuthEX.ShellArgError
+                raise AuthEX.ShellArgError(arg_list[0])
         
             self.do_list(arg=None)
         
         except KeyError as key_error:
-            print("Error: Bad key in " + str(key_error.args))
-            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
+            print("\nError: Bad key in " + str(key_error.args))
+            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args.\n")
             return
 
         except TypeError as t_err:
-            print("Error: Found \'None\' in: " + str(t_err.args))
+            print("\nError: Found \'None\' in: " + str(t_err.args) + ".\n")
             return
 
         except IndexError as inx_err:
-            print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
+            print("\nNot enough arguments, or too many for this functionality. Use \'help\' or \'?\' for usage.\n")
             return
 
-        except AuthEX.ShellArgError:
-            print("Error: Invalid shell argument specified.")
+        except AuthEX.ShellArgError as err:
+            print("Error: Invalid shell argument specified: " + str(err) + ".\n")
             return
 
         return
@@ -359,9 +360,47 @@ class tweet_timeline(cmd.Cmd):
 
 
 
-    def __dump_info(self, json_obj):
+    def __dump_info(self, json_object):
 
-        with open(self.__conf.file_IO["out"]["tweet_timeline"]["tweet_timelines"], mode='a') as writefile:
-            json.dump(json_obj, writefile, indent=4, sort_keys=True)
+        try:
+
+            writefile_path = self.__conf.file_IO["out"]["tweet_timeline"]["tweet_timelines"]
+            file_extension = os.path.splitext(writefile_path)[1]
+
+            if os.path.isfile(writefile_path):
+                pass
+            else:
+                raise FileNotFoundError
+
+            if file_extension in [".json"]:
+                with open(writefile_path, mode='a') as writefile:
+                    json.dump(json_object, writefile, indent=4, sort_keys=True)
+                return    
+            else:
+                raise AuthEX.OutputFileError
+
+        except AuthEX.OutputFileError:
+            print("\nError: Writefile is not of .json type.\n")
+            return
         
-        return
+        except FileNotFoundError:
+            print("\nError: Writefile not found.\n")
+            return
+
+        except IsADirectoryError:
+            print("\nError: Writefile not found, found directory instead.\n")
+            return  
+
+
+
+    def __input_file_check(self, readline):
+
+        regex_string = "[^\n\r\t\0]"
+        regex_pattern = re.compile(regex_string)
+
+        match_boolean = re.search(regex_pattern, readline)
+
+        if match_boolean:
+            return True
+        elif match_boolean in [False, None]:
+            return False

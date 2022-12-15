@@ -28,7 +28,7 @@ class JsonFormatError(Exception):
     pass
 
 class OutputFileError(Exception):
-    """exception for specified output file being something other than .json"""
+    """exception for specified output files not being json"""
     pass
 
 

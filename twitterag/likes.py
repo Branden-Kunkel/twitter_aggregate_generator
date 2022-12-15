@@ -4,8 +4,9 @@ import twitterag.tweet_timeline as tweet_timeline
 import twitterag.user_profile as user_profile
 import twitterag.config_tools as config_tools
 import twitterag.exceptions.auth_except as AuthEX
-import json
 from time import sleep
+import re
+import json
 import requests
 import os
 import sys
@@ -38,7 +39,6 @@ class likes(cmd.Cmd):
 
         print("\nRunning {}\n".format(self.prompt))
 
-
         try:
 
             read_from_file_bool = self.__conf.likes_params["read_from_file?"]
@@ -50,23 +50,27 @@ class likes(cmd.Cmd):
             if read_from_file_bool == True:
                 with open(io_liked_readfile, mode='r') as readfile:
                     for line in readfile:
-                        request = self.__retrieve_info(self.__url_build(user_id=line.strip(), url_type="liked"), self.__bearer_oauth_liked, self.__param_engine("liked"))
-                        self.__dump_info(request, "liked")
-                        self.__page_count = self.__page_count + 1
-                        if pagination_bool == True:
-                            while self.__page_count <= pagination_page_count:
-                                self.__conf.likes_params["liked_request_params"]["pagination_token"] = request["meta"]["next_token"]
-                                next_request = self.__retrieve_info(self.__url_build(user_id=line.strip(), url_type="liked"), oauth_type=self.__bearer_oauth_liked, params_type=self.__param_engine("liked"))
-                                request = next_request
-                                self.__dump_info(request, type="liked")
-                                self.__page_count = self.__page_count + 1
-                            self.__page_count = 0
-                            return
-                        elif pagination_bool == False:
-                            self.__page_count = 0
-                            return
+                        if self.__input_file_check(line):
+                            request = self.__retrieve_info(self.__url_build(user_id=line.strip(), url_type="liked"), self.__bearer_oauth_liked, self.__param_engine("liked"))
+                            self.__dump_info(request, "liked")
+                            self.__page_count = self.__page_count + 1
+                            if pagination_bool == True:
+                                while self.__page_count <= pagination_page_count:
+                                    self.__conf.likes_params["liked_request_params"]["pagination_token"] = request["meta"]["next_token"]
+                                    next_request = self.__retrieve_info(self.__url_build(user_id=line.strip(), url_type="liked"), oauth_type=self.__bearer_oauth_liked, params_type=self.__param_engine("liked"))
+                                    request = next_request
+                                    self.__dump_info(request, "liked")
+                                    self.__page_count = self.__page_count + 1
+                                self.__page_count = 0
+                                return
+                            elif pagination_bool == False:
+                                self.__page_count = 0
+                                return
+                            else:
+                                raise AuthEX.ParamTypeError(pagination_bool)
                         else:
-                            raise AuthEX.ParamTypeError
+                            print("\nNo data. Skipping line.\n")
+                            pass
             elif read_from_file_bool == False:
                 request = self.__retrieve_info(self.__url_build(user_id=user_id_string, url_type="liked"), self.__bearer_oauth_liked, self.__param_engine("liked"))
                 self.__dump_info(request, "liked")
@@ -76,7 +80,7 @@ class likes(cmd.Cmd):
                         self.__conf.likes_params["liked_request_params"]["pagination_token"] = request["meta"]["next_token"]
                         next_request = self.__retrieve_info(self.__url_build(user_id=user_id_string, url_type="liked"), oauth_type=self.__bearer_oauth_liked, params_type=self.__param_engine("liked"))
                         request = next_request
-                        self.__dump_info(request, type="liked")
+                        self.__dump_info(request, "liked")
                         self.__page_count = self.__page_count + 1
                     self.__page_count = 0
                     return
@@ -84,12 +88,12 @@ class likes(cmd.Cmd):
                     self.__page_count = 0
                     return
                 else:
-                    raise AuthEX.ParamTypeError
+                    raise AuthEX.ParamTypeError(pagination_bool)
             else:
-                raise AuthEX.ParamTypeError
+                raise AuthEX.ParamTypeError(read_from_file_bool)
 
         except FileNotFoundError:
-            print("Error: Readfile not found.")
+            print("\nError: Readfile not found.\n")
             return
 
         except IsADirectoryError as dir_err:
@@ -101,11 +105,8 @@ class likes(cmd.Cmd):
             print("\nConfig File Error: Bad key found in config file.\n")
             return
 
-        except TypeError as t_err:
-            print("Error: Found \'None\' in: " + str(t_err.args))
-
-        except AuthEX.ParamTypeError:
-            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
+        except AuthEX.ParamTypeError as err:
+            print("\nConfig File Error: Invalid parameter: " + str(err) + ".\n")
             return
 
         
@@ -133,7 +134,7 @@ class likes(cmd.Cmd):
                                 self.__conf.likes_params["liking_request_params"]["pagination_token"] = request["meta"]["next_token"]
                                 next_request = self.__retrieve_info(self.__url_build(tweet_id=line.strip(), url_type="liking"), oauth_type=self.__bearer_oauth_liking, params_type=self.__param_engine("liked"))
                                 request = next_request
-                                self.__dump_info(request, type="liking")
+                                self.__dump_info(request, "liking")
                                 self.__page_count = self.__page_count + 1
                             self.__page_count = 0
                             return
@@ -141,7 +142,7 @@ class likes(cmd.Cmd):
                             self.__page_count = 0
                             return
                         else:
-                            raise AuthEX.ParamTypeError
+                            raise AuthEX.ParamTypeError(pagination_bool)
             elif read_from_file_bool == False:
                 request = self.__retrieve_info(self.__url_build(tweet_id=tweet_id_string, url_type="liking"), self.__bearer_oauth_liking, self.__param_engine("liked"))
                 self.__dump_info(request, "liking")
@@ -151,7 +152,7 @@ class likes(cmd.Cmd):
                         self.__conf.likes_params["liking_request_params"]["pagination_token"] = request["meta"]["next_token"]
                         next_request = self.__retrieve_info(self.__url_build(tweet_id=tweet_id_string, url_type="liking"), oauth_type=self.__bearer_oauth_liking, params_type=self.__param_engine("liked"))
                         request = next_request
-                        self.__dump_info(request, type="liking")
+                        self.__dump_info(request, "liking")
                         self.__page_count = self.__page_count + 1
                     self.__page_count = 0
                     return
@@ -159,12 +160,12 @@ class likes(cmd.Cmd):
                     self.__page_count = 0
                     return
                 else:
-                    raise AuthEX.ParamTypeError
+                    raise AuthEX.ParamTypeError(pagination_bool)
             else:
-                raise AuthEX.ParamTypeError
+                raise AuthEX.ParamTypeError(read_from_file_bool)
 
         except FileNotFoundError:
-            print("Error: Readfile not found.")
+            print("\nError: Readfile not found.\n")
             return
 
         except IsADirectoryError as dir_err:
@@ -176,13 +177,9 @@ class likes(cmd.Cmd):
             print("\nConfig File Error: Bad key found in config file.\n")
             return
 
-        except TypeError as t_err:
-            print("Error: Found \'None\' in: " + str(t_err.args))
-
-        except AuthEX.ParamTypeError:
-            print("\nConfig File Error: Invalid or unexpected parameter found in config file.")
+        except AuthEX.ParamTypeError as err:
+            print("\nConfig File Error: Invalid parameter: " + str(err) + "\n")
             return
-
         
     
     
@@ -233,7 +230,7 @@ class likes(cmd.Cmd):
                             else:
                                 self.__conf.likes_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise AuthEX.ShellArgError(arg_list[2])
                     elif arg_list[1] in ["liked_request_params"]:
                         if arg_list[2] in self.__conf.likes_params["liked_request_params"]:
                             if arg_list[3] in ["true", "false", "none"]:
@@ -246,7 +243,7 @@ class likes(cmd.Cmd):
                             else:
                                 self.__conf.likes_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise AuthEX.ShellArgError(arg_list[2])
                     elif arg_list[1] in ["pagination"]:
                         if arg_list[2] in self.__conf.likes_params["pagination"]:
                             if arg_list[3] in ["true", "false", "none"]:
@@ -259,7 +256,7 @@ class likes(cmd.Cmd):
                             else:
                                 self.__conf.likes_params[arg_list[1]][arg_list[2]] = arg_list[3]
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise AuthEX.ShellArgError(arg_list[2])
                     else:
                         if arg_list[2] in ["true", "false", "none"]:
                             if arg_list[2] == "true":
@@ -271,7 +268,7 @@ class likes(cmd.Cmd):
                         else:
                             self.__conf.likes_params[arg_list[1]] = arg_list[2]
                 else:
-                    print("Invalid argument in: " + arg_list[1])
+                    raise AuthEX.ShellArgError(arg_list[1])
             elif arg_list[0] in ["files"]:
                 if arg_list[1] in ["global"]:
                     self.__conf.GLOBAL_FILE_PATH = arg_list[2]
@@ -280,28 +277,35 @@ class likes(cmd.Cmd):
                         if arg_list[2] in self.__conf.file_IO[arg_list[1]]["likes"]:
                             self.__conf.file_IO[arg_list[1]]["likes"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3]
                         else:
-                                print("Invalid argument in: " + arg_list[2])
+                                raise AuthEX.ShellArgError(arg_list[2])
                     else:
                         if arg_list[2] in self.__conf.file_IO["in"]["likes"]:
                             self.__conf.file_IO["in"]["likes"][arg_list[2]] = self.__conf.GLOBAL_FILE_PATH + arg_list[3] 
                         else:
-                            print("Invalid argument in: " + arg_list[2])
+                            raise AuthEX.ShellArgError(arg_list[2])
                 else:
-                    print("Invalid argument in:" + arg_list[1])
+                    raise AuthEX.ShellArgError(arg_list[1])
             else:
-                print("Invalid option in: " + arg_list[0])
+                raise AuthEX.ShellArgError(arg_list[0])
         
             self.do_list(arg=None)
 
         except IndexError as inx_err:
-            print("Not enough arguments, or too many for this functionality. Use \'list commands\'  for basic description or 'help' for detailed instructions.")
-        
+            print("\nNot enough arguments, or too many for this functionality. Use \'help\' or \'?\' for usage.\n")
+            return
+
         except KeyError as key_error:
-            print("Error: Bad key in " + str(key_error.args))
-            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args")
+            print("\nError: Bad key in " + str(key_error.args))
+            print("TIP: Config file corruption is possible with this error, but usually is due to a typo in args.\n")
+            return
 
         except TypeError as t_err:
-            print("Error: Found \'None\' in: " + str(t_err.args))
+            print("\nError: Found \'None\' in: " + str(t_err.args) + ".\n")
+            return
+
+        except AuthEX.ShellArgError as err:
+            print("\nError: Invalid shell argument specified: " + str(err) + ".\n")
+            return
 
 
 
@@ -458,7 +462,7 @@ class likes(cmd.Cmd):
 
 
 
-    def __dump_info(self, json_object, type=""):
+    def __dump_info(self, json_object, type):
 
         prettify = json.dumps(json_object, indent=4, sort_keys=True)
 
@@ -475,4 +479,64 @@ class likes(cmd.Cmd):
                     print(prettify)
                 print("JSON successfully written!")
 
-        return    
+        return
+
+
+    def __dump_info(self, json_obj, type):
+
+        try:
+
+            prettify = json.dumps(json_obj, indent=4, sort_keys=True)
+
+            writefile_path = ""
+
+
+            if type == "liking":
+
+                writefile_path = self.__conf.file_IO["out"]["likes"]["liking"]
+
+            elif type == "liked":
+
+                writefile_path = self.__conf.file_IO["out"]["likes"]["liked"]
+
+            file_extension = os.path.splitext(writefile_path)[1]
+
+            if os.path.isfile(writefile_path):
+                pass
+            else:
+                raise FileNotFoundError
+
+            if file_extension in [".json"]:
+                with open(writefile_path, mode='a') as writefile:
+                    json.dump(json_obj, writefile, indent=4, sort_keys=True)
+                    if self.__conf.genopts["verbose?"]:
+                        print(prettify)
+                return    
+            else:
+                raise AuthEX.OutputFileError
+
+        except AuthEX.OutputFileError:
+            print("\nError: Writefile is not of .json type.\n")
+            return
+        
+        except FileNotFoundError:
+            print("\nError: Writefile not found.\n")
+            return
+
+        except IsADirectoryError:
+            print("\nError: Writefile not found, found directory instead.\n")
+            return  
+
+
+
+    def __input_file_check(self, readline):
+
+        regex_string = "[^\n\r\t\0]"
+        regex_pattern = re.compile(regex_string)
+
+        match_boolean = re.search(regex_pattern, readline)
+
+        if match_boolean:
+            return True
+        elif match_boolean in [False, None]:
+            return False    

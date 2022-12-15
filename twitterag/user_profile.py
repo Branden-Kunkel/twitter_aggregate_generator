@@ -4,13 +4,14 @@ import twitterag.tweet_timeline as tweet_timeline
 import twitterag.likes as likes
 import twitterag.config_tools as config_tools
 import twitterag.exceptions.auth_except as AuthEX
-import json
-import requests
-import os
-import sys
-import cmd 
-import cmd 
 from time import sleep
+import requests
+import json
+import sys
+import cmd
+import re
+import os
+  
 
 
 
@@ -55,14 +56,22 @@ class user_profile(cmd.Cmd):
                 if search_by_username_bool == True:
                     with open(io_usernames_readfile, mode='r') as readfile:
                         for line in readfile:
-                            request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
-                            self.__dump_info(request)
+                            if self.__input_file_check(line):
+                                request = self.__retrieve_info(self.__url_build(usernames=line.strip()))
+                                self.__dump_info(request)
+                            else:
+                                print("\nNo data. Skipping line.\n")
+                                pass
                     return
                 elif search_by_username_bool == False:
                     with open(io_userid_readfile, mode='r') as readfile:
                         for line in readfile:
-                            request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
-                            self.__dump_info(request)
+                            if self.__input_file_check(line):
+                                request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
+                                self.__dump_info(request)
+                            else:
+                                print("\nNo data. Skipping line.\n")
+                                pass
                     return
                 else:
                     raise AuthEX.ParamTypeError(search_by_username_bool)
@@ -78,7 +87,7 @@ class user_profile(cmd.Cmd):
                 else:
                     raise AuthEX.ParamTypeError(search_by_username_bool)
             else:
-                raise AuthEX.ParamTypeError(search_by_username_bool)
+                raise AuthEX.ParamTypeError(read_from_file_bool)
 
 
         except FileNotFoundError:
@@ -95,7 +104,7 @@ class user_profile(cmd.Cmd):
             return
 
         except AuthEX.ParamTypeError as err:
-            print("\nConfig File Error: Invalid parameter type: " + err + ".\n")
+            print("\nConfig File Error: Invalid parameter type: " + str(err) + ".\n")
             return
 
 
@@ -191,11 +200,11 @@ class user_profile(cmd.Cmd):
             return
 
         except IndexError as inx_err:
-            print("\nError: Not enough arguments, or too many for this functionality. Use \'help\' or \'?\' for basic command usage.\n")
+            print("\nNot enough arguments, or too many for this functionality. Use \'help\' or \'?\' for usage.\n")
             return
 
         except AuthEX.ShellArgError as err:
-            print("\nError: Invalid shell argument specified: " + err + ".\n")
+            print("\nError: Invalid shell argument specified: " + str(err) + ".\n")
             return
         
         return
@@ -370,5 +379,19 @@ class user_profile(cmd.Cmd):
 
         except IsADirectoryError:
             print("\nError: Writefile not found, found directory instead.\n")
-            return    
+            return  
+
+
+
+    def __input_file_check(self, readline):
+
+        regex_string = "[^\n\r\t\0]"
+        regex_pattern = re.compile(regex_string)
+
+        match_boolean = re.search(regex_pattern, readline)
+
+        if match_boolean:
+            return True
+        elif match_boolean in [False, None]:
+            return False
             
