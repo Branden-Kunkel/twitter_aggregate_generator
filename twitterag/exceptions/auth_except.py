@@ -21,7 +21,7 @@ class ParamTypeError(Exception):
 
     def __str__(self):
         
-        return(repr(self.parameter))
+        return(repr(self.parameter))    
 
 class JsonFormatError(Exception):
     """exception for unexpected json response key"""
