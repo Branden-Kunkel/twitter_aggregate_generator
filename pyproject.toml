@@ -7,14 +7,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 
-version = "1.1.0"
+version = "1.2.0"
 
 name = "Twitter_Aggregate_Generator"
 
 authors = [{name="Branden Kunkel", email="kunkel.branden6130@gmail.com"}]
 
 dependencies = 	[
-			"requests==2.5.4.1",
+			"requests==2.28.1",
 		]
 
 requires-python = ">=3.8"
