@@ -104,8 +104,11 @@ class follows(cmd.Cmd):
             return
 
         except KeyError as key_error:
-            print("\nConfig File Error: Bad key found in config file.\n")
-            return
+            if "next_token" in key_error.args:
+                pass
+            else:
+                print("\nConfig File Error: Bad key found in config file.\n")
+                return
 
         except AuthEX.ParamTypeError as err:
             print("\nConfig File Error: Invalid parameter type: " + str(err) + ".\n")
@@ -347,11 +350,6 @@ class follows(cmd.Cmd):
 
 
 
-    def do_main(self, arg):
-        os.system("python3 infoCLI.py")
-
-
-    
     def do_timeline(self, arg):
         tweet_timeline_console = tweet_timeline.tweet_timeline()
         tweet_timeline_console.cmdloop()

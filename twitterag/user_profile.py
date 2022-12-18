@@ -69,6 +69,14 @@ class user_profile(cmd.Cmd):
                             if self.__input_file_check(line):
                                 request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
                                 self.__dump_info(request)
+                                pass
+                    return
+                elif search_by_username_bool == False:
+                    with open(io_userid_readfile, mode='r') as readfile:
+                        for line in readfile:
+                            if self.__input_file_check(line):
+                                request = self.__retrieve_info(self.__url_build(user_id=line.strip()))
+                                self.__dump_info(request)
                             else:
                                 print("\nNo data. Skipping line.\n")
                                 pass
@@ -254,11 +262,6 @@ class user_profile(cmd.Cmd):
         print("Terminating")
         sleep(2)
         sys.exit()
-
-
-
-    def do_main(self, arg):
-        os.system("python3 infoCLI.py")
 
 
 

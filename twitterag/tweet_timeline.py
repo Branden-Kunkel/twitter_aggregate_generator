@@ -46,7 +46,7 @@ class tweet_timeline(cmd.Cmd):
             pagination_bool = self.__conf.tweet_timeline_params["pagination"]["paginate?"]
             pagination_page_count = self.__conf.tweet_timeline_params["pagination"]["page_count"]
             read_from_file_bool = self.__conf.tweet_timeline_params["read_from_file?"]
-            io_userid_readfile = self.__conf.tweet_timeline_params["in"]["tweet_timeline"]["user_id_list"]
+            io_userid_readfile = self.__conf.file_IO["in"]["tweet_timeline"]["user_id_list"]
             user_id_string = self.__conf.tweet_timeline_params["user_id"]
 
             if read_from_file_bool == True:
@@ -105,8 +105,11 @@ class tweet_timeline(cmd.Cmd):
             return
 
         except KeyError as key_error:
-            print("\nConfig File Error: Bad key found in config file.\n")
-            return
+            if "next_token" in key_error.args:
+                pass
+            else:
+                print("\nConfig File Error: Bad key found in config file.\n")
+                return
 
         except AuthEX.ParamTypeError as err:
             print("\nConfig File Error: Invalid parameter type: " + str(err) + ".\n")
@@ -269,11 +272,6 @@ class tweet_timeline(cmd.Cmd):
     def do_clear(self, arg):
         os.system("clear")
         return
-
-
-
-    def do_main(self, arg):
-        os.system("python3 infoCLI.py")
 
 
 

@@ -102,8 +102,11 @@ class likes(cmd.Cmd):
             return
 
         except KeyError as key_error:
-            print("\nConfig File Error: Bad key found in config file.\n")
-            return
+            if "next_token" in key_error.args:
+                pass
+            else:
+                print("\nConfig File Error: Bad key found in config file.\n")
+                return
 
         except AuthEX.ParamTypeError as err:
             print("\nConfig File Error: Invalid parameter: " + str(err) + ".\n")
@@ -132,7 +135,7 @@ class likes(cmd.Cmd):
                         if pagination_bool == True:
                             while self.__page_count <= pagination_page_count:
                                 self.__conf.likes_params["liking_request_params"]["pagination_token"] = request["meta"]["next_token"]
-                                next_request = self.__retrieve_info(self.__url_build(tweet_id=line.strip(), url_type="liking"), oauth_type=self.__bearer_oauth_liking, params_type=self.__param_engine("liked"))
+                                next_request = self.__retrieve_info(self.__url_build(tweet_id=line.strip(), url_type="liking"), oauth_type=self.__bearer_oauth_liking, params_type=self.__param_engine("liking"))
                                 request = next_request
                                 self.__dump_info(request, "liking")
                                 self.__page_count = self.__page_count + 1
@@ -144,7 +147,7 @@ class likes(cmd.Cmd):
                         else:
                             raise AuthEX.ParamTypeError(pagination_bool)
             elif read_from_file_bool == False:
-                request = self.__retrieve_info(self.__url_build(tweet_id=tweet_id_string, url_type="liking"), self.__bearer_oauth_liking, self.__param_engine("liked"))
+                request = self.__retrieve_info(self.__url_build(tweet_id=tweet_id_string, url_type="liking"), self.__bearer_oauth_liking, self.__param_engine("liking"))
                 self.__dump_info(request, "liking")
                 self.__page_count = self.__page_count + 1
                 if pagination_bool == True:
@@ -187,9 +190,9 @@ class likes(cmd.Cmd):
 
         request_params = json.dumps(self.__conf.likes_params, indent=4, sort_keys=True)
         io_liking_readfile = self.__conf.file_IO["in"]["likes"]["tweet_id_list"]
-        io_liked_readfile = self.__conf["in"]["likes"]["user_id_list"]
+        io_liked_readfile = self.__conf.file_IO["in"]["likes"]["user_id_list"]
         io_liking_writefile = self.__conf.file_IO["out"]["likes"]["liking"]
-        io_liked_writefile = self.__conf["out"]["likes"]["liked"]
+        io_liked_writefile = self.__conf.file_IO["out"]["likes"]["liked"]
         io_global = self.__conf.GLOBAL_FILE_PATH
 
         print("\n__Request__\n")
@@ -354,11 +357,6 @@ class likes(cmd.Cmd):
         print("Terminating TAG...")
         sleep(2)
         sys.exit()
-
-
-
-    def do_main(self, arg):
-        os.system("python3 infoCLI.py")
 
 
 

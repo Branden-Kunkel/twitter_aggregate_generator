@@ -9,9 +9,10 @@ data from the official Twitter API. The intended use of this data includes, but 
 - create and analyze social networks consisting of individuals or entities of academic interest
 
 Currently, TwitterAG is in the **beta** stage, with known bugs noted in the source repository. The **release** version++ hopes to have further core modules supporting more features such as:
-- command piping to even more precisely filter, append or strip data in responses 
-- increased access elevation and API endpoints available
-- a compiled version of this program which will be based on elevated access. I anticipate that speed will be a more important factor when datasets become that large
+- Command piping to even more precisely filter, append or strip data in responses
+- A small SDK? 
+- Increased access elevation and API endpoints available. Will add a filtered stream API functionality once I can work with usable rate limits.
+- A compiled version of this program which will be based on elevated access. I anticipate that speed will be a more important factor when datasets become that large
 
 Note that **all** response types from the Twitter API are of JSON type.
 

@@ -42,7 +42,7 @@ class tweet_lookup(cmd.Cmd):
         try:
 
             read_from_file_bool = self.__conf.tweet_lookup_params["read_from_file?"]
-            io_tweet_id_readfile = self.__conf.tweet_lookup_params["in"]["tweet_lookup"]["tweet_id_list"]
+            io_tweet_id_readfile = self.__conf.file_IO["in"]["tweet_lookup"]["tweet_id_list"]
             tweet_id_string = self.__conf.tweet_lookup_params["tweet_id"]
 
             if read_from_file_bool == True:
@@ -221,12 +221,6 @@ class tweet_lookup(cmd.Cmd):
         print("Terminating")
         sleep(2)
         sys.exit()
-
-
-
-    def do_main(self, arg):
-        os.system("python3 infoCLI.py")
-
     
 
 
