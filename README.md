@@ -14,7 +14,8 @@ Currently, TwitterAG is in the **beta** stage, with known bugs noted in the sour
 - Increased access elevation and API endpoints available. Will add a filtered stream API functionality once I can work with usable rate limits.
 - A compiled version of this program which will be based on elevated access. I anticipate that speed will be a more important factor when datasets become that large
 
-Note that **all** response types from the Twitter API are of JSON type.
+Note that **all** response types from the Twitter API are of JSON type. Furthermore, the data retrieved is simply transcribed to the output file
+with an additional response number attached. In other words, the JSON is **NOT** flattened!
 
 To look at future modules bieng tested, take a look at the 'testing' branch for this project. To see the next update that will be pushed to 'master'
 see the 'update' branch. Thank you for taking the time to check out the project!
